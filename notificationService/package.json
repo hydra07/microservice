@@ -1,0 +1,26 @@
+{
+  "name": "notificationservice",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot ./src/index.ts",
+    "typeorm": "typeorm-ts-node-commonjs"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "express-validator": "^7.0.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.10",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.6.1",
+    "reflect-metadata": "^0.2.2",
+    "socket.io": "^4.7.5",
+    "typeorm": "^0.3.20"
+  }
+}
