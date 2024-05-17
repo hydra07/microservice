@@ -1,8 +1,17 @@
+import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import createHttpError, { isHttpError } from 'http-errors';
 import postRouter from '../router/post.router';
+
 const app = express();
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'http://localhost:3000'],
+    // origin: 'http://localhost:5173',
+  }),
+);
 app.use(express.json());
+
 app.use('/api/hello', (req, res) => {
   res.send('Hello World');
 });

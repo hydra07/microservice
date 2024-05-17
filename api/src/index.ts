@@ -1,5 +1,6 @@
-import app from './config/app.config';
+// import app from './config/app.config';
 import AppDataSource from './config/db.config';
+import app from './config/socket.config';
 
 async function main() {
   try {

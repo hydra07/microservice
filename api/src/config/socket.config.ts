@@ -1,17 +1,8 @@
-import cors from 'cors';
-import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { NotificationService } from '../service/notification.service';
+import app from './app.config';
 
-const app = express();
-app.use(
-  cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
-    // origin: 'http://localhost:5173',
-  }),
-);
-app.use(express.json());
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -19,8 +10,8 @@ const io = new Server(server, {
     methods: ['GET', 'POST'],
   },
 });
-const notificationService = new NotificationService(io);
 
+const notificationService = new NotificationService(io);
 app.post('/notification', async (req, res) => {
   const body = req.body;
   const notification = {
@@ -41,8 +32,7 @@ app.post('/notification', async (req, res) => {
     notification: savedNotification,
   });
 });
-
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('A user connected');
 
   socket.on('createNotification', async (data) => {
@@ -64,25 +54,5 @@ io.on('connection', (socket) => {
     console.log('A user disconnected');
   });
 });
-
-// app.use(express.json());
-// app.use('/api/hello', (req, res) => {
-//   res.send('Hello World');
-// });c
-
-// app.use((res, req, next) => {
-//   next(createHttpError(404, 'Not found'));
-// });
-
-// app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-//   let errorMessage = 'An unknown error occurred';
-//   let statusCode = 500;
-//   if (isHttpError(error)) {
-//     statusCode = error.status;
-//     errorMessage = error.message;
-//   }
-//   res.status(statusCode).json({ error: errorMessage });
-// });
-// export default app;
 
 export default server;

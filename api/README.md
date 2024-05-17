@@ -1,4 +1,4 @@
-# notificationservice
+# api
 
 To install dependencies:
 
