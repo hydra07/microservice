@@ -2,15 +2,15 @@ import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import createHttpError, { isHttpError } from 'http-errors';
 import postRouter from '../router/post.router';
-
+import env from '../util/validateEnv';
 const app = express();
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
-    // origin: 'http://localhost:5173',
+    origin: env.CLIENT_URL,
   }),
 );
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/hello', (req, res) => {
   res.send('Hello World');
