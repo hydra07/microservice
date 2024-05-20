@@ -6,8 +6,14 @@ export class Post {
   _id!: ObjectId;
 
   @Column('text')
-  content?: string;
+  title?: string;
+
+  @Column()
+  author?: number;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt?: Date;
 
   @Column('text')
-  title?: string;
+  content?: string;
 }
