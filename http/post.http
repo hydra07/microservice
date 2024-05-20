@@ -1,0 +1,20 @@
+### Create a new post
+POST http://localhost:3000/api/post HTTP/1.1
+content-type: application/json
+
+{
+  "title": "Test title",
+  "content": "Test content"
+}
+
+### Get all posts
+GET http://localhost:3000/api/post HTTP/1.1
+
+### Update a post
+PUT http://localhost:3000/api/post/664aecbbc06d4ab5040cbc1f HTTP/1.1
+content-type: application/json
+
+{
+  "title": "Updated title",
+  "content": "Updated content"
+}
