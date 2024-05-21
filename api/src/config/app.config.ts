@@ -3,6 +3,11 @@ import express, { NextFunction, Request, Response } from 'express';
 import createHttpError, { isHttpError } from 'http-errors';
 import postRouter from '../router/post.router';
 import env from '../util/validateEnv';
+import "../strategies/discord-strategy"
+import passport from 'passport';
+import userRouter from '../router/user.router';
+import session from 'express-session';
+
 const app = express();
 app.use(
   cors({
@@ -12,10 +17,21 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+  secret: 'visaotoikhongtheyeuem',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {maxAge: 60000 * 60 * 24} // 1 day
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 app.use('/api/hello', (req, res) => {
   res.send('Hello World');
 });
 app.use('/api', postRouter);
+app.use('/api', userRouter);
 
 app.use((res, req, next) => {
   next(createHttpError(404, 'Not found'));

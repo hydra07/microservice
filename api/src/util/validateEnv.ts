@@ -14,4 +14,8 @@ export default cleanEnv(process.env, {
   POSTGRES_DB: str(),
   // JWT_SECRET: str(),
   // SESSION_SECRET: str(),
+  DISCORD_CLIENT_ID: str(),
+  DISCORD_CLIENT_SECRET: str(),
+  DISCORD_CALLBACK_URL: str(),
+
 });

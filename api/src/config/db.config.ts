@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { Notification } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import env from '../util/validateEnv';
+import { User } from '../entity/user.entity';
 const AppDataSource = new DataSource({
   type: 'mongodb',
   host: env.MONGO_HOST,
@@ -12,7 +13,7 @@ const AppDataSource = new DataSource({
   // useNewUrlParser: true,
 
   synchronize: true,
-  logging: true,
+  logging: false,
   // entities: [__dirname + '/entity/*.ts'],
   entities: [Notification, Post],
   migrations: [],
@@ -29,8 +30,8 @@ const PostgresDataSource = new DataSource({
   database: env.POSTGRES_DB,
 
   synchronize: true,
-  logging: true,
-  entities: [],
+  logging: false,
+  entities: [User],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000,
