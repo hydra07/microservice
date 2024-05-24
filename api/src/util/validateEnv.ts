@@ -1,4 +1,4 @@
-import { cleanEnv, port, str } from 'envalid';
+import { cleanEnv, port, str, num } from 'envalid';
 
 export default cleanEnv(process.env, {
   // MONGO_URI: str(),
@@ -14,4 +14,12 @@ export default cleanEnv(process.env, {
   POSTGRES_DB: str(),
   // JWT_SECRET: str(),
   // SESSION_SECRET: str(),
+  DISCORD_CLIENT_ID: str(),
+  DISCORD_CLIENT_SECRET: str(),
+  DISCORD_CALLBACK_URL: str(),
+  JWT_SECRET: str(),
+  REFRESH_SECRET: str(),
+  EXPIRE_JWT: num(),
+  EXPIRE_REFRESH: num(),
+
 });
