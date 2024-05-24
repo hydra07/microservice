@@ -4,6 +4,7 @@ import { Notification } from '../entity/notification.entity';
 import { Post } from '../entity/post.entity';
 import env from '../util/validateEnv';
 import { User } from '../entity/user.entity';
+import { RefreshToken } from '../entity/refreshToken.entity';
 const AppDataSource = new DataSource({
   type: 'mongodb',
   host: env.MONGO_HOST,
@@ -31,7 +32,7 @@ const PostgresDataSource = new DataSource({
 
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [User, RefreshToken],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000,

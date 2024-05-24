@@ -1,11 +1,13 @@
-import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, Table } from 'typeorm';
+import { UserRole } from '../util/constraint';
+import { RefreshToken } from './refreshToken.entity';
 
-@Entity("user")
+@Entity()
 export class User {
   @PrimaryColumn('text')
   id?: string;
 
-  @Column('text')
+  @Column('text' )
   username?: string;
 
   @Column('text', {nullable: true})
@@ -20,9 +22,17 @@ export class User {
   @Column('text', {nullable: true})
   avatar?: string;
 
-  @Column('text', {nullable: true})
-  accessToken?: string;
+  @Column("text", { nullable: true, unique: true })
+  refreshTokenId?: string;
 
-  @Column('text', {nullable: true})
-  refreshToken?: string;
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.USER
+  })
+  role?: UserRole;
+
+  @OneToOne(() => RefreshToken)
+  @JoinColumn({ name: 'refreshTokenId' })
+  refreshTokenEntity?: RefreshToken;
 }

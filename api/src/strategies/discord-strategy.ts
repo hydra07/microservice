@@ -1,26 +1,20 @@
-import passport, { Profile } from "passport";
-import { Strategy as DiscordStrategy } from "passport-discord";
+import env from "../util/validateEnv";
+
+import passport from "passport";
+import { Strategy as DiscordStrategy, Profile } from "passport-discord";
 import {PostgresDataSource} from "../config/db.config";
 import { User } from "../entity/user.entity";
-import env from "../util/validateEnv";
+import { UserRole } from "../util/constraint";
+
 import { VerifyCallback } from "passport-oauth2";
+import { generateAccessToken, generateRefreshToken } from "../util/tokenGenerate";
+import jwt from 'jsonwebtoken';
 
-const userRepo = PostgresDataSource.getRepository(User);
+import UserService from "../service/user.service";
+import RefreshTokenService from "../service/refreshToken.service";
+import { RefreshToken } from "../entity/refreshToken.entity";
 
-passport.serializeUser((user: User, done) => {
-  console.log('Serialize User:', user);
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id: string, done) => {
-  console.log('Deserialize User:', id);
-  try {
-    const user = await userRepo.findOneBy({ id });
-    return done(null, user);
-  } catch (error) {
-    return done(error, null);
-  }
-});
+const userService = new UserService();
 
 export default passport.use(
   new DiscordStrategy(
@@ -38,22 +32,52 @@ export default passport.use(
     ) => {
       console.log('Strategy callback called');  // New log
       try {
-        console.log('Profile:', profile);  // Existing log
-        let user = await userRepo.findOneBy({ id: profile.id });
+        console.log('Starting user lookup');  // New log
+        const userService = new UserService();
+        let user = await userService.findUserById(profile.id);
+        console.log('User found:', user);  // New log
 
         if (!user) {
+          console.log('User not found, creating new user');  // New log
           user = new User();
           user.id = profile.id;
           user.username = profile.username;
           user.email = profile.email;
 
-          await userRepo.save(user);
-          done(null, user);
+          if (profile.avatar) {
+            user.avatar = profile.avatar;
+          }
+          user.role = UserRole.USER;
+
+          await userService.saveUser(user);
+          console.log('User created:', user);  // New log
         }
-        done(null, user);
+
+        if (user?.id && user?.role) {
+          const jwtAccessToken = generateAccessToken(user.id, user.role);
+          const jwtRefreshToken = generateRefreshToken(user.id, user.role);
+
+          // Save the refresh token in the database
+          const refreshTokenEntity = new RefreshToken();
+          refreshTokenEntity.token = jwtRefreshToken;
+          refreshTokenEntity.expiryDate = new Date(Date.now() + env.EXPIRE_REFRESH * 1000);
+          await PostgresDataSource.getRepository(RefreshToken).save(refreshTokenEntity);
+          console.log("exipre", refreshTokenEntity.expiryDate)
+
+          //update user refreshTokenId
+          user.refreshTokenId = refreshTokenEntity.id;
+          await userService.saveUser(user);
+
+          console.log('Tokens generated:', jwtAccessToken, jwtRefreshToken);  // New log
+          // Pass tokens to the done callback
+          return done(undefined, { user, accessToken: jwtAccessToken, refreshToken: jwtRefreshToken });
+        } else {
+          console.error('User not found or missing ID or role:', user);
+          return done(undefined, user);
+        }
       } catch (error) {
-        console.error(error);
-        done(error, false);
+        console.error('Error during authentication:', error);
+        return done(undefined, false);
       }
     }
   )
