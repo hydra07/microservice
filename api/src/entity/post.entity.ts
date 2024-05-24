@@ -1,13 +1,19 @@
 import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 
-@Entity()
+@Entity('post')
 export class Post {
   @ObjectIdColumn()
   _id!: ObjectId;
 
   @Column('text')
-  content?: string;
+  title?: string;
+
+  @Column()
+  author?: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt?: Date;
 
   @Column('text')
-  title?: string;
+  content?: string;
 }
