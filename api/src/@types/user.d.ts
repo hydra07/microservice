@@ -3,8 +3,12 @@ interface User {
   accessToken: string;
   refreshToken: string;
 }
-export enum UserRole {
+enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
 }
-export { User, UserRole };
+interface UserPayload {
+  id: string;
+  role: string;
+}
+export { User, UserRole,UserPayload };
