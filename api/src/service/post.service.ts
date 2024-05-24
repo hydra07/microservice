@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb';
 // import { ObjectId } from 'typeorm';
-import AppDataSource from '../config/db.config';
-import { Post } from '../entity/post.entity';
+import { MongoDataSource } from '@/config/db.config';
+import { Post } from '@/entity/post.entity';
 
 class PostService {
   // private postRepository = getConnection().getRepository(Post);
-  private postRepository = AppDataSource.getRepository(Post);
+  private postRepository = MongoDataSource.getRepository(Post);
   async createPost(title: string, author: string, content: string) {
     const newPost = this.postRepository.create({
       title,

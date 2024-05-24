@@ -1,8 +1,8 @@
+import app from '@/config/app.config';
 import { NotificationService } from '@/service/notification.service';
 import env from '@/util/validateEnv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import app from './app.config';
 const server = createServer(app);
 const io = new Server(server, {
   cors: {

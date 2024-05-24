@@ -1,14 +1,14 @@
+import { Notification } from '@/entity/notification.entity';
+import { Post } from '@/entity/post.entity';
+import { RefreshToken } from '@/entity/refreshToken.entity';
+import { User } from '@/entity/user.entity';
+import env from '@/util/validateEnv';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { Notification } from '../entity/notification.entity';
-import { Post } from '../entity/post.entity';
-import env from '../util/validateEnv';
-import { User } from '../entity/user.entity';
-import { RefreshToken } from '../entity/refreshToken.entity';
 // import { Notification } from '@/entity/notification.entity';
 // import { Post } from '@/entity/post.entity';
 // import env from '@/util/validateEnv';
-const AppDataSource = new DataSource({
+const MongoDataSource = new DataSource({
   type: 'mongodb',
   host: env.MONGO_HOST,
   port: env.MONGO_PORT,
@@ -41,5 +41,4 @@ const PostgresDataSource = new DataSource({
   maxQueryExecutionTime: 2000,
 });
 
-export default AppDataSource;
-export { PostgresDataSource };
+export { MongoDataSource, PostgresDataSource };

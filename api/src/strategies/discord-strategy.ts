@@ -1,44 +1,45 @@
-import env from "../util/validateEnv";
+import env from '@/util/validateEnv';
 
-import passport from "passport";
-import { Strategy as DiscordStrategy, Profile } from "passport-discord";
-import {PostgresDataSource} from "../config/db.config";
-import { User } from "../entity/user.entity";
-import { UserRole } from "../util/constraint";
+import { UserRole } from '@/@types/user.d';
+import { PostgresDataSource } from '@/config/db.config';
+import { User } from '@/entity/user.entity';
+import passport from 'passport';
+import { Strategy as DiscordStrategy } from 'passport-discord';
 
-import { VerifyCallback } from "passport-oauth2";
-import { generateAccessToken, generateRefreshToken } from "../util/tokenGenerate";
-import jwt from 'jsonwebtoken';
+import { VerifyCallback } from 'passport-oauth2';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from '../util/tokenGenerate';
 
-import UserService from "../service/user.service";
-import RefreshTokenService from "../service/refreshToken.service";
-import { RefreshToken } from "../entity/refreshToken.entity";
+import { RefreshToken } from '@/entity/refreshToken.entity';
+import UserService from '@/service/user.service';
 
 const userService = new UserService();
 
 export default passport.use(
   new DiscordStrategy(
     {
-      clientID: env.DISCORD_CLIENT_ID || "",
-      clientSecret: env.DISCORD_CLIENT_SECRET || "",
-      callbackURL: env.DISCORD_CALLBACK_URL || "",
-      scope: ["identify", "email"],
+      clientID: env.DISCORD_CLIENT_ID || '',
+      clientSecret: env.DISCORD_CLIENT_SECRET || '',
+      callbackURL: env.DISCORD_CALLBACK_URL || '',
+      scope: ['identify', 'email'],
     },
     async (
       accessToken: string,
       refreshToken: string,
       profile,
-      done: VerifyCallback
+      done: VerifyCallback,
     ) => {
-      console.log('Strategy callback called');  // New log
+      console.log('Strategy callback called'); // New log
       try {
-        console.log('Starting user lookup');  // New log
+        console.log('Starting user lookup'); // New log
         const userService = new UserService();
         let user = await userService.findUserById(profile.id);
-        console.log('User found:', user);  // New log
+        console.log('User found:', user); // New log
 
         if (!user) {
-          console.log('User not found, creating new user');  // New log
+          console.log('User not found, creating new user'); // New log
           user = new User();
           user.id = profile.id;
           user.username = profile.username;
@@ -50,7 +51,7 @@ export default passport.use(
           user.role = UserRole.USER;
 
           await userService.saveUser(user);
-          console.log('User created:', user);  // New log
+          console.log('User created:', user); // New log
         }
 
         if (user?.id && user?.role) {
@@ -60,17 +61,25 @@ export default passport.use(
           // Save the refresh token in the database
           const refreshTokenEntity = new RefreshToken();
           refreshTokenEntity.token = jwtRefreshToken;
-          refreshTokenEntity.expiryDate = new Date(Date.now() + env.EXPIRE_REFRESH * 1000);
-          await PostgresDataSource.getRepository(RefreshToken).save(refreshTokenEntity);
-          console.log("exipre", refreshTokenEntity.expiryDate)
+          refreshTokenEntity.expiryDate = new Date(
+            Date.now() + env.EXPIRE_REFRESH * 1000,
+          );
+          await PostgresDataSource.getRepository(RefreshToken).save(
+            refreshTokenEntity,
+          );
+          console.log('exipre', refreshTokenEntity.expiryDate);
 
           //update user refreshTokenId
           user.refreshTokenId = refreshTokenEntity.id;
           await userService.saveUser(user);
 
-          console.log('Tokens generated:', jwtAccessToken, jwtRefreshToken);  // New log
+          console.log('Tokens generated:', jwtAccessToken, jwtRefreshToken); // New log
           // Pass tokens to the done callback
-          return done(undefined, { user, accessToken: jwtAccessToken, refreshToken: jwtRefreshToken });
+          return done(undefined, {
+            user,
+            accessToken: jwtAccessToken,
+            refreshToken: jwtRefreshToken,
+          });
         } else {
           console.error('User not found or missing ID or role:', user);
           return done(undefined, user);
@@ -79,6 +88,6 @@ export default passport.use(
         console.error('Error during authentication:', error);
         return done(undefined, false);
       }
-    }
-  )
+    },
+  ),
 );

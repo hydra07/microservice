@@ -1,52 +1,47 @@
-import { NextFunction, Request, Response } from "express";
-import env from "../util/validateEnv";
+import RefreshTokenService from '@/service/refreshToken.service';
+import UserService from '@/service/user.service';
+
 import {
   generateAccessToken,
   generateRefreshToken,
-} from "../util/tokenGenerate";
-import { RequestWithUser } from "../type/types";
-import jwt from "jsonwebtoken";
-import RefreshTokenService from "../service/refreshToken.service";
-import { RefreshToken } from "../entity/refreshToken.entity";
+} from '@/util/tokenGenerate';
+import env from '@/util/validateEnv';
+import { NextFunction, RequestWithUser, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 export default class AuthController {
   private refreshTokenService = new RefreshTokenService();
-
-  saveTokenToCookie = (
-    req: RequestWithUser,
-    res: Response,
-  ) => {
-    console.log("saveTokenToCookie");
+  private UserService = new UserService();
+  saveTokenToCookie = (req: RequestWithUser, res: Response) => {
+    console.log('saveTokenToCookie');
     try {
       const user = req.user;
       if (user?.accessToken && user?.refreshToken) {
-        res.cookie("accessToken", user.accessToken, {
+        res.cookie('accessToken', user.accessToken, {
           httpOnly: true,
-    
         });
-        res.cookie("refreshToken", user.refreshToken, {
+        res.cookie('refreshToken', user.refreshToken, {
           httpOnly: true,
-         
         });
         console.log(user);
-        console.log("gui gui");
-        res.redirect("http://localhost:5173");
+        console.log('gui gui');
+        res.redirect('http://localhost:5173');
       } else {
-        res.status(401).send("Unauthorized");
+        res.status(401).send('Unauthorized');
       }
     } catch (error) {
-      console.error("Error in saveTokenToCookie:", error);
+      console.error('Error in saveTokenToCookie:', error);
     }
   };
 
   refreshToken = async (
     req: RequestWithUser,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      return res.status(401).send("Refresh token is required");
+      return res.status(401).send('Refresh token is required');
     }
 
     try {
@@ -57,15 +52,18 @@ export default class AuthController {
       const userId = decoded.id;
       const userRole = decoded.role;
 
+      // const refreshTokenEntity =
+      //   await this.refreshTokenService.findTokenByUserId(userId);
+
       const refreshTokenEntity =
-        await this.refreshTokenService.findTokenByUserId(userId);
+        await this.UserService.findRefreshTokenByUserId(userId);
 
       if (!refreshTokenEntity) {
-        return res.status(401).send("Refresh token not found");
+        return res.status(401).send('Refresh token not found');
       }
 
       if (refreshToken !== refreshTokenEntity.token) {
-        return res.status(401).send("Refresh token is invalid");
+        return res.status(401).send('Refresh token is invalid');
       }
 
       const newAccessToken = generateAccessToken(userId, userRole);
@@ -74,28 +72,27 @@ export default class AuthController {
       //update refreh token to db
       refreshTokenEntity.token = newRefreshToken;
       refreshTokenEntity.expiryDate = new Date(
-        Date.now() + Number(env.EXPIRE_REFRESH) * 1000
+        Date.now() + Number(env.EXPIRE_REFRESH) * 1000,
       );
       await this.refreshTokenService.saveToken(refreshTokenEntity);
 
-      res.cookie("accessToken", newAccessToken, {
+      res.cookie('accessToken', newAccessToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: 'strict',
         maxAge: Number(env.EXPIRE_JWT),
       });
 
-      res.cookie("refreshToken", newRefreshToken, {
+      res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        sameSite: 'strict',
         maxAge: Number(env.EXPIRE_REFRESH),
       });
 
-
       res.json({ accessToken: newAccessToken });
     } catch (error) {
-      console.error("Error in refreshToken:", error);
+      console.error('Error in refreshToken:', error);
       next(error);
     }
   };

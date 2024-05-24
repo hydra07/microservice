@@ -1,10 +1,10 @@
+import { MongoDataSource } from '@/config/db.config';
+import { Notification } from '@/entity/notification.entity';
 import { Server } from 'socket.io';
-import AppDataSource from '../config/db.config';
-import { Notification } from '../entity/notification.entity';
 
 export class NotificationService {
   private socketIo: Server;
-  private notificationRepository = AppDataSource.getRepository(Notification);
+  private notificationRepository = MongoDataSource.getRepository(Notification);
   constructor(socketIo: Server) {
     this.socketIo = socketIo;
   }

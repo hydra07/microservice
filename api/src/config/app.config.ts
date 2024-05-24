@@ -1,26 +1,24 @@
-// import postRouter from '@/router/post.router';
+import authRouter from '@/router/auth.router';
+import postRouter from '@/router/post.router';
 import uploadRouter from '@/router/upload.router';
-// import env from '@/util/validateEnv';
+import '@/strategies/discord-strategy';
+import env from '@/util/validateEnv';
+import Cookieparser from 'cookie-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
-import createHttpError, { isHttpError } from 'http-errors';
-import postRouter from '../router/post.router';
-import env from '../util/validateEnv';
-import "../strategies/discord-strategy"
-import passport from 'passport';
-import userRouter from '../router/user.router';
 import session from 'express-session';
-import Cookieparser from 'cookie-parser';
-import authRouter from '../router/auth.router';
-import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
+import createHttpError, { isHttpError } from 'http-errors';
+import passport from 'passport';
 import path from 'path';
 
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:5173/', // Replace with your client domain
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:5173/', // Replace with your client domain
+    credentials: true,
+  }),
+);
 
 app.use(
   cors({
@@ -31,15 +29,16 @@ app.use(Cookieparser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
-  secret: 'visaotoikhongtheyeuem',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {maxAge: 60000 * 60 * 24} // 1 day
-}));
+app.use(
+  session({
+    secret: 'visaotoikhongtheyeuem',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 60000 * 60 * 24 }, // 1 day
+  }),
+);
 app.use(passport.initialize());
 // app.use(passport.session());
-
 
 app.use('/uploads', express.static(path.join(__dirname, '../../../uploads')));
 app.use('/api/hello', (req, res) => {
