@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { Notification } from '../entity/notification.entity';
-import { Post } from '../entity/post.entity';
-import env from '../util/validateEnv';
+import { Notification } from '@/entity/notification.entity';
+import { Post } from '@/entity/post.entity';
+import env from '@/util/validateEnv';
 const AppDataSource = new DataSource({
   type: 'mongodb',
   host: env.MONGO_HOST,

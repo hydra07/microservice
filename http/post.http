@@ -4,6 +4,7 @@ content-type: application/json
 
 {
   "title": "Test title",
+  "author": "Test author",
   "content": "Test content"
 }
 
@@ -11,10 +12,15 @@ content-type: application/json
 GET http://localhost:3000/api/post HTTP/1.1
 
 ### Update a post
-PUT http://localhost:3000/api/post/664aecbbc06d4ab5040cbc1f HTTP/1.1
+PUT http://localhost:3000/api/post/664b13e845f3601588c49a07 HTTP/1.1
 content-type: application/json
 
 {
   "title": "Updated title",
+  "author": "Updated author",
   "content": "Updated content"
 }
+
+### Delete a post
+DELETE http://localhost:3000/api/post/664b13e845f3601588c49a07 HTTP/1.1
+Content-Type: application/json
