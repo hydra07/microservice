@@ -1,6 +1,7 @@
 import { Layout } from '@/layout';
 import Home from '@/pages/Home';
 import Noti from '@/pages/Noti';
+import Post from '@/pages/Post';
 import Test from '@/pages/Test';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -21,6 +22,10 @@ let router = createBrowserRouter([
         path: '/test',
         Component: Test,
       },
+      {
+        path: '/post',
+        Component:Post
+      }
     ],
   },
 ]);

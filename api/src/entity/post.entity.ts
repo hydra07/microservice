@@ -1,6 +1,6 @@
 import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 
-@Entity()
+@Entity('post')
 export class Post {
   @ObjectIdColumn()
   _id!: ObjectId;
@@ -9,7 +9,7 @@ export class Post {
   title?: string;
 
   @Column()
-  author?: number;
+  author?: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt?: Date;

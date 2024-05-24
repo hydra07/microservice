@@ -1,0 +1,16 @@
+### Upload an image
+# POST http://localhost:3000/api/upload
+# Content-Type: image/jpeg
+# http://www.thefamouspeople.com/profiles/images/claude-monet-3.jpg
+
+
+POST http://localhost:3000/api/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="example.jpg"
+Content-Type: image/jpeg
+
+# < http://www.thefamouspeople.com/profiles/images/claude-monet-3.jpg
+# < ./demo.png
+--WebAppBoundary--
