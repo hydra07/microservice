@@ -1,3 +1,4 @@
+import { Comment } from '@/entity/comment.entity';
 import { Notification } from '@/entity/notification.entity';
 import { Post } from '@/entity/post.entity';
 import { RefreshToken } from '@/entity/refreshToken.entity';
@@ -19,7 +20,7 @@ const MongoDataSource = new DataSource({
   synchronize: true,
   logging: false,
   // entities: [__dirname + '/entity/*.ts'],
-  entities: [Notification, Post],
+  entities: [Notification, Post, Comment],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000, // thời gian tối đa mà một câu query được thực thi

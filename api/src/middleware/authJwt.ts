@@ -1,11 +1,10 @@
-import { NextFunction, Request, Response,RequestWithUser } from 'express';
+import { NextFunction, Request, RequestWithUser, Response } from 'express';
 import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 //env
 import { UserRole } from '@/@types/user.d';
 import env from '@/util/validateEnv';
 
 const { TokenExpiredError } = jwt;
-
 
 const catchError = (res: Response, error: JsonWebTokenError) => {
   if (error instanceof TokenExpiredError) {

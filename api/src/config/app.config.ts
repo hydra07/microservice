@@ -1,4 +1,5 @@
 import authRouter from '@/router/auth.router';
+import commentRouter from '@/router/comment.router';
 import postRouter from '@/router/post.router';
 import uploadRouter from '@/router/upload.router';
 import '@/strategies/discord-strategy';
@@ -44,8 +45,10 @@ app.use('/uploads', express.static(path.join(__dirname, '../../../uploads')));
 app.use('/api/hello', (req, res) => {
   res.send('Hello World');
 });
-app.use('/api', postRouter);
+
 app.use('/api/auth', authRouter);
+app.use('/api', postRouter);
+app.use('/api', commentRouter);
 // app.use('/api/user', userRouter);
 
 app.use('/api', uploadRouter);

@@ -2,10 +2,6 @@ import { Request } from 'express';
 import fs from 'fs';
 import multer, { diskStorage } from 'multer';
 import path from 'path';
-interface RequestWithFile extends Request {
-  filePath?: string;
-}
-
 /**
  *
  * @param folderName
@@ -22,12 +18,12 @@ interface RequestWithFile extends Request {
  */
 function uploadService(folderName: string, fileType: string) {
   const storage = diskStorage({
-    destination: function (req: RequestWithFile, file, cb) {
+    destination: function (req: Request, file, cb) {
       const dir = path.join(__dirname, `../../../uploads/${folderName}`);
       fs.mkdirSync(dir, { recursive: true });
       cb(null, dir);
     },
-    filename: function (req: RequestWithFile, file, cb) {
+    filename: function (req: Request, file, cb) {
       const fileName = Date.now() + path.extname(file.originalname);
       // req.filePath = path.join(
       //   __dirname,

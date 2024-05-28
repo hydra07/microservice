@@ -6,11 +6,11 @@ import { User } from '@/entity/user.entity';
 import passport from 'passport';
 import { Strategy as DiscordStrategy } from 'passport-discord';
 
-import { VerifyCallback } from 'passport-oauth2';
 import {
   generateAccessToken,
   generateRefreshToken,
-} from '../util/tokenGenerate';
+} from '@/util/tokenGenerate';
+import { VerifyCallback } from 'passport-oauth2';
 
 import { RefreshToken } from '@/entity/refreshToken.entity';
 import UserService from '@/service/user.service';
