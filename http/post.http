@@ -1,26 +1,43 @@
 ### Create a new post
 POST http://localhost:3000/api/post HTTP/1.1
-content-type: application/json
+Content-Type: application/json
 
 {
-  "title": "Test title",
-  "author": "Test author",
-  "content": "Test content"
+  "title": "Demo title",
+  "userId": "Demo user",
+  "content": "Demo content"
 }
 
 ### Get all posts
 GET http://localhost:3000/api/post HTTP/1.1
 
 ### Update a post
-PUT http://localhost:3000/api/post/664b13e845f3601588c49a07 HTTP/1.1
+PUT http://localhost:3000/api/post/66521060ddf0293686e95382 HTTP/1.1
 content-type: application/json
+  {
+    "title": "Thử update",
+    "userId": "Test author",
+    "createdAt": "2024-05-25T16:22:56.695Z",
+    "content": "Test content"
+  }
 
-{
-  "title": "Updated title",
-  "author": "Updated author",
-  "content": "Updated content"
-}
+### Get a post
+GET http://localhost:3000/api/post/665577b83aacb852d5b5be89 HTTP/1.1
 
 ### Delete a post
 DELETE http://localhost:3000/api/post/664b13e845f3601588c49a07 HTTP/1.1
 Content-Type: application/json
+
+### Create a new comment
+POST http://localhost:3000/api/post/comment HTTP/1.1
+Content-Type: application/json
+
+{
+  "postId": "66558509b1850b59e406b768",
+  "userId": "Demo user2",
+  "content": "Demo content2"
+}
+
+
+
+
