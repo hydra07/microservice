@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+  import { NextFunction, Request, Response } from 'express';
 import UserService from '@/service/user.service';
 
 export default class UserController {

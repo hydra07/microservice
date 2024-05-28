@@ -9,7 +9,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/jsonwebtoken": "^9.0.6",
-    "express-validator": "^7.0.1"
+    "express-validator": "^7.1.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

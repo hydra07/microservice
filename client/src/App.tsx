@@ -11,11 +11,12 @@
 // }
 
 // export default App;
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import UserPage from './pages/UserPage';
-import AdminPage from './pages/AdminPage';
-import './App.css';
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import UserPage from "./pages/UserPage";
+import AdminPage from "./pages/AdminPage";
+import "./App.css";
+import AutoCloseComponent from "./components/ui/AutoClose";
 
 function App() {
   return (
@@ -27,6 +28,9 @@ function App() {
           <Link to="/admin">Admin Page</Link>
         </nav>
         <Routes>
+          <Route path="/auto-close" element= {<AutoCloseComponent/>}>
+           
+          </Route>
           <Route path="/" element={<Home />} />
           <Route path="/user" element={<UserPage />} />
           <Route path="/admin" element={<AdminPage />} />

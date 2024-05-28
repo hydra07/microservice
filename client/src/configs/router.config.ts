@@ -5,7 +5,7 @@ import Post from '@/pages/Post';
 import Test from '@/pages/Test';
 import { createBrowserRouter } from 'react-router-dom';
 
-let router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: '/',
     Component: Layout,

@@ -2,6 +2,7 @@ import { Notification } from '@/entity/notification.entity';
 import { Post } from '@/entity/post.entity';
 import { RefreshToken } from '@/entity/refreshToken.entity';
 import { User } from '@/entity/user.entity';
+import { CategoryProduct } from '@/entity/categoryProduct.entity';
 import env from '@/util/validateEnv';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
@@ -35,7 +36,7 @@ const PostgresDataSource = new DataSource({
 
   synchronize: true,
   logging: false,
-  entities: [User, RefreshToken],
+  entities: [User, RefreshToken, CategoryProduct],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000,

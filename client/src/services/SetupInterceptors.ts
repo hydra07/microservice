@@ -1,63 +1,54 @@
-
-import TokenService from "./token.service";
+import TokenService from './token.service';
 import http from './http';
-import httpPublic from "./httpPublic";
-import { refreshToken } from "@/features/authSlice";
+import httpPublic from './httpPublic';
+import { refreshToken } from '@/features/authSlice';
 import { Store } from '@reduxjs/toolkit';
 
-
 const setup = (store: Store) => {
-    http.interceptors.request.use(
-        (config) => {
-            const token = TokenService.getAccessToken();
-            if (token) {
-                config.headers['Authorization'] = 'Bearer ' + token; // for Spring Boot back-end
-                //config.headers['x-access-token'] = token; // for Node.js Express back-end
-            }
-            return config;
-        },
-        (error) => {
-            return Promise.reject(new Error(error)); // Wrap the rejection reason in a new Error object
-        }
-    );
+  console.log('Setting up interceptors with store:', store);
+  console.log('Initial state:', JSON.stringify(store.getState()));
 
-    const { dispatch } = store;
-    http.interceptors.response.use(
-      (res) => {
-        return res;
-      },
-  
-      async (err) => {
-        console.log(http.defaults.headers.common);
-        const originalConfig = err.config;
-  
-        if (originalConfig.url !== '/auth/signin' && err.response) {
-          // Access Token was expired
-          if (err.response.status === 401 && !originalConfig._retry) {
-            originalConfig._retry = true;
-            try {
-                const token = TokenService.getRefreshToken();
-                const rs = await httpPublic.get('/auth/refresh', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                dispatch(refreshToken(rs.data));
-                TokenService.updateAccessToken(rs.data.accessToken);
-                TokenService.updateRefreshToken(rs.data.refreshToken);
+  const requestInterceptor = http.interceptors.request.use(
+    (config) => {
+      const token = TokenService.getAccessToken();
+      if (token) {
+        config.headers['x-access-token'] = token;
+      }
+      return config;
+    },
+    (error) => Promise.reject(new Error(error))
+  );
 
-                return http(originalConfig);
-            } catch (_error) {
-                const error = _error as string; // Cast _error to string
-                return Promise.reject(new Error(error));
-            }
+  const responseInterceptor = http.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalConfig = error.config;
+      if (originalConfig.url !== '/auth/signin' && error.response) {
+        if (error.response.status === 401 && !originalConfig._retry) {
+          originalConfig._retry = true;
+          try {
+            const token = TokenService.getRefreshToken();
+            const rs = await httpPublic.get('/auth/refresh', {
+              headers: { 'x-access-token': token },
+            });
+            store.dispatch(refreshToken(rs.data));
+            TokenService.updateAccessToken(rs.data.accessToken);
+            TokenService.updateRefreshToken(rs.data.refreshToken);
+            return http(originalConfig);
+          } catch (_error) {
+            const error = _error as string;
+            return Promise.reject(new Error(error));
           }
         }
-  
-        return Promise.reject(new Error(err));
       }
-    );
+      return Promise.reject(error);
+    }
+  );
+
+  return () => {
+    http.interceptors.request.eject(requestInterceptor);
+    http.interceptors.response.eject(responseInterceptor);
   };
-  
-  export default setup;
-  
+};
+
+export default setup;

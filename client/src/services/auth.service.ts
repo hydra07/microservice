@@ -5,13 +5,27 @@ class AuthService{
     async loginWithDiscord(){
         return http.get("/api/auth/discord")
             .then(res =>{
-
-                if(res.data.accessToken && res.data.refreshToken){
-                    TokenService.setUser(res.data);
-                }
-
-                return res.data;
+                console.log(res.data);
+                return res;
             });
+    }
+    // async loginWithDiscord(){
+    //     return http.get("/api/auth/discord")
+    //         .then(res =>{
+
+    //             if(res.data.accessToken && res.data.refreshToken){
+                   
+    //                 TokenService.setUser(res.data);
+    //             }
+    //             console.log(res.data);
+    //             return res.data;
+    //         });
+    // }
+
+    async getUserData(){
+        return http.get("/api/auth/protected", {
+            withCredentials: true
+        });
     }
 
     async logout(){

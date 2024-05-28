@@ -1,12 +1,12 @@
 import env from '@/util/validateEnv';
 
-import { UserRole } from '@/@types/user.d';
+import { RequestWithRole, UserRole } from '@/@types/user.d';
 import { PostgresDataSource } from '@/config/db.config';
 import { User } from '@/entity/user.entity';
 import passport from 'passport';
 import { Strategy as DiscordStrategy } from 'passport-discord';
-
 import { VerifyCallback } from 'passport-oauth2';
+import { Request } from 'express';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -24,8 +24,11 @@ export default passport.use(
       clientSecret: env.DISCORD_CLIENT_SECRET || '',
       callbackURL: env.DISCORD_CALLBACK_URL || '',
       scope: ['identify', 'email'],
+      
+      // passReqToCallback: true,
     },
     async (
+      // req: Request,
       accessToken: string,
       refreshToken: string,
       profile,
@@ -33,6 +36,8 @@ export default passport.use(
     ) => {
       console.log('Strategy callback called'); // New log
       try {
+        // const userRole = req.params.role;  // Nhận vai trò từ `req`
+        // console.log('User role:', userRole); // New log
         console.log('Starting user lookup'); // New log
         const userService = new UserService();
         let user = await userService.findUserById(profile.id);
@@ -49,7 +54,6 @@ export default passport.use(
             user.avatar = profile.avatar;
           }
           user.role = UserRole.USER;
-
           await userService.saveUser(user);
           console.log('User created:', user); // New log
         }

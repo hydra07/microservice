@@ -1,6 +1,7 @@
 import authRouter from '@/router/auth.router';
 import postRouter from '@/router/post.router';
 import uploadRouter from '@/router/upload.router';
+import categoryProductRouter from '@/router/categoryProduct.router';
 import '@/strategies/discord-strategy';
 import env from '@/util/validateEnv';
 import Cookieparser from 'cookie-parser';
@@ -10,19 +11,16 @@ import session from 'express-session';
 import createHttpError, { isHttpError } from 'http-errors';
 import passport from 'passport';
 import path from 'path';
+import * as CustomMiddleware from '@/middleware/index';
+
 
 const app = express();
-
-app.use(
-  cors({
-    origin: 'http://localhost:5173/', // Replace with your client domain
-    credentials: true,
-  }),
-);
+ 
 
 app.use(
   cors({
     origin: env.CLIENT_URL,
+    credentials: true,
   }),
 );
 app.use(Cookieparser());
@@ -40,13 +38,19 @@ app.use(
 app.use(passport.initialize());
 // app.use(passport.session());
 
+//custom middleware
+// app.use(CustomMiddleware.checkForBodyInGetRequest);
+
 app.use('/uploads', express.static(path.join(__dirname, '../../../uploads')));
 app.use('/api/hello', (req, res) => {
   res.send('Hello World');
 });
+
+
 app.use('/api', postRouter);
 app.use('/api/auth', authRouter);
 // app.use('/api/user', userRouter);
+app.use('/api/', categoryProductRouter);
 
 app.use('/api', uploadRouter);
 app.use((res, req, next) => {
