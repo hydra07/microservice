@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
-const Comment = dynamic(() => import('@/components/post/Comment'));
-const Post = dynamic(() => import('@/components/post/Post'));
+const Comment = dynamic(() => import('../Comment'));
+const Post = dynamic(() => import('../Post'));
 export default async ({ params }: { params: { id: string } }) => {
   // const post = await fetchingPost(params.id);
   // console.log(post);

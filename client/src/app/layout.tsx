@@ -1,3 +1,4 @@
+import Header from '@/components/header';
 import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -24,7 +25,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <Header />
+          <div className="pt-14">{children}</div>
         </ThemeProvider>
       </body>
     </html>
