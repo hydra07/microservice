@@ -1,10 +1,11 @@
-import { NextFunction, Request, RequestWithUser, Response } from 'express';
+import { NextFunction, Request, Response,RequestWithUser } from 'express';
 import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 //env
 import { UserRole } from '@/@types/user.d';
 import env from '@/util/validateEnv';
 
 const { TokenExpiredError } = jwt;
+
 
 const catchError = (res: Response, error: JsonWebTokenError) => {
   if (error instanceof TokenExpiredError) {
@@ -20,10 +21,11 @@ const verifyToken = (
   next: NextFunction,
 ) => {
   const token = req.headers['x-access-token'] as string;
-
+  console.log('Token:', token);
   if (!token) {
     return res.status(403).send({ message: 'No token provided!' });
   }
+
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
