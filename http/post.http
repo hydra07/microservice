@@ -1,15 +1,15 @@
 ### Create a new post
-POST http://localhost:3000/api/post HTTP/1.1
+POST http://localhost:5000/api/post HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Demo title",
+  "title": "Tiêu đề của demo blog thứ 3",
   "userId": "Demo user",
-  "content": "Demo content"
+  "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis ullamcorper ante. Mauris bibendum orci sit amet velit tempus, ac lacinia lacus malesuada. Ut ullamcorper malesuada nisi, id mollis est ultricies ut. Nulla et nisl nisl. Aliquam sed justo at turpis eleifend sodales. Phasellus dignissim eros et tortor hendrerit varius. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc elementum erat at justo sollicitudin consequat."
 }
 
 ### Get all posts
-GET http://localhost:3000/api/post HTTP/1.1
+GET http://localhost:5000/api/post HTTP/1.1
 
 ### Update a post
 PUT http://localhost:5000/api/post/6655fc49174382ffd7f1700d HTTP/1.1

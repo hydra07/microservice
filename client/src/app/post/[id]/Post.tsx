@@ -1,4 +1,6 @@
+import { Separator } from '@/components/ui/separator';
 import axios from 'axios';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,7 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '../../components/ui/breadcrumb';
+} from '../../../components/ui/breadcrumb';
 interface PostProps {
   id: string;
   children?: React.ReactNode;
@@ -33,13 +35,11 @@ export default async function Post({ id, children }: PostProps) {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Post</BreadcrumbPage>
+                <BreadcrumbLink href={`/post`}>Post</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink href={`/post/${id}`}>
-                  {post.title}
-                </BreadcrumbLink>
+                <BreadcrumbPage>{post.title}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -48,10 +48,11 @@ export default async function Post({ id, children }: PostProps) {
           <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
           <div className="text-gray-600 mb-2 flex flex-col">
             <span>By User {post.userId}</span>
-            <span>{post.createdAt}</span>
+            <span>{formatDistanceToNow(parseISO(post.createdAt))}</span>
           </div>
           <p className="text-lg">{post.content}</p>
         </div>
+        <Separator className="my-6" />
         <div>{children}</div>
       </div>
     </>

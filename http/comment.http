@@ -1,12 +1,12 @@
 // Create a new comment
-POST http://localhost:3000/api/comment HTTP/1.1
+POST http://localhost:5000/api/comment HTTP/1.1
 Content-Type: application/json
 
 {
   "content": "This is a test comment3",
   "userId": "testUserId3",
   "postId": "6655fc49174382ffd7f1700d",
-  "parentId": "6655fc68174382ffd7f1700f"
+  "parentId": "66574e068499840e9122b105"
 }
 
 
