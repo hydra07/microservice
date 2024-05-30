@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'http://localhost:5173/', // Replace with your client domain
+    origin: env.CLIENT_URL, // Replace with your client domain
     credentials: true,
   }),
 );

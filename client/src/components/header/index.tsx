@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import ModeButton from './ModeButton';
+import Navbar from '../ui/Navbar';
 
 export default function Header() {
   const [isAtTop, setIsAtTop] = useState(true);
@@ -30,7 +31,9 @@ export default function Header() {
         <div className="flex justify-between gap-8">
           <ModeButton />
         </div>
+        
       </div>
+      <Navbar />
     </header>
   );
 }

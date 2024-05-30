@@ -17,15 +17,10 @@ export default class AuthController {
     try {
       const user = req.user;
       if (user?.accessToken && user?.refreshToken) {
-        res.cookie('accessToken', user.accessToken, {
-          httpOnly: true,
-        });
-        res.cookie('refreshToken', user.refreshToken, {
-          httpOnly: true,
-        });
-        console.log(user);
-        console.log('gui gui');
-        res.redirect('http://localhost:5173');
+        const redirectUrl = `http://localhost:4000/auto-close?accessToken=${user.accessToken}&refreshToken=${user.refreshToken}`;
+        console.log('Redirecting to:', redirectUrl);
+        
+        res.redirect(redirectUrl);
       } else {
         res.status(401).send('Unauthorized');
       }
