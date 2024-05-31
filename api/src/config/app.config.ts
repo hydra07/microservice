@@ -3,6 +3,7 @@ import commentRouter from '@/router/comment.router';
 import postRouter from '@/router/post.router';
 import uploadRouter from '@/router/upload.router';
 import '@/strategies/discord-strategy';
+import '@/strategies/google-strategy';
 import env from '@/util/validateEnv';
 import Cookieparser from 'cookie-parser';
 import cors from 'cors';
@@ -38,9 +39,8 @@ app.use(
     cookie: { maxAge: 60000 * 60 * 24 }, // 1 day
   }),
 );
-app.use(passport.initialize());
+app.use(passport.initialize({}));
 // app.use(passport.session());
-
 app.use('/uploads', express.static(path.join(__dirname, '../../../uploads')));
 app.use('/api/hello', (req, res) => {
   res.send('Hello World');
@@ -63,6 +63,7 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     statusCode = error.status;
     errorMessage = error.message;
   }
-  res.status(statusCode).json({ error: errorMessage });
+  console.log(error);
+  res.status(statusCode).json({ error: error.message });
 });
 export default app;

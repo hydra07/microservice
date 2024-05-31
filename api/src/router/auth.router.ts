@@ -1,8 +1,8 @@
 import AuthController from '@/controller/auth.controller';
 import { authenticateJWT } from '@/middleware/authJwt';
+import env from '@/util/validateEnv';
 import { Request, RequestWithUser, Response, Router } from 'express';
 import passport from 'passport';
-import env from '@/util/validateEnv';
 const router = Router();
 const authController = new AuthController();
 
@@ -25,7 +25,6 @@ router.get('/discord', (req: Request, res: Response) => {
   res.json({ authUrl });
 });
 
-
 // router.get('/discord', passport.authenticate('discord', { session: false }));
 // router.get('/discord', (req: Request, res: Response) => {
 //   console.log('Accessed protected route');
@@ -38,6 +37,22 @@ router.get(
     authController.saveTokenToCookie(req as RequestWithUser, res);
   },
 );
+
+// router.get('/google', passport.authenticate('google', { session: false }));
+router.get('/google', passport.authenticate('google'));
+router.get(
+  '/callback/google',
+  passport.authenticate('google', {
+    session: false,
+    scope: ['profile', 'email'],
+  }),
+  (req: Request, res: Response) => {
+    authController.saveTokenToCookie(req as RequestWithUser, res);
+    res.json({ message: 'Google login successful' });
+  },
+);
+router.post('/authenticate', authController.authenticate);
+
 // Apply this middleware to protected routes
 router.get('/protected', authenticateJWT, (req: Request, res: Response) => {
   console.log('Accessed protected route');

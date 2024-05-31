@@ -7,25 +7,31 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { loginDiscordAsync, logoutAsync } from '@/lib/features/auth/authSlice';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@radix-ui/react-dropdown-menu';
+} from '@/components/ui/dropdown-menu';
+import { loginDiscordAsync } from '@/lib/features/auth/authSlice';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../lib/hooks';
-import { Avatar, AvatarFallback } from '../ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 export default function AuthButton() {
   const dispatch = useAppDispatch();
   const auth = useAppSelector((state) => state.auth);
+  const { data: session, status } = useSession();
   const handleDiscordLogin = async () => {
     await dispatch(loginDiscordAsync());
   };
-  const handleGoogleLogin = async () => {};
+  const handleGoogleLogin = async () => {
+    await signIn('google');
+  };
   const handleLogout = async () => {
-    await dispatch(logoutAsync());
+    // await dispatch(logoutAsync());
+    await signOut();
   };
 
   const loginForm = () => {
@@ -56,11 +62,13 @@ export default function AuthButton() {
     );
   };
 
-  const userAvatar = () => {
+  const userAvatar = useCallback(() => {
+    console.log('session', session?.user.avatar);
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar>
+            <AvatarImage src={session?.user.avatar as string}></AvatarImage>
             <AvatarFallback>{'OK'}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
@@ -71,8 +79,10 @@ export default function AuthButton() {
         </DropdownMenuContent>
       </DropdownMenu>
     );
-  };
+  }, [status]);
 
-  return <>{auth.isLoggedIn ? userAvatar() : loginForm()}</>;
+  // return <>{auth.isLoggedIn ? userAvatar() : loginForm()}</>;
+  // return <>{status === 'authenticated' ? userAvatar() : loginForm()}</>;
+  return <>{session?.user ? userAvatar() : loginForm()}</>;
   // return <>{auth.isLoggedIn ? <div></div> : loginForm()}</>;
 }
