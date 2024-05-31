@@ -1,9 +1,9 @@
 import isAuth from "@/components/privateRouter";
 
-export default function AdminDashboard() {
+export default function ProductCategory() {
   return (
     <>
-      <h1>Admin Dashboard</h1>
+      <h1>Product Category</h1>
     </>
   );
 }

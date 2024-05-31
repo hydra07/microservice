@@ -1,16 +1,22 @@
-import { Navigate } from "react-router-dom";
-import { useAppSelector } from "@/lib/hooks";
+"use client";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 import { selectAuth } from "@/lib/features/auth/authSlice";
-import { history } from "@/helpers/history";
+import { useEffect } from "react";
 
+export default function isAuth(Component: any) {
+  return function IsAuth(props: any) {
+    const router = useRouter();
+    const { isLoggedIn } = useSelector(selectAuth);
 
-const PrivateRouter = ({ children }: { children: JSX.Element }) => {
-    const {isLoggedIn} = useAppSelector(selectAuth);
-    if (!isLoggedIn) {
-        return <Navigate to="/login" state={{ from: history.location }} />;
-    }
+    useEffect(() => {
+      if (!isLoggedIn) {
+        router.push("/login");
+        return; // Exit the useEffect hook if not logged in
+      }
+    }, [isLoggedIn, router]);
 
-    return children;
-};
-
-export default PrivateRouter;
+    // Render the component if logged in
+    return <Component {...props} />;
+  };
+}

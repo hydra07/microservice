@@ -10,6 +10,17 @@ declare module "CustomTypes" {
       error: string;
       // isLoading: boolean;
     };
+
+    export type UserInfo = {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+      bio: string;
+      avatar: string;
+      address: string;
+    };
+    
   
     export type CategoryProduct = {
       id: string;
