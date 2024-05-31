@@ -3,13 +3,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import setup from '../services/SetupInterceptors';
-import { store } from '../lib/store'
 import StoreProvider from './StoreProvider';
-import Navbar from '@/components/ui/Navbar';
 const inter = Inter({ subsets: ['latin'] });
-
-
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,22 +16,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
-      <StoreProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          {/* <Navbar /> */}
-          <div className="pt-14">{children}</div>
-        </ThemeProvider>
-      </StoreProvider>
+        <StoreProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            {/* <Navbar /> */}
+            <div className="pt-14">{children}</div>
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );

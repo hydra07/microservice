@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState } from 'react';
 // import { Link, useNavigate } from "react-router-dom";
 
-import { useAppSelector,  useAppDispatch } from '../../lib/hooks';
-import { loginDiscordAsync } from "@/lib/features/auth/authSlice";
+import { loginDiscordAsync } from '@/lib/features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../../lib/hooks';
 
 const LoginModal: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
