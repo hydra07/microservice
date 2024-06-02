@@ -6,11 +6,17 @@ import { Post } from '@/entity/post.entity';
 class PostService {
   private postRepository = MongoDataSource.getRepository(Post);
   private commentRepository = MongoDataSource.getRepository(Comment);
-  async newPost(title: string, userId: string, content: string): Promise<Post> {
+  async newPost(
+    title: string,
+    userId: string,
+    content: string,
+    image: string,
+  ): Promise<Post> {
     const post = new Post();
     post.title = title;
     post.userId = userId;
     post.content = content;
+    post.image = image;
     post.createdAt = new Date();
     post.comments = [];
 

@@ -63,7 +63,6 @@ export default function AuthButton() {
   };
 
   const userAvatar = useCallback(() => {
-    console.log('session', session?.user.avatar);
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

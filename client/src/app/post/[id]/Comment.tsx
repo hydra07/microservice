@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { ReactNode } from 'react';
 interface CommentProps {
@@ -8,7 +8,7 @@ interface CommentProps {
 }
 async function fetchingComment(id: string) {
   try {
-    const res = await axios.get(`http://localhost:5000/api/comment/${id}`);
+    const res = await axios.get(`/api/comment/${id}`);
     const comments = res.data;
     return comments.sort((a: any, b: any) => a.left - b.left);
   } catch (error) {

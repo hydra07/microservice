@@ -7,8 +7,13 @@ export default class PostController {
   private commentService = new CommentService();
   createPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { title, userId, content } = req.body;
-      const newPost = await this.postService.newPost(title, userId, content);
+      const { title, userId, content, image } = req.body;
+      const newPost = await this.postService.newPost(
+        title,
+        userId,
+        content,
+        image,
+      );
       const savedPost = await this.postService.addPost(newPost);
       res.status(201).json({
         message: 'Post created successfully',
@@ -16,6 +21,7 @@ export default class PostController {
           id: savedPost._id,
           title: savedPost.title,
           userId: savedPost.userId,
+          image: savedPost.image,
           createdAt: savedPost.createdAt,
           content: savedPost.content,
         },

@@ -5,12 +5,11 @@ import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth/next';
 
 const authOptions: AuthOptions = {
+  secret: process.env.SECRET,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      // accessTokenUrl: 'http://localhost:3000/api/auth/google',
-      // authorization: 'http://localhost:3000/api/auth/callback/google',
     }),
   ],
   callbacks: {
@@ -22,7 +21,7 @@ const authOptions: AuthOptions = {
         avatar: user.image as string,
       };
       const res = await axios.post(
-        'http://localhost:3000/api/auth/authenticate',
+        `${process.env.API_URL}/api/auth/authenticate`,
         initUser,
       );
       // const data = res.data; // {}
@@ -52,14 +51,13 @@ const authOptions: AuthOptions = {
       return { ...token, ...user };
     },
     async session({ session, token }) {
-      console.log('session->', session.user);
-      session.user.accessToken = token.accessToken;
-      session.user.refreshToken = token.refreshToken;
-      session.user.id = token.id;
-      session.user.username = token.username;
-      session.user.email = token.email;
-      session.user.avatar = token.avatar;
-      session.user.role = token.role;
+      session.user.accessToken = token.accessToken as string;
+      session.user.refreshToken = token.refreshToken as string;
+      session.user.id = token.id as string;
+      session.user.username = token.username as string;
+      session.user.email = token.email as string;
+      session.user.avatar = token.avatar as string;
+      session.user.role = token.role as 'user' | 'admin';
       return session;
     },
   },
@@ -67,7 +65,6 @@ const authOptions: AuthOptions = {
 
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
-
 interface User {
   id: string;
   username: string;

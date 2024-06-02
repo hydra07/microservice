@@ -16,6 +16,15 @@ declare module "next-auth" {
     //   role:Array<string>;
     //   // refreshToken: string;
     // }
-    user: any
+    user: {
+      id:string;
+      email:string;
+      username: string;
+      avatar: string;
+      accessToken: string;
+      refreshToken: string;
+      role: 'user' | 'admin';
+
+    }
   };
 }

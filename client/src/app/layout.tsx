@@ -3,8 +3,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
+import StoreProvider from '../components/StoreProvider';
 import './globals.css';
-import StoreProvider from './StoreProvider';
 const inter = Inter({ subsets: ['latin'] });
 const SessionWrapper = dynamic(() => import('@/components/SessionWrapper'), {
   ssr: false,

@@ -14,10 +14,9 @@ export default class AuthController {
   private refreshTokenService = new RefreshTokenService();
   private UserService = new UserService();
   private authService = new authService();
+
   authenticate = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // console.log(req.body);
-      // const user = req.body;
       const result = await this.authService.authenticate(req.body);
       if (result) {
         const { user, jwtAccessToken, jwtRefreshToken } = result;
