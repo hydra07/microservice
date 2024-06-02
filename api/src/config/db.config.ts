@@ -1,3 +1,4 @@
+import { CategoryProduct } from '@/entity/categoryProduct.entity';
 import { Comment } from '@/entity/comment.entity';
 import { Notification } from '@/entity/notification.entity';
 import { Post } from '@/entity/post.entity';
@@ -36,7 +37,7 @@ const PostgresDataSource = new DataSource({
 
   synchronize: true,
   logging: false,
-  entities: [User, RefreshToken],
+  entities: [User, RefreshToken, CategoryProduct],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000,

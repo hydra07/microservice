@@ -22,7 +22,7 @@ declare module "CustomTypes" {
     };
     
   
-    export type CategoryProduct = {
+    export type ProductCategoryType = {
       id: string;
       name: string;
       isActive: boolean;

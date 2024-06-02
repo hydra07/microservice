@@ -11,7 +11,7 @@ export default function isAuth(Component: any) {
 
     useEffect(() => {
       if (!isLoggedIn) {
-        router.push("/login");
+        router.push("/");
         return; // Exit the useEffect hook if not logged in
       }
     }, [isLoggedIn, router]);
