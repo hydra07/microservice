@@ -16,6 +16,9 @@ export class Post extends BaseEntity {
   createdAt?: Date;
 
   @Column('text')
+  image?: string;
+
+  @Column('text')
   content?: string;
 
   @OneToMany(() => Comment, (comment: Comment) => comment.postId, {

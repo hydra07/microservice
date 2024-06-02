@@ -1,8 +1,8 @@
 import { Separator } from '@/components/ui/separator';
-import axios from 'axios';
+import axios from '@/lib/axios';
 
 async function fetching() {
-  const res = await axios.get('http://localhost:5000/api/post/');
+  const res = await axios.get(`/api/post/`);
   if (res.data) return res.data;
   return [];
 }

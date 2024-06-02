@@ -1,11 +1,12 @@
 import PostController from '@/controller/post.controller';
 import { Router } from 'express';
+import upload from '@/util/upload';
 
 const router = Router();
 const postController = new PostController();
 router
   .get('/post', postController.getAllPost)
-  .post('/post', postController.createPost);
+  .post('/post',upload('post','image'), postController.createPost);
 router
   .get('/post/:id', postController.getPostById)
   .put('/post/:id', postController.updatePost);

@@ -1,12 +1,11 @@
 import env from '@/util/validateEnv';
 
-import { RequestWithRole, UserRole } from '@/@types/user.d';
+import { UserRole } from '@/@types/user.d';
 import { PostgresDataSource } from '@/config/db.config';
 import { User } from '@/entity/user.entity';
 import passport from 'passport';
 import { Strategy as DiscordStrategy } from 'passport-discord';
 import { VerifyCallback } from 'passport-oauth2';
-import { Request } from 'express';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -24,7 +23,7 @@ export default passport.use(
       clientSecret: env.DISCORD_CLIENT_SECRET || '',
       callbackURL: env.DISCORD_CALLBACK_URL || '',
       scope: ['identify', 'email'],
-      
+
       // passReqToCallback: true,
     },
     async (

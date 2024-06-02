@@ -1,3 +1,4 @@
+import authService from '@/service/auth.service';
 import RefreshTokenService from '@/service/refreshToken.service';
 import UserService from '@/service/user.service';
 
@@ -12,6 +13,23 @@ import jwt from 'jsonwebtoken';
 export default class AuthController {
   private refreshTokenService = new RefreshTokenService();
   private UserService = new UserService();
+  private authService = new authService();
+
+  authenticate = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.authService.authenticate(req.body);
+      if (result) {
+        const { user, jwtAccessToken, jwtRefreshToken } = result;
+        console.log(result);
+        res.status(200).json({ user, jwtAccessToken, jwtRefreshToken });
+      } else {
+        res.status(401).send('Unauthorized');
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
   saveTokenToCookie = (req: RequestWithUser, res: Response) => {
     console.log('saveTokenToCookie');
     try {
@@ -19,7 +37,7 @@ export default class AuthController {
       if (user?.accessToken && user?.refreshToken) {
         const redirectUrl = `http://localhost:4000/auto-close?accessToken=${user.accessToken}&refreshToken=${user.refreshToken}`;
         console.log('Redirecting to:', redirectUrl);
-        
+        console.log('User:', JSON.stringify(user));
         res.redirect(redirectUrl);
       } else {
         res.status(401).send('Unauthorized');

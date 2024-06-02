@@ -1,5 +1,5 @@
 import { Separator } from '@/components/ui/separator';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import {
   Breadcrumb,
@@ -15,7 +15,7 @@ interface PostProps {
 }
 async function fetchingPost(id: string) {
   try {
-    const res = await axios.get(`http://localhost:5000/api/post/${id}`);
+    const res = await axios.get(`/api/post/${id}`);
     return res.data;
   } catch (error) {
     console.error(error);
@@ -50,7 +50,11 @@ export default async function Post({ id, children }: PostProps) {
             <span>By User {post.userId}</span>
             <span>{formatDistanceToNow(parseISO(post.createdAt))}</span>
           </div>
-          <p className="text-lg">{post.content}</p>
+          {/* <p className="text-lg">{post.content}</p> */}
+          <div
+            className="content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </div>
         <Separator className="my-6" />
         <div>{children}</div>

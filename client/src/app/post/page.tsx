@@ -7,13 +7,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import axios from '@/lib/axios';
 import { formatDate } from '@/utils/date.utils';
-import axios from 'axios';
 import { ArrowRight } from 'lucide-react';
+import { AddPost } from './AddPost';
 
 async function fetching() {
-  const res = await axios.get('http://localhost:5000/api/post/');
-  if (res.data) return res.data;
+  try {
+    const res = await axios.get(`/api/post/`);
+    if (res.data) return res.data;
+  } catch (error) {
+    // console.error(error);
+  }
   return [];
 }
 
@@ -26,7 +32,8 @@ function CardPost({ post }: any) {
           {post.userId} upload {formatDate(post.createdAt)}
         </CardDescription>
         <CardContent>
-          <p className="text-lg">{post.content.substring(0, 200)}</p>
+          <img src={post.image} />
+          {/* <p className="text-lg">{post.content.substring(0, 200)}</p> */}
         </CardContent>
         <CardFooter>
           <Button asChild>
@@ -48,6 +55,8 @@ export default async function CommentList() {
   return (
     <>
       <div className="mx-10">
+        <AddPost />
+        <Separator className="my-6" />
         <div className="grid grid-cols-4 gap-4">
           {post.map((post: any) => (
             <CardPost key={post.id} post={post} />
