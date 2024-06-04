@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Input } from "@/components/ui/input";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -56,6 +57,8 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
+
+  const totalPages = table.getPageCount();
 
   return (
     <div>
@@ -128,6 +131,16 @@ export function DataTable<TData, TValue>({
         >
           Previous
         </Button>
+        {[...Array(totalPages)].map((_, page) => (
+          <Button
+            key={page}
+            variant={table.getState().pagination.pageIndex === page ? "secondary" : "default" as const}
+            size="sm"
+            onClick={() => table.setPageIndex(page)}
+          >
+            {page + 1}
+          </Button>
+        ))}
         <Button
           variant="outline"
           size="sm"

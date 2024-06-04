@@ -21,5 +21,8 @@ export default cleanEnv(process.env, {
   REFRESH_SECRET: str(),
   EXPIRE_JWT: num(),
   EXPIRE_REFRESH: num(),
-
+  CLOUD_NAME: str(),
+  CLOUD_API_KEY: str(),
+  CLOUD_API_SECRET: str(),
+  CLOUD_IMG_FOLDER: str(),
 });

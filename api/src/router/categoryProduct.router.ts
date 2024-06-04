@@ -5,7 +5,18 @@ import { NextFunction, Request, Response, Router } from "express";
 const router = Router();
 const categoryProductController = new CategoryProductController();
 
-router.get("/categoryProduct", categoryProductController.getAll.bind(categoryProductController));
+// router.get("/categoryProduct", categoryProductController.getAll.bind(categoryProductController));
+router.get('/categoryProduct', async (req, res) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const pageSize = parseInt(req.query.pageSize as string) || 10;
+
+  try {
+    const result = await categoryProductController.paginate(req, res);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching paginated data' });
+  }
+});
 router.get("/categoryProduct/search", CategoryProductSchema, categoryProductController.findAndPaginate.bind(categoryProductController));
 router.get("/categoryProduct/:id", categoryProductController.getSingle.bind(categoryProductController));
 router.post("/categoryProduct", CategoryProductSchema, async (req: Request, res: Response, next: NextFunction) => {
@@ -22,6 +33,7 @@ router.put("/categoryProduct/:id", CategoryProductSchema, async (req: Request, r
   }
   await categoryProductController.update(req, res);
 });
+
 // router.get("/categoryProduct/search", categoryProductController.findAndPaginate.bind(categoryProductController));
 // router.get("/categoryProduct/cc", (req: Request,res: Response)=>{
 //   return res.json({message: "cc"});

@@ -6,6 +6,8 @@ import { DataTable } from "./data-table";
 import { ProductCategoryType } from "CustomTypes";
 import * as ProductCategoryService from "@/services/productCategory.service";
 import CreateProductCategoryDialog from "./CreateProductCategoryDialog";
+import ImageUpload from "../component/image-upload";
+import UploadImgDialog from "../component/UploadImgDialog";
 const ProductCategory = () => {
   const [data, setData] = useState<ProductCategoryType[]>([]);
 
@@ -45,6 +47,10 @@ const ProductCategory = () => {
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={data} />
       </div>
+
+      {/* <ImageUpload /> */}
+      <UploadImgDialog />
+      
     </>
   );
 };

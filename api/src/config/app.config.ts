@@ -12,6 +12,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import createHttpError, { isHttpError } from 'http-errors';
 import passport from 'passport';
 import path from 'path';
+import ImageUploadRouter from '@/router/imageUpload';
 
 const app = express();
 
@@ -53,6 +54,10 @@ app.use('/api', commentRouter);
 // app.use('/api/user', userRouter);
 
 app.use('/api', uploadRouter);
+app.use('/api',ImageUploadRouter);
+
+
+
 app.use((res, req, next) => {
   next(createHttpError(404, 'Not found'));
 });
