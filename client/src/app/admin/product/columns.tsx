@@ -1,7 +1,6 @@
-"use client";
-import { Button } from "@/components/ui/button";
-
 import { ColumnDef } from "@tanstack/react-table";
+import { ImgProductType, ProductType } from "CustomTypes";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,8 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { ProductType } from "CustomTypes";
-// import UpdateProductDialog from "./UpdateProductDialog";
+
+const productImageURL =
+  "https://res.cloudinary.com/djvlldzih/image/upload/v1717554614/letcook/uploads/images/product/";
 
 export const createColumns = (
   handleUpdateSuccess: (updatedProduct: ProductType) => void
@@ -21,7 +21,6 @@ export const createColumns = (
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -37,35 +36,38 @@ export const createColumns = (
                 navigator.clipboard.writeText(product.id.toString())
               }
             >
-              Copy payment ID
+              Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            {/* <UpdateProductCategoryDialog
-                category={productCategory}
-                onUpdateSuccess={handleUpdateSuccess}
-              /> */}
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>View product details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
   },
-
   {
     accessorKey: "id",
     header: "ID",
   },
   {
-    accessorKey: "imgProducts[0].url", // Display the first image URL
+    accessorKey: "imgProducts",
     header: "Image",
-    cell: ({ getValue }) => (
-      <img
-        src={getValue<string>() || "/placeholder.png"} // Replace with your placeholder image URL
-        alt="Product Image"
-        className="h-12 w-12 object-cover"
-      />
-    ),
+    cell: ({ getValue }) => {
+      const imgProducts = getValue<ImgProductType[]>();
+      const imageUrl = imgProducts.length
+        ? `https://res.cloudinary.com/djvlldzih/image/upload/v1717554614/letcook/uploads/images/product/${imgProducts[0].imageUrl}`
+        : "/placeholder.png";
+
+      return (
+        <img
+          src={imageUrl}
+          alt="Product Image"
+          className="h-12 w-12 object-cover"
+        />
+      );
+    },
   },
+
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -95,7 +97,6 @@ export const createColumns = (
     header: "Status",
     cell: ({ row }) => {
       const isActive = row.getValue("is_activated");
-
       return (
         <div className="flex items-center">
           <div

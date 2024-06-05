@@ -30,10 +30,10 @@ export class Product extends BaseEntity {
   @Column({ type: "double precision" })
   price?: number;
 
-  @OneToMany(() => ImgProduct, (imgProduct) => imgProduct.product)
+  @OneToMany(() => ImgProduct, (imgProduct) => imgProduct.product, { eager: true })
   imgProducts?: ImgProduct[];
 
-  @ManyToOne(() => CategoryProduct)
+  @ManyToOne(() => CategoryProduct, { eager: true })
   @JoinColumn({ name: "category_id" })
   category?: CategoryProduct;
 
@@ -46,14 +46,11 @@ export class Product extends BaseEntity {
   @Column({ type: "double precision" })
   averageWeight?: number;
 
-  @OneToOne(() => Measurement)
+  @OneToOne(() => Measurement, { eager: true })
   @JoinColumn({ name: "measurement_id" })
   measurement?: Measurement;
 
-  @OneToOne(() => Nutrition)
+  @OneToOne(() => Nutrition, { eager: true })
   @JoinColumn({ name: "nutrition_id" })
   nutrition?: Nutrition;
-
-  // @Column({ type: "text" })
-  // tags?: string;
 }

@@ -131,19 +131,15 @@ export default function ImageUpload() {
     }
   };
 
-  const uploadImageToCloudinary = async (
+  const uploadImageToBackend = async (
     formData: FormData,
     onUploadProgress: (progressEvent: AxiosProgressEvent) => void,
     cancelSource: CancelTokenSource
   ) => {
-    return axios.post(
-      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUD_NAME}/image/upload`,
-      formData,
-      {
-        onUploadProgress,
-        cancelToken: cancelSource.token,
-      }
-    );
+    return axios.post(`http://localhost:3000/api/uploadImg`, formData, {
+      onUploadProgress,
+      cancelToken: cancelSource.token,
+    });
   };
 
   const removeFile = (file: File) => {
@@ -179,7 +175,7 @@ export default function ImageUpload() {
 
         const cancelSource = axios.CancelToken.source();
 
-        return uploadImageToCloudinary(
+        return uploadImageToBackend(
           formData,
           (progressEvent) =>
             onUploadProgress(progressEvent, file, cancelSource),

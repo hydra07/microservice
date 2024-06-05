@@ -7,6 +7,7 @@ import { ProductType } from "CustomTypes";
 import CreateProductDialog from "./CreateProductDialog";
 import UploadImgDialog from "../component/UploadImgDialog";
 import * as ProductService from "@/services/product.service";
+import { ThreeCircles } from 'react-loader-spinner';
 
 const Product = () => {
   const [data, setData] = useState<ProductType[]>([]);
@@ -18,7 +19,7 @@ const Product = () => {
       try {
         const fetchedData = await ProductService.fetchProducts();
         console.log(fetchedData);
-        // setData(fetchedData);
+        setData(fetchedData);
       } catch (error) {
         console.error("Error fetching products:", error);
         setError("Failed to fetch products.");
@@ -45,7 +46,23 @@ const Product = () => {
   const columns = createColumns(handleUpdateSuccess);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+      <ThreeCircles
+        height="80"
+        width="80"
+        color="#4fa94d"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+        ariaLabel="three-circles-rotating"
+        outerCircleColor=""
+        innerCircleColor=""
+        middleCircleColor=""
+      />
+      <p className="mt-4 text-lg font-semibold text-gray-600">Loading...</p>
+    </div>
+    );
   }
 
   if (error) {
@@ -57,7 +74,7 @@ const Product = () => {
       <h1>Product</h1>
       <CreateProductDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={data} />
+        {/* <DataTable columns={columns} data={data} /> */}
       </div>
       <UploadImgDialog />
     </>
