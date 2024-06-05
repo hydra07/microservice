@@ -3,7 +3,8 @@
 import {
   UserGroupIcon,
   HomeIcon,
-  TagIcon
+  TagIcon,
+  
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,6 +17,11 @@ const links = [
     href: '/admin/productCategory',
     icon: TagIcon,
   },
+  {
+    name: "Product",
+    href: "/admin/product",
+    icon: TagIcon,
+  }
   // { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
 ];
 

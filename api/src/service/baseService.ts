@@ -7,8 +7,10 @@ import {
     ObjectLiteral,
     Repository,
   } from "typeorm";
-  import { PostgresDataSource } from "./config/db.config";
-  
+  import { PostgresDataSource } from "../config/db.config";
+  import handleError from "../util/handleError";
+import { PaginatedResult } from "../@types/user";
+
   export default class BaseService<ENTITY extends ObjectLiteral> {
     protected repository: Repository<ENTITY>;
   
@@ -21,23 +23,19 @@ import {
         return await this.repository.save(entity);
       } catch (error) {
         // Handle error accordingly
-        console.error("Error saving entity:", error);
-        throw error;
+        handleError(error as Error, "Error saving entity");
       }
     }
   
     public async delete(options: FindOneOptions<ENTITY>): Promise<ENTITY | null> {
       try {
         const entity = await this.repository.findOne(options);
-        if (!entity) {
-          return null;
+        if (entity) {
+          await this.repository.remove(entity);
         }
-        await this.repository.remove(entity);
         return entity;
       } catch (error) {
-        // Handle error accordingly
-        console.error("Error deleting entity:", error);
-        throw error;
+        return handleError(error as Error, "Error deleting entity");
       }
     }
   
@@ -50,12 +48,12 @@ import {
         if (!entity) {
           return null;
         }
+    
         Object.assign(entity, data);
-        return await this.repository.save(entity);
+        const updatedEntity = await this.repository.save(entity);
+        return updatedEntity;
       } catch (error) {
-        // Handle error accordingly
-        console.error("Error updating entity:", error);
-        throw error;
+        return handleError(error as Error, "Error updating entity");
       }
     }
   
@@ -68,8 +66,7 @@ import {
         });
       } catch (error) {
         // Handle error accordingly
-        console.error("Error finding entities by keyword:", error);
-        throw error;
+        return handleError(error as Error, "Error finding by keyword")
       }
     }
   
@@ -78,8 +75,7 @@ import {
         return await this.repository.find();
       } catch (error) {
         // Handle error accordingly
-        console.error("Error getting all entities:", error);
-        throw error;
+        return handleError(error as Error, "Error getting all entities");
       }
     }
   
@@ -88,16 +84,15 @@ import {
         return await this.repository.findOne(options);
       } catch (error) {
         // Handle error accordingly
-        console.error("Error getting single entity:", error);
-        throw error;
+        return handleError(error as Error, "Error getting single entity")
       }
     }
   
-    public async getAllAndPaginate(
+    async getAllAndPaginate(
       page: number,
       limit: number,
       options: FindOneOptions<ENTITY> = {}
-    ) {
+    ): Promise<PaginatedResult<ENTITY>> {
       try {
         const [entities, total] = await this.repository.findAndCount({
           ...options,
@@ -114,8 +109,7 @@ import {
         };
       } catch (error) {
         // Handle error accordingly
-        console.error("Error getting paginated entities:", error);
-        throw error;
+        return handleError(error as Error, "Error getting all and paginating entities");
       }
     }
   
@@ -124,7 +118,7 @@ import {
       limit: number,
       keyword: string,
       fieldName: keyof ENTITY
-    ) {
+    ): Promise<PaginatedResult<ENTITY>> {
       try {
         const skip = (page - 1) * limit;
         const [result, total] = await this.repository.findAndCount({
@@ -144,8 +138,7 @@ import {
         };
       } catch (error) {
         // Handle error accordingly
-        console.error("Error finding and paginating entities:", error);
-        throw error;
+        return handleError(error as Error, "Error finding and paginating entities");
       }
     }
   }

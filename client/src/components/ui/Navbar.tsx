@@ -17,6 +17,7 @@ const links = [
   { name: 'Home', href: '/', icon: HomeIcon },
   { name: 'Admins', href: '/admin', icon: LockClosedIcon },
   { name: 'Customers', href: '/user', icon: UserGroupIcon },
+  
 ];
 
 const Navbar = () => {

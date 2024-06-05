@@ -18,4 +18,12 @@ interface RequestWithRole extends Request {
   role?: UserRole;
 }
 
-export { User, UserRole,UserPayload, RequestWithRole };
+interface PaginatedResult<ENTITY> {
+  data: ENTITY[];
+  total: number;
+  limit: number;
+  page: number;
+  lastPage: number;
+}
+
+export { User, UserRole,UserPayload, RequestWithRole, PaginatedResult };

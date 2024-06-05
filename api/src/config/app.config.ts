@@ -1,4 +1,5 @@
 import authRouter from '@/router/auth.router';
+import productRouter from '@/router/product.router';
 import commentRouter from '@/router/comment.router';
 import postRouter from '@/router/post.router';
 import uploadRouter from '@/router/upload.router';
@@ -51,6 +52,7 @@ app.use('/api/hello', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api', postRouter);
 app.use('/api', commentRouter);
+app.use('/api', productRouter);
 // app.use('/api/user', userRouter);
 
 app.use('/api', uploadRouter);

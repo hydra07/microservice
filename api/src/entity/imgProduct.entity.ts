@@ -1,0 +1,22 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  BaseEntity,
+  JoinColumn,
+} from "typeorm";
+import { Product } from "./product.entity";
+
+@Entity("img_products")
+export class ImgProduct extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column({ type: "text" })
+  imageUrl?: string;
+
+  @ManyToOne(() => Product, (product) => product.imgProducts)
+  @JoinColumn({ name: "product_id" })
+  product?: Product;
+}

@@ -1,7 +1,11 @@
 import { CategoryProduct } from '@/entity/categoryProduct.entity';
 import { Comment } from '@/entity/comment.entity';
+import { ImgProduct } from '@/entity/imgProduct.entity';
+import { Measurement } from '@/entity/measurement.entity';
 import { Notification } from '@/entity/notification.entity';
+import { Nutrition } from '@/entity/nutrition.entity';
 import { Post } from '@/entity/post.entity';
+import { Product } from '@/entity/product.entity';
 import { RefreshToken } from '@/entity/refreshToken.entity';
 import { User } from '@/entity/user.entity';
 import env from '@/util/validateEnv';
@@ -37,7 +41,7 @@ const PostgresDataSource = new DataSource({
 
   synchronize: true,
   logging: false,
-  entities: [User, RefreshToken, CategoryProduct],
+  entities: [User, RefreshToken, CategoryProduct, Product, Nutrition, Measurement, ImgProduct],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000,

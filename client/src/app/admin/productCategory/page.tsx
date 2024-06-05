@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import isAuth from "@/components/privateRouter";
 import { createColumns } from "./columns";
-import { DataTable } from "./data-table";
+import { DataTable } from "../component/data-table";
 import { ProductCategoryType } from "CustomTypes";
 import * as ProductCategoryService from "@/services/productCategory.service";
 import CreateProductCategoryDialog from "./CreateProductCategoryDialog";
