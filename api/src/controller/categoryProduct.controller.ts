@@ -1,5 +1,5 @@
 
-import { BaseController } from "@/baseController";
+import { BaseController } from "./baseController";
 import { CategoryProduct } from "@/entity/categoryProduct.entity";
 import { CategoryProductService } from "@/service/categoryProduct.service";
 

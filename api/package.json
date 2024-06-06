@@ -24,6 +24,7 @@
     "@types/passport-discord": "^0.1.13",
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-jwt": "^4.0.1",
+    "cloudinary": "^2.2.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "envalid": "^8.0.0",

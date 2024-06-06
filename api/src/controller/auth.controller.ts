@@ -35,9 +35,20 @@ export default class AuthController {
     try {
       const user = req.user;
       if (user?.accessToken && user?.refreshToken) {
+        // res.cookie("accessToken", user.accessToken, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "strict",
+        //   maxAge: Number(env.EXPIRE_JWT),
+        // });
+
+        // res.cookie("refreshToken", user.refreshToken, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "strict",
+        //   maxAge: Number(env.EXPIRE_REFRESH),
+        // });
         const redirectUrl = `http://localhost:4000/auto-close?accessToken=${user.accessToken}&refreshToken=${user.refreshToken}`;
-        console.log('Redirecting to:', redirectUrl);
-        console.log('User:', JSON.stringify(user));
         res.redirect(redirectUrl);
       } else {
         res.status(401).send('Unauthorized');
@@ -89,19 +100,19 @@ export default class AuthController {
       );
       await this.refreshTokenService.saveToken(refreshTokenEntity);
 
-      res.cookie('accessToken', newAccessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: Number(env.EXPIRE_JWT),
-      });
+      // res.cookie('accessToken', newAccessToken, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: 'strict',
+      //   maxAge: Number(env.EXPIRE_JWT),
+      // });
 
-      res.cookie('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: Number(env.EXPIRE_REFRESH),
-      });
+      // res.cookie('refreshToken', newRefreshToken, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: 'strict',
+      //   maxAge: Number(env.EXPIRE_REFRESH),
+      // });
 
       res.json({ accessToken: newAccessToken });
     } catch (error) {
