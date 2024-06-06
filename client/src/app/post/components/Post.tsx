@@ -1,7 +1,5 @@
 'use client';
-// import Editor from '@/components/Editor';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -14,26 +12,25 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import useUploadFile from '@/hooks/useUploadFile';
-import dynamic from 'next/dynamic';
-import { useForm } from 'react-hook-form';
 import axios from '@/lib/axios';
-const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
+import dynamic from 'next/dynamic';
+import { ReactNode } from 'react';
+import { useForm } from 'react-hook-form';
 
-export function AddPost() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Add Post</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-6xl w-2/3 h-4/5">
-        <FormPost />
-      </DialogContent>
-    </Dialog>
-  );
-}
+// export function AddPost() {
+//   return (
+//     <Dialog>
+//       <DialogTrigger asChild>
+//         <Button>Add Post</Button>
+//       </DialogTrigger>
+//       <DialogContent className="sm:max-w-6xl w-2/3 h-4/5">
+//         <FormPost />
+//       </DialogContent>
+//     </Dialog>
+//   );
+// }
 
-function FormPost() {
-  // const [image, setImage] = useState<File | null>(null);
+export default function FormPost(): ReactNode {
   const { InputFile, filePath } = useUploadFile();
   const form = useForm({
     defaultValues: {
@@ -45,14 +42,14 @@ function FormPost() {
   const onsubmit = async (data: any) => {
     data.userId = 'Day la userId nek';
     console.log(data);
-    console.log(process.env.NEXT_PUBLIC_API_URL);
     const res = await axios.post('/api/post', data);
     console.log(res.data);
   };
+  const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
   return (
     <Form {...form}>
       <form
-        className="flex flex-col space-y-4 w-full h-full overflow-y-auto"
+        className="flex flex-col space-y-5 overflow-y-auto"
         onSubmit={form.handleSubmit(onsubmit)}
         encType="multipart/form-data"
       >
@@ -83,32 +80,11 @@ function FormPost() {
                   }}
                 />
               </FormControl>
-              <FormDescription>Please enter your post title.</FormDescription>
+              <FormDescription>This is your post thumbnail.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image</FormLabel>
-              <FormControl>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  // {...field}
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      field.onChange(event.target.files[0]);
-                    }
-                  }}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        /> */}
         <FormField
           control={form.control}
           name="content"
@@ -135,7 +111,3 @@ function FormPost() {
     </Form>
   );
 }
-
-// function FormPost() {
-//   return ()
-// }

@@ -1,17 +1,13 @@
 import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
-
 export default function useUploadFile() {
-  // const [file, setFile] = useState<File | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filePath, setFilePath] = useState<string>('');
-  const [count, setCount] = useState<number>(0);
   const handleChange = async () => {
     const formData = new FormData(formRef.current!);
-    // const res = await axios.post('/api/uploads', formData);
-    // const data = await res.data;
-    const res = await fetch('http://localhost:3000/api/uploads', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/uploads`, {
       method: 'POST',
       body: formData,
     });
@@ -29,12 +25,10 @@ export default function useUploadFile() {
         handleChange();
       }
     };
-
     const input = fileInputRef.current;
     if (input) {
       input.addEventListener('change', handleFileChange);
     }
-
     return () => {
       if (input) {
         input.removeEventListener('change', handleFileChange);
@@ -47,7 +41,6 @@ export default function useUploadFile() {
       useEffect(() => {
         if (filePath) {
           onChange(filePath);
-          // setCount((prev) => prev + 1);
         }
       }, [filePath, onChange]);
       return (
@@ -55,12 +48,22 @@ export default function useUploadFile() {
           <form ref={formRef} encType="multipart/form-data">
             <Input type="file" name="image" ref={fileInputRef} />
           </form>
-          {filePath && (
-            <div>
-              <p>File uploaded successfully!</p>
-              <img src={filePath} alt="Uploaded File" />
-            </div>
-          )}
+          <div>
+            {filePath && (
+              <div className="w-full h-fit mb-8 flex flex-col">
+                <Image
+                  className="rounded-md object-cover"
+                  src={filePath}
+                  alt="Uploaded File"
+                  width={200}
+                  height={150}
+                />
+                <p className="text-green-400 flex-nowrap">
+                  File uploaded successfully!
+                </p>
+              </div>
+            )}
+          </div>
         </>
       );
     },

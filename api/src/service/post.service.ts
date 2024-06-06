@@ -1,8 +1,7 @@
-import { ObjectId } from 'mongodb';
-// import { ObjectId } from 'typeorm';
-import { MongoDataSource } from '@/config/db.config';
-import { Comment } from '@/entity/comment.entity';
-import { Post } from '@/entity/post.entity';
+import { ObjectId } from "mongodb";
+import { MongoDataSource } from "@/config/db.config";
+import { Comment } from "@/entity/comment.entity";
+import { Post } from "@/entity/post.entity";
 class PostService {
   private postRepository = MongoDataSource.getRepository(Post);
   private commentRepository = MongoDataSource.getRepository(Comment);
@@ -19,7 +18,6 @@ class PostService {
     post.image = image;
     post.createdAt = new Date();
     post.comments = [];
-
     return post;
   }
 
@@ -40,6 +38,15 @@ class PostService {
   //   return comment;
   // }
 
+  async getListPost() {
+    return await this.postRepository.find({
+      select: ["_id", "title", "image", "userId"],
+      order: {
+        createdAt: "DESC",
+      },
+    });
+  }
+
   async getAllPosts() {
     return await this.postRepository.find();
   }
@@ -50,7 +57,7 @@ class PostService {
 
   async getPostById(id: string): Promise<Post> {
     if (!ObjectId.isValid(id)) {
-      throw new Error('Invalid ID');
+      throw new Error("Invalid ID");
     }
     const postId = new ObjectId(id);
     try {
@@ -64,13 +71,13 @@ class PostService {
       });
       return post;
     } catch (error) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
   }
 
   async getCommentById(id: string): Promise<Comment> {
     if (!ObjectId.isValid(id)) {
-      throw new Error('Invalid ID');
+      throw new Error("Invalid ID");
     }
     const commentId = new ObjectId(id);
     try {
@@ -81,7 +88,7 @@ class PostService {
       });
       return comment;
     } catch (error) {
-      throw new Error('Comment not found');
+      throw new Error("Comment not found");
     }
   }
 
@@ -92,7 +99,7 @@ class PostService {
       });
       return post;
     } catch (error) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
   }
 
@@ -105,7 +112,7 @@ class PostService {
       postToUpdate.content = content;
       return await this.postRepository.save(postToUpdate);
     } catch (error) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
   }
   async deletePost(id: string) {
@@ -113,7 +120,7 @@ class PostService {
       const postToDelete = await this.getPostById(id);
       return await this.postRepository.remove(postToDelete);
     } catch (error) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
   }
 

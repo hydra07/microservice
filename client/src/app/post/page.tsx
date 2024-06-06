@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import {
   Card,
   CardContent,
@@ -10,52 +10,48 @@ import {
 import { Separator } from '@/components/ui/separator';
 import axios from '@/lib/axios';
 import { formatDate } from '@/utils/date.utils';
-import { ArrowRight } from 'lucide-react';
-import { AddPost } from './AddPost';
-
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
 async function fetching() {
   try {
     const res = await axios.get(`/api/post/`);
     if (res.data) return res.data;
-  } catch (error) {
-    // console.error(error);
-  }
+  } catch (error) {}
   return [];
 }
 
 function CardPost({ post }: any) {
+  const Link = dynamic(() => import('@/components/Link'));
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{post.title}</CardTitle>
-        <CardDescription>
-          {post.userId} upload {formatDate(post.createdAt)}
-        </CardDescription>
-        <CardContent>
-          <img src={post.image} />
-          {/* <p className="text-lg">{post.content.substring(0, 200)}</p> */}
-        </CardContent>
-        <CardFooter>
-          <Button asChild>
-            <a
-              className="flex flex-row space-x-4 text-primary hover:text-primary-dark"
-              href={`/post/${post._id}`}
-            >
-              Read more
-              <ArrowRight className="w-6 h-6" />
-            </a>
-          </Button>
-        </CardFooter>
-      </CardHeader>
-    </Card>
+    <Link href={`/post/${post._id}`}>
+      <Card>
+        <CardHeader>
+          <CardTitle>{post.title}</CardTitle>
+          <CardDescription>
+            {post.userId} upload {formatDate(post.createdAt)}
+          </CardDescription>
+          <CardContent>
+            <AspectRatio ratio={16 / 9}>
+              <Image src={post.image} alt={post.title} fill />
+            </AspectRatio>
+          </CardContent>
+          <CardFooter></CardFooter>
+        </CardHeader>
+      </Card>
+    </Link>
   );
 }
+
 export default async function CommentList() {
   const post = await fetching();
+  // const AddPost = dynamic(
+  //   () => import('./components/Post').then((module) => module.AddPost),
+  //   { ssr: false },
+  // );
   return (
     <>
       <div className="mx-10">
-        <AddPost />
+        {/* <AddPost /> */}
         <Separator className="my-6" />
         <div className="grid grid-cols-4 gap-4">
           {post.map((post: any) => (
