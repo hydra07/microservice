@@ -1,11 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+'use client';
 import axios from '@/lib/axios';
-import { formatDistanceToNow, parseISO } from 'date-fns';
+import dynamic from 'next/dynamic';
 import { ReactNode } from 'react';
+
+// import { ReplyComment } from '../AddComment';
 interface CommentProps {
   id: string;
   level?: number;
 }
+
 async function fetchingComment(id: string) {
   try {
     const res = await axios.get(`/api/comment/${id}`);
@@ -15,56 +18,18 @@ async function fetchingComment(id: string) {
     console.error(error);
   }
 }
-const Comment = ({ comment, level, children }: any) => {
-  return (
-    <div style={{ marginLeft: `${level * 40}px` }}>
-      <div className="flex flex-row space-x-3 mb-4">
-        <Avatar className="w-10 h-10 rounded-full overflow-hidden mt-3">
-          <AvatarImage
-            src="https://source.unsplash.com/random"
-            className="object-cover"
-          />
-          <AvatarFallback>CN</AvatarFallback>
-          {/* <CircleUserRound className="w-8 h-8" /> */}
-        </Avatar>
 
-        <div className="flex flex-col max-w-72">
-          <div className="bg-opacity-65 bg-secondary p-2 rounded-md px-4">
-            <div>
-              <span className="text-lg font-bold">{comment.userId}</span>
-            </div>
-            <div>
-              <span className="text-lg">{comment.content}</span>
-            </div>
-          </div>
-          <div>
-            <span>{formatDistanceToNow(parseISO(comment.createdAt))}</span>
-          </div>
-        </div>
-        {/* <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex flex-row space-x-5">
-              <p className="text-lg font-bold">{comment.userId}</p>
-            </CardTitle>
-            <CardContent className="-ml-4 pt-4">
-              <span className="text-lg">{comment.content}</span>
-            </CardContent>
-            <CardDescription>
-              <span>{formatDistanceToNow(parseISO(comment.createdAt))}</span>
-              <span className="text-sm text-gray-500">{`[${comment.left},${comment.right}],${level}`}</span>
-            </CardDescription>
-          </CardHeader>
-        </Card> */}
-      </div>
-
-      {children}
-    </div>
-  );
-};
+/**
+ * Comment tree component to render all comments in a tree structure
+ * @param id
+ * @returns
+ */
 export default async function CommentTree({ id }: CommentProps) {
   const comments = await fetchingComment(id);
   const rendedComments: { [key: string]: boolean } = {};
-
+  const Comment = dynamic(() => import('../components/Comment'), {
+    ssr: false,
+  });
   const traverseComments = (currentComments: any[], level: number) => {
     const result: ReactNode[] = [];
     for (const comment of currentComments) {
@@ -75,7 +40,7 @@ export default async function CommentTree({ id }: CommentProps) {
       rendedComments[_id] = true;
       result.push(
         <div>
-          <Comment comment={comment} level={level}>
+          <Comment comment={comment} level={level} postId={id}>
             {traverseComments(
               currentComments.filter((c) => c.left > left && c.right < right),
               level + 1,

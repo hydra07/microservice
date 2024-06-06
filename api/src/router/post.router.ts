@@ -5,7 +5,7 @@ import upload from '@/util/upload';
 const router = Router();
 const postController = new PostController();
 router
-  .get('/post', postController.getAllPost)
+  .get('/post', postController.getListPost)
   .post('/post',upload('post','image'), postController.createPost);
 router
   .get('/post/:id', postController.getPostById)

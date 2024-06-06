@@ -42,12 +42,19 @@ export default class PostController {
       next(error);
     }
   };
-
+  getListPost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const listPosts = await this.postService.getListPost();
+      res.status(200).json(listPosts);
+    } catch (error) {
+      next(error);
+    }
+  };
   getPostById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const postId = req.params.id;
       const post = await this.postService.getPostById(postId);
-      console.log(post);
+      // console.log(post);
       res.status(200).json(post);
     } catch (error) {
       // res.status(500).json({ message: 'Failed to fetch post', error });

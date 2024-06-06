@@ -1,6 +1,6 @@
 import Google from 'next-auth/providers/google';
 // import { authOptions } from '@/server/auth';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth/next';
 
@@ -20,10 +20,7 @@ const authOptions: AuthOptions = {
         email: user.email as string,
         avatar: user.image as string,
       };
-      const res = await axios.post(
-        `${process.env.API_URL}/api/auth/authenticate`,
-        initUser,
-      );
+      const res = await axios.post(`/api/auth/authenticate`, initUser);
       // const data = res.data; // {}
       if (res.data) {
         (user as any).id = res.data.user.id;

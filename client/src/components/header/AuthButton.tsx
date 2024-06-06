@@ -13,19 +13,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { loginDiscordAsync } from '@/lib/features/auth/authSlice';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useCallback } from 'react';
-import { useAppDispatch, useAppSelector } from '../../lib/hooks';
+// import { useAppDispatch } from '../../lib/hooks';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 export default function AuthButton() {
-  const dispatch = useAppDispatch();
-  const auth = useAppSelector((state) => state.auth);
+  // const dispatch = useAppDispatch();
+  // const auth = useAppSelector((state) => state.auth);
   const { data: session, status } = useSession();
-  const handleDiscordLogin = async () => {
-    await dispatch(loginDiscordAsync());
-  };
+  // const handleDiscordLogin = async () => {
+  //   await dispatch(loginDiscordAsync());
+  // };
   const handleGoogleLogin = async () => {
     await signIn('google');
   };
@@ -49,7 +48,10 @@ export default function AuthButton() {
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col justify-center space-y-4 ">
-              <Button className="bg-indigo-600" onClick={handleDiscordLogin}>
+              <Button
+                className="bg-indigo-600"
+                // onClick={handleDiscordLogin}
+              >
                 Đăng nhập với Discord
               </Button>
               <Button className="bg-red-600" onClick={handleGoogleLogin}>

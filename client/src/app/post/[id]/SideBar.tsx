@@ -1,5 +1,6 @@
 import { Separator } from '@/components/ui/separator';
 import axios from '@/lib/axios';
+import dynamic from 'next/dynamic';
 
 async function fetching() {
   const res = await axios.get(`/api/post/`);
@@ -9,6 +10,7 @@ async function fetching() {
 
 export default async function SideBar() {
   const post = await fetching();
+  const Link = dynamic(() => import('@/components/Link'));
   return (
     <div className="w-72">
       <div className="sticky top-20 ">
@@ -18,9 +20,9 @@ export default async function SideBar() {
           <div>
             {post.map((post: any) => (
               <div key={post.id} className="mb-4">
-                <a href={`/post/${post._id}`} className="text-primary">
+                <Link href={`/post/${post._id}`} className="text-primary">
                   {post.title}
-                </a>
+                </Link>
               </div>
             ))}
           </div>

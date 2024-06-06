@@ -98,3 +98,8 @@
   /* Đảm bảo rằng video giữ nguyên tỷ lệ khung hình ngay cả khi kích thước của nó thay đổi */
   aspect-ratio: 16 / 9;
 }
+
+.content img {
+  width: 500px;
+  height: auto;
+}
