@@ -1,6 +1,6 @@
-'use client'
-import SideNav from "@/components/ui/admin/sidenav";
-import isAuth from "@/components/privateRouter";// Adjust the import path accordingly
+'use client';
+import SideNav from '@/components/ui/admin/sidenav';
+// import isAuth from "@/components/privateRouter";// Adjust the import path accordingly
 
 function AdminLayout({
   children,
@@ -16,5 +16,5 @@ function AdminLayout({
     </div>
   );
 }
-
-export default isAuth(AdminLayout);
+export default AdminLayout;
+// export default isAuth(AdminLayout);

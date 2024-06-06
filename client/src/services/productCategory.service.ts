@@ -1,4 +1,4 @@
-import http from "./http";
+import http from "@/lib/axios";
 import { ProductCategoryType } from "CustomTypes";
 
 export const fetchProductCategories = async (): Promise<
