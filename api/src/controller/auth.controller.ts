@@ -1,19 +1,37 @@
-import RefreshTokenService from "@/service/refreshToken.service";
-import UserService from "@/service/user.service";
+import authService from '@/service/auth.service';
+import RefreshTokenService from '@/service/refreshToken.service';
+import UserService from '@/service/user.service';
 
 import {
   generateAccessToken,
   generateRefreshToken,
-} from "@/util/tokenGenerate";
-import env from "@/util/validateEnv";
-import { NextFunction, RequestWithUser, Response } from "express";
-import jwt from "jsonwebtoken";
+} from '@/util/tokenGenerate';
+import env from '@/util/validateEnv';
+import { NextFunction, RequestWithUser, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 export default class AuthController {
   private refreshTokenService = new RefreshTokenService();
   private UserService = new UserService();
+  private authService = new authService();
+
+  authenticate = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.authService.authenticate(req.body);
+      if (result) {
+        const { user, jwtAccessToken, jwtRefreshToken } = result;
+        console.log(result);
+        res.status(200).json({ user, jwtAccessToken, jwtRefreshToken });
+      } else {
+        res.status(401).send('Unauthorized');
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
   saveTokenToCookie = (req: RequestWithUser, res: Response) => {
-    console.log("saveTokenToCookie");
+    console.log('saveTokenToCookie');
     try {
       const user = req.user;
       if (user?.accessToken && user?.refreshToken) {
@@ -31,25 +49,23 @@ export default class AuthController {
         //   maxAge: Number(env.EXPIRE_REFRESH),
         // });
         const redirectUrl = `http://localhost:4000/auto-close?accessToken=${user.accessToken}&refreshToken=${user.refreshToken}`;
-        console.log("Redirecting to:", redirectUrl);
-
         res.redirect(redirectUrl);
       } else {
-        res.status(401).send("Unauthorized");
+        res.status(401).send('Unauthorized');
       }
     } catch (error) {
-      console.error("Error in saveTokenToCookie:", error);
+      console.error('Error in saveTokenToCookie:', error);
     }
   };
 
   refreshToken = async (
     req: RequestWithUser,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
-      return res.status(401).send("Refresh token is required");
+      return res.status(401).send('Refresh token is required');
     }
 
     try {
@@ -67,11 +83,11 @@ export default class AuthController {
         await this.UserService.findRefreshTokenByUserId(userId);
 
       if (!refreshTokenEntity) {
-        return res.status(401).send("Refresh token not found");
+        return res.status(401).send('Refresh token not found');
       }
 
       if (refreshToken !== refreshTokenEntity.token) {
-        return res.status(401).send("Refresh token is invalid");
+        return res.status(401).send('Refresh token is invalid');
       }
 
       const newAccessToken = generateAccessToken(userId, userRole);
@@ -80,7 +96,7 @@ export default class AuthController {
       //update refreh token to db
       refreshTokenEntity.token = newRefreshToken;
       refreshTokenEntity.expiryDate = new Date(
-        Date.now() + Number(env.EXPIRE_REFRESH) * 1000
+        Date.now() + Number(env.EXPIRE_REFRESH) * 1000,
       );
       await this.refreshTokenService.saveToken(refreshTokenEntity);
 
@@ -100,7 +116,7 @@ export default class AuthController {
 
       res.json({ accessToken: newAccessToken });
     } catch (error) {
-      console.error("Error in refreshToken:", error);
+      console.error('Error in refreshToken:', error);
       next(error);
     }
   };

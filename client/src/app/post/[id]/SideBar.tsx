@@ -1,14 +1,16 @@
 import { Separator } from '@/components/ui/separator';
-import axios from 'axios';
+import axios from '@/lib/axios';
+import dynamic from 'next/dynamic';
 
 async function fetching() {
-  const res = await axios.get('http://localhost:5000/api/post/');
+  const res = await axios.get(`/api/post/`);
   if (res.data) return res.data;
   return [];
 }
 
 export default async function SideBar() {
   const post = await fetching();
+  const Link = dynamic(() => import('@/components/Link'));
   return (
     <div className="w-72">
       <div className="sticky top-20 ">
@@ -18,9 +20,9 @@ export default async function SideBar() {
           <div>
             {post.map((post: any) => (
               <div key={post.id} className="mb-4">
-                <a href={`/post/${post._id}`} className="text-primary">
+                <Link href={`/post/${post._id}`} className="text-primary">
                   {post.title}
-                </a>
+                </Link>
               </div>
             ))}
           </div>

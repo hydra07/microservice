@@ -28,10 +28,13 @@ export class Comment extends BaseEntity {
   @Column()
   right!: number;
 
-  // @Column()
-  @ManyToOne(() => Comment, (comment) => comment.children, { nullable: true })
-  parent?: Comment | null; // null means it's a root comment
+  @Column(() => ObjectId)
+  parentId?: ObjectId;
 
-  @ManyToOne(() => Comment, (comment) => comment.parent, { nullable: true })
-  children?: Comment[];
+  // @Column()
+  // @ManyToOne(() => Comment, (comment) => comment.children, { nullable: true })
+  // parent?: Comment | null; // null means it's a root comment
+
+  // @ManyToOne(() => Comment, (comment) => comment.parent, { nullable: true })
+  // children?: Comment[];
 }

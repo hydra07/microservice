@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 
 ### Get all posts
-GET http://localhost:5000/api/post HTTP/1.1
+GET http://localhost:3000/api/post HTTP/1.1
 
 ### Update a post
 PUT http://localhost:5000/api/post/6655fc49174382ffd7f1700d HTTP/1.1

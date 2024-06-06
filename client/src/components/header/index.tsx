@@ -1,9 +1,9 @@
 'use client';
-
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import ModeButton from './ModeButton';
-import Navbar from '../ui/Navbar';
-
+// import AuthButton from './AuthButton';
+const AuthButton = dynamic(() => import('./AuthButton'), { ssr: false });
+const ModeButton = dynamic(() => import('./ModeButton'));
 export default function Header() {
   const [isAtTop, setIsAtTop] = useState(true);
   const handleScroll = () => {
@@ -23,17 +23,19 @@ export default function Header() {
 
   return (
     <header
-      className={`w-full py-[11px] fixed top-0 left-0 z-50 bg-indigo-100 border-b border-gray-800 shadow-lg
+
+      className={`w-full py-[11px] fixed top-0 left-0 z-50 bg-black shadow-lg
+
       ${isAtTop ? 'bg-opacity-20' : 'bg-opacity-70'}
       `}
     >
       <div className="w-full px-14">
         <div className="flex justify-between gap-8">
           <ModeButton />
+          <AuthButton />
         </div>
-        
       </div>
-      <Navbar />
+      {/* <Navbar /> */}
     </header>
   );
 }

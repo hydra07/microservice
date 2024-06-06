@@ -1,11 +1,9 @@
-import { Separator } from '@/components/ui/separator';
 import dynamic from 'next/dynamic';
-import SideBar from './SideBar';
-const Comment = dynamic(() => import('./Comment'));
-const Post = dynamic(() => import('./Post'));
+// import Comment from './Comment';
 export default async ({ params }: { params: { id: string } }) => {
-  // const post = await fetchingPost(params.id);
-  // console.log(post);
+  const Comment = dynamic(() => import('./Comment'));
+  const Post = dynamic(() => import('./Post'));
+  const SideBar = dynamic(() => import('./SideBar'));
   return (
     <>
       <div className="container">
@@ -13,7 +11,6 @@ export default async ({ params }: { params: { id: string } }) => {
           <Post id={params.id}>
             <Comment id={params.id} />
           </Post>
-
           <SideBar />
         </div>
       </div>
