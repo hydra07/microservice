@@ -16,6 +16,9 @@ export class ImgProduct extends BaseEntity {
   @Column({ type: "text" })
   imageUrl?: string;
 
+  @Column({type: "text"})
+  publicId?: string;
+
   @ManyToOne(() => Product, (product) => product.imgProducts)
   @JoinColumn({ name: "product_id" })
   product?: Product;

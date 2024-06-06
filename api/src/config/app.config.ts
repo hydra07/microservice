@@ -3,6 +3,7 @@ import productRouter from '@/router/product.router';
 import commentRouter from '@/router/comment.router';
 import postRouter from '@/router/post.router';
 import uploadRouter from '@/router/upload.router';
+import measurementRouter from '@/router/measurement.router';
 import categoryProductRouter from '@/router/categoryProduct.router'
 import '@/strategies/discord-strategy';
 import env from '@/util/validateEnv';
@@ -14,6 +15,7 @@ import createHttpError, { isHttpError } from 'http-errors';
 import passport from 'passport';
 import path from 'path';
 import ImageUploadRouter from '@/router/imageUpload';
+import { Measurement } from '@/entity/measurement.entity';
 
 const app = express();
 
@@ -53,6 +55,7 @@ app.use('/api/auth', authRouter);
 app.use('/api', postRouter);
 app.use('/api', commentRouter);
 app.use('/api', productRouter);
+app.use('/api', measurementRouter)
 // app.use('/api/user', userRouter);
 
 app.use('/api', uploadRouter);

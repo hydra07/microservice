@@ -3,20 +3,29 @@ import React from "react";
 import { ProductType } from "CustomTypes";
 import InputField from "./InputField";
 import TooltipWrapper from "./TooltipWrapper";
+import CategorySelect from "./CategorySelect";
 
 interface BasicInfoFormProps {
   newProduct: ProductType;
   handleInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  handleCategoryChange: (value: string) => void;
 }
 
 const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
   newProduct,
   handleInputChange,
+  handleCategoryChange,
 }) => {
   return (
     <div className="space-y-4">
+      {/* <TooltipWrapper label="Category"> */}
+        <CategorySelect
+          value={newProduct.category.id}
+          onChange={handleCategoryChange}
+        />
+      {/* </TooltipWrapper> */}
       <TooltipWrapper label="Product Name">
         <InputField
           name="name"
@@ -35,6 +44,7 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           type="text"
         />
       </TooltipWrapper>
+
       <TooltipWrapper label="Price">
         <InputField
           name="price"

@@ -54,7 +54,12 @@ const OtherColor = {
   fillColor: "fill-gray-400",
 };
 
-export default function ImageUpload() {
+interface ImageUploadProps {
+  onUploadSuccess: (uploadedFilesData: { imageUrl: string; publicId: string }[]) => void;
+}
+
+
+export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
 
@@ -167,7 +172,7 @@ export default function ImageUpload() {
       // Prepare formData for each file and track progress
       const fileUploadPromises = acceptedFiles.map((file) => {
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("files", file);
         formData.append(
           "upload_preset",
           process.env.NEXT_PUBLIC_UPLOAD_PRESET as string
@@ -184,7 +189,14 @@ export default function ImageUpload() {
       });
 
       try {
-        await Promise.all(fileUploadPromises);
+        // await Promise.all(fileUploadPromises);
+        // alert("All files uploaded successfully");
+        const responses = await Promise.all(fileUploadPromises);
+        const uploadedFilesData = responses.map((response) => ({
+          imageUrl: response.data.url, // Assuming the API returns the URL of the uploaded image
+          publicId: response.data.public_id, // Assuming the API returns the public ID of the uploaded image
+        }));
+        onUploadSuccess(uploadedFilesData);
         alert("All files uploaded successfully");
       } catch (error) {
         console.error("Error uploading files: ", error);

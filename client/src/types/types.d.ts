@@ -28,9 +28,10 @@ export type ProductCategoryType = {
 };
 
 export type ImgProductType = {
-  id: number;
+  id?: number;
   imageUrl: string;
-  productId: number;
+  publicId: string;
+  productId?: number;
 };
 
 export type MeasurementType = {

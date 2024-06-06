@@ -56,7 +56,7 @@ export const createColumns = (
       const imgProducts = getValue<ImgProductType[]>();
       const imageUrl = imgProducts.length
         ? `https://res.cloudinary.com/djvlldzih/image/upload/v1717554614/letcook/uploads/images/product/${imgProducts[0].imageUrl}`
-        : "/placeholder.png";
+        : "https://res.cloudinary.com/djvlldzih/image/upload/v1717604827/letcook/uploads/images/yfmw7mzqplpyxcmiopuj.jpg";
 
       return (
         <img

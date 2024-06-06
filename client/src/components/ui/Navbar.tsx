@@ -53,6 +53,7 @@ const Navbar = () => {
                         'bg-gray-900': pathname === link.href,
                       }
                     )}
+                    prefetch={false}
                   >
                     <LinkIcon
                       className={clsx('h-5 w-5', {

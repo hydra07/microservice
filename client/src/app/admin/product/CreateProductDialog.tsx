@@ -11,9 +11,9 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ProductType } from "CustomTypes";
+import { ProductType, ImgProductType } from "CustomTypes";
 import ImageUpload from "../component/image-upload";
-import MeasurementForm from "./MeasurementForm";
+import NutritionForm from "./NutritionForm"; "./NutritionForm";
 import BasicInfoForm from "./BasicInfoForm";
 
 interface CreateProductDialogProps {
@@ -24,8 +24,11 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
   onCreateSuccess,
 }) => {
   const [open, setOpen] = useState(false);
-  const [uploadedImageURLs, setUploadedImageURLs] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<
+    { imageUrl: string; publicId: string }[]
+  >([]);
   const [currentTab, setCurrentTab] = useState(0);
+
   const [newProduct, setNewProduct] = useState<ProductType>({
     id: 0,
     name: "",
@@ -49,7 +52,9 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setNewProduct((prevProduct) => ({
@@ -58,18 +63,20 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
     }));
   };
 
-  const handleMeasurementChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setNewProduct((prevProduct) => ({
-      ...prevProduct,
-      measurement: {
-        ...prevProduct.measurement,
-        [name]: value,
-      },
-    }));
-  };
+  // const handleMeasurementChange = (
+  //   e: React.ChangeEvent<
+  //     HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+  //   >
+  // ) => {
+  //   const { name, value } = e.target;
+  //   setNewProduct((prevProduct) => ({
+  //     ...prevProduct,
+  //     measurement: {
+  //       ...prevProduct.measurement,
+  //       [name]: value,
+  //     },
+  //   }));
+  // };
 
   const handleNutritionChange = (key: string, value: string) => {
     setNewProduct((prevProduct) => ({
@@ -80,11 +87,30 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
       },
     }));
   };
+  const handleCategoryChange = (value: string) => {
+    setNewProduct((prevProduct) => ({
+      ...prevProduct,
+      category: {
+        ...prevProduct.category,
+        id: value,
+      },
+    }));
+  };
+
+  const handleMeasurementChange = (value: string) => {
+    // setNewProduct((prevProduct) => ({
+    //   ...prevProduct,
+    //   measurement: {
+    //     ...prevProduct.measurement,
+    //     id: value,
+    //   },
+    // }));
+  }
 
   const handleCreateProduct = async () => {
     try {
-      
-      const createdProduct = await ProductService.createProduct(newProduct);
+      const productData = { ...newProduct, imgProducts: uploadedImages };
+      const createdProduct = await ProductService.createProduct(productData);
       if (createdProduct) {
         onCreateSuccess(createdProduct);
         setOpen(false);
@@ -109,10 +135,22 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
             fiber: 0,
           },
         });
+        setUploadedImages([]);
       }
     } catch (error) {
       console.error("Error creating product:", error);
     }
+  };
+
+  const handleUploadSuccess = (
+    uploadedFilesData: { imageUrl: string; publicId: string }[]
+  ) => {
+    const imgProductsData = uploadedFilesData.map((file) => ({
+      imageUrl: file.imageUrl,
+      publicId: file.publicId,
+      productId: 0, // This will be set by the backend when creating the product
+    }));
+    setUploadedImages(imgProductsData);
   };
 
   const nextTab = () => setCurrentTab((prev) => prev + 1);
@@ -138,14 +176,18 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
         {currentTab === 0 && (
           <div>
             <h4 className="text-gray-500 mb-4">Basic information</h4>
-            <BasicInfoForm newProduct={newProduct} handleInputChange={handleInputChange} />
+            <BasicInfoForm
+              newProduct={newProduct}
+              handleInputChange={handleInputChange}
+              handleCategoryChange={handleCategoryChange}
+            />
           </div>
         )}
 
         {currentTab === 1 && (
           <div>
-              <h4 className="text-gray-500 mb-4">Nutrition information</h4>
-            <MeasurementForm
+            <h4 className="text-gray-500 mb-4">Nutrition information</h4>
+            <NutritionForm
               newProduct={newProduct}
               handleInputChange={handleInputChange}
               handleMeasurementChange={handleMeasurementChange}
@@ -157,7 +199,7 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
         {currentTab === 2 && (
           <div>
             <h4 className="text-gray-500 mb-4">Media</h4>
-            <ImageUpload />
+            <ImageUpload onUploadSuccess={handleUploadSuccess} />
           </div>
         )}
 
