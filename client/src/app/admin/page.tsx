@@ -1,5 +1,3 @@
-import isAuth from "@/components/privateRouter";
-
 export default function AdminDashboard() {
   return (
     <>
