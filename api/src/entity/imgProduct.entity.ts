@@ -19,7 +19,7 @@ export class ImgProduct extends BaseEntity {
   @Column({type: "text"})
   publicId?: string;
 
-  @ManyToOne(() => Product, (product) => product.imgProducts)
+  @ManyToOne(() => Product, (product) => product.imgProducts, { onDelete: "CASCADE" })
   @JoinColumn({ name: "product_id" })
-  product?: Product;
+  product!: Product;
 }

@@ -16,6 +16,7 @@ const MeasurementSelect: React.FC<MeasurementSelectProps> = ({ value, onChange }
       try {
         const response = await fetch("http://localhost:3000/api/measurements");
         const data = await response.json();
+        // console.log(data);
         setMeasusrements(data);
       } catch (error) {
         console.error("Error fetching measuremtnws:", error);
@@ -33,7 +34,7 @@ const MeasurementSelect: React.FC<MeasurementSelectProps> = ({ value, onChange }
       <SelectContent>
         {measusrements.map((measurement) => (
           <SelectItem key={measurement.id} value={measurement.id.toString()}>
-            {measurement.name}
+            {measurement.unit}
           </SelectItem>
         ))}
       </SelectContent>

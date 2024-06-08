@@ -16,6 +16,7 @@ const Product = () => {
     const fetchData = async () => {
       try {
         const fetchedData = await ProductService.fetchProducts();
+        
         console.log(fetchedData);
         setData(fetchedData);
       } catch (error) {

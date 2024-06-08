@@ -36,7 +36,7 @@ export type ImgProductType = {
 
 export type MeasurementType = {
   id: number;
-  name: string;
+  unit: string;
 };
 
 export type NutritionType = {
@@ -58,7 +58,7 @@ export type ProductType = {
   imgProducts: ImgProductType[];
   category: ProductCategoryType;
   is_activated: boolean;
-  amountToSell: number | null;
+  amountToSell?: number;
   averageWeight: number;
   measurement: MeasurementType;
   nutrition: NutritionType;

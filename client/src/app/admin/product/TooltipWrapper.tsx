@@ -16,7 +16,7 @@ interface TooltipWrapperProps {
 
 const TooltipWrapper: React.FC<TooltipWrapperProps> = ({
   label,
-  delay = 0,
+  delay = 0.3,
   sideStyle = "top",
   children,
 }) => {

@@ -47,7 +47,16 @@ export const createColumns = (
   },
   {
     accessorKey: "id",
-    header: "ID",
+    header: () => <div className="text-right w-10">Title</div>,
+    cell: ({ row }) => (
+      <div className="flex gap-2 items-center">
+        {" "}
+        <span className="truncate w-10 font-medium">
+          {" "}
+          {row.getValue("id")}{" "}
+        </span>{" "}
+      </div>
+    ),
   },
   {
     accessorKey: "imgProducts",
@@ -55,7 +64,7 @@ export const createColumns = (
     cell: ({ getValue }) => {
       const imgProducts = getValue<ImgProductType[]>();
       const imageUrl = imgProducts.length
-        ? `https://res.cloudinary.com/djvlldzih/image/upload/v1717554614/letcook/uploads/images/product/${imgProducts[0].imageUrl}`
+        ? `${imgProducts[0].imageUrl}`
         : "https://res.cloudinary.com/djvlldzih/image/upload/v1717604827/letcook/uploads/images/yfmw7mzqplpyxcmiopuj.jpg";
 
       return (
@@ -81,16 +90,35 @@ export const createColumns = (
         </Button>
       );
     },
-    maxSize: 20,
+    cell: ({ row }) => (
+      <div className="flex gap-2 items-center">
+        <span className="truncate w-40 font-medium">
+          {row.getValue("name")}
+        </span>
+      </div>
+    ),
+
     enableResizing: false,
   },
   {
     accessorKey: "currentQuantity",
     header: "Current Quantity",
+    cell: ({ row }) => (
+      <span className="text-gray-700 font-mono">
+        {row.getValue("currentQuantity")}
+      </span>
+    ),
+    meta: { className: 'w-[120px] text-center' },
   },
   {
     accessorKey: "price",
-    header: "Price",
+    header: () => <span className="font-semibold text-gray-700">Price</span>,
+    cell: ({ row }) => (
+      <span>
+        ${Number(row.getValue("price")).toFixed(2)}
+      </span>
+    ),
+    meta: { className: 'w-[100px] text-right' },
   },
   {
     accessorKey: "is_activated",

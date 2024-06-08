@@ -9,7 +9,7 @@
     handleInputChange: (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => void;
-    handleMeasurementChange: (value: string) => void;
+    handleMeasurementChange: (value: number) => void; // Updated type to accept string
     handleNutritionChange: (key: string, value: string) => void;
   }
 
@@ -21,12 +21,13 @@
   }) => {
     return (
       <div className="space-y-4">
-        <TooltipWrapper label="Measurement Name" sideStyle="right">
+        {/* <TooltipWrapper label="Measurement Name" sideStyle="right"> */}
           <MeasurementSelect
-            value={newProduct.measurement.name}
-            onChange={handleMeasurementChange}
+            value={newProduct.measurement.id.toString()}
+            // onChange={handleMeasurementChange}
+            onChange={(value) => handleMeasurementChange(parseInt(value))}
           />
-        </TooltipWrapper>
+        {/* </TooltipWrapper> */}
         <TooltipWrapper label="Average Weight">
           <InputField
             name="averageWeight"

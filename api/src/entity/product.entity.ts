@@ -16,41 +16,41 @@ import { Nutrition } from "./nutrition.entity";
 @Entity("products")
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
   @Column({ type: "text" })
-  name?: string;
+  name!: string;
 
   @Column({ type: "text" })
-  description?: string;
+  description!: string;
 
   @Column()
-  currentQuantity?: number;
+  currentQuantity!: number;
 
   @Column({ type: "double precision" })
-  price?: number;
+  price!: number;
 
-  @OneToMany(() => ImgProduct, (imgProduct) => imgProduct.product, { eager: true })
+  @OneToMany(() => ImgProduct, (imgProduct) => imgProduct.product, { cascade: ["insert", "update"] })
   imgProducts?: ImgProduct[];
 
   @ManyToOne(() => CategoryProduct, { eager: true })
   @JoinColumn({ name: "category_id" })
-  category?: CategoryProduct;
+  category!: CategoryProduct;
 
   @Column()
-  is_activated?: boolean;
+  is_activated!: boolean;
 
   @Column({ type: "double precision", nullable: true })
-  amountToSell?: number;
+  amountToSell!: number;
 
   @Column({ type: "double precision" })
   averageWeight?: number;
 
-  @OneToOne(() => Measurement, { eager: true })
+  @ManyToOne(() => Measurement, { eager: true })
   @JoinColumn({ name: "measurement_id" })
-  measurement?: Measurement;
+  measurement!: Measurement;
 
-  @OneToOne(() => Nutrition, { eager: true })
-  @JoinColumn({ name: "nutrition_id" })
+  @OneToOne(() => Nutrition, { cascade: true, eager: true })
+  @JoinColumn({ name: "nutrition_id" }) 
   nutrition?: Nutrition;
 }
