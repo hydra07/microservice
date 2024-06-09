@@ -5,5 +5,5 @@ export class CategoryProductDTO {
     id!: number;
 
     @Expose()
-    name!: string;
+    name?: string;
 }

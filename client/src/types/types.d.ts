@@ -23,8 +23,8 @@ export type UserInfo = {
 
 export type ProductCategoryType = {
   id: string;
-  name: string;
-  isActive: boolean;
+  name?: string;
+  isActive?: boolean;
 };
 
 export type ImgProductType = {

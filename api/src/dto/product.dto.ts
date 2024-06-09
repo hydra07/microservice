@@ -1,35 +1,35 @@
-import { Expose, Transform, Type } from 'class-transformer';
-import { CategoryProductDTO } from './categoryProduct';
+import { Expose, Transform, Type } from 'class-transformer';;
 import { ImgProductDTO } from './imgProduct.dto';
-import { MeasurementDTO } from './measurement.dto';
-import { NutritionDTO } from './nutrition.dto';
+import { CategoryProduct } from '../entity/categoryProduct.entity';
+import { Measurement } from '@/entity/measurement.entity';
+import { Nutrition } from '@/entity/nutrition.entity';
 
 export class ProductDTO {
   @Expose()
   id?: number;
 
   @Expose()
-  name?: string;
+  name!: string;
 
   @Expose()
   description?: string;
 
   @Expose()
-  currentQuantity?: number;
+  currentQuantity!: number;
 
   @Expose()
-  price?: number;
+  price!: number;
 
   @Expose()
   @Type(() => ImgProductDTO)
   imgProducts?: ImgProductDTO[];
 
   @Expose()
-  @Type(() => CategoryProductDTO)
-  category!: CategoryProductDTO;
+  @Type(() => CategoryProduct)
+  category!: CategoryProduct;
 
   @Expose()
-  isActivated?: boolean;
+  isActivated!: boolean;
 
   @Expose()
   amountToSell?: number;
@@ -38,10 +38,10 @@ export class ProductDTO {
   averageWeight?: number;
 
   @Expose()
-  @Type(() => MeasurementDTO)
-  measurement!: MeasurementDTO;
+  @Type(() => Measurement)
+  measurement!: Measurement;
 
   @Expose()
-  @Type(() => NutritionDTO)
-  nutrition?: NutritionDTO;
+  @Type(() => Nutrition)
+  nutrition?: Nutrition;
 }

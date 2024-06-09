@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectLiteral } from "typeorm";
 import BaseService from "../service/baseService";
-import { stringify } from 'flatted';
 
 export class BaseController<ENTITY extends ObjectLiteral> {
   protected service: BaseService<ENTITY>;

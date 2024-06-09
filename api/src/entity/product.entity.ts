@@ -30,7 +30,7 @@ export class Product extends BaseEntity {
   @Column({ type: "double precision" })
   price!: number;
 
-  @OneToMany(() => ImgProduct, (imgProduct) => imgProduct.product, { cascade: ["insert", "update"] })
+  @OneToMany(() => ImgProduct, (imgProduct) => imgProduct.product, { cascade: ["insert", "update"], eager: true })
   imgProducts?: ImgProduct[];
 
   @ManyToOne(() => CategoryProduct, { eager: true })

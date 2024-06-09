@@ -21,5 +21,5 @@ export class ImgProduct extends BaseEntity {
 
   @ManyToOne(() => Product, (product) => product.imgProducts, { onDelete: "CASCADE" })
   @JoinColumn({ name: "product_id" })
-  product!: Product;
+  product?: Product;
 }
