@@ -23,9 +23,10 @@
       <div className="space-y-4">
         {/* <TooltipWrapper label="Measurement Name" sideStyle="right"> */}
           <MeasurementSelect
-            value={newProduct.measurement.id.toString()}
-            // onChange={handleMeasurementChange}
-            onChange={(value) => handleMeasurementChange(parseInt(value))}
+            // value={newProduct.measurement.id.toString()}          
+            // onChange={(value) => handleMeasurementChange(parseInt(value))}
+            value={newProduct.measurement.id ? newProduct.measurement.id.toString() : ""}
+            onChange={(value) => handleMeasurementChange(parseInt(value || "0"))}
           />
         {/* </TooltipWrapper> */}
         <TooltipWrapper label="Average Weight">

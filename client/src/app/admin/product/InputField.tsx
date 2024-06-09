@@ -44,6 +44,7 @@ const InputField: React.FC<InputFieldProps> = ({
         />
       ) : (
         <input
+          min={0}
           ref={inputRef as React.RefObject<HTMLInputElement>}
           name={name}
           placeholder={placeholder}

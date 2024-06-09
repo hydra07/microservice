@@ -1,6 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ImgProductType, ProductType } from "CustomTypes";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
 import {
   DropdownMenu,
   DropdownMenuContent,

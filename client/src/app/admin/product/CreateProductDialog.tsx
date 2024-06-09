@@ -17,6 +17,10 @@ import NutritionForm from "./NutritionForm";
 ("./NutritionForm");
 import BasicInfoForm from "./BasicInfoForm";
 import ProductImageUpload from "./ProductImageUpload";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ProductFormData, productSchema } from "@/validation/productSchema";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
+
 
 interface CreateProductDialogProps {
   onCreateSuccess: (newProduct: ProductType) => void;
@@ -37,6 +41,30 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
   const [uploadedImages, setUploadedImages] = useState<ImgProductType[]>([]);
 
   const [currentTab, setCurrentTab] = useState(0);
+
+  const methods = useForm<ProductFormData>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      currentQuantity: 0,
+      price: 0,
+      // imgProducts: [],
+      category: { id: "", name: "", isActive: true },
+      // is_activated: true,
+      amountToSell: 0,
+      averageWeight: 0,
+      measurement: { id: 0, unit: "" },
+      nutrition: {
+        calories: 0,
+        sugar: 0,
+        fat: 0,
+        sodium: 0,
+        carbs: 0,
+        fiber: 0,
+      },
+    }
+  });
 
   const [newProduct, setNewProduct] = useState<ProductType>({
     id: 0,
@@ -60,6 +88,8 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
     },
   });
 
+
+  
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
