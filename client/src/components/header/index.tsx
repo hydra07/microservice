@@ -1,3 +1,4 @@
+
 'use client';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
@@ -20,6 +21,7 @@ export default function Header() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
 
   return (
     <header

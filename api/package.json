@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "bun --hot ./src/index.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "start": "node"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -45,5 +46,11 @@
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.7.5",
     "typeorm": "^0.3.20"
-  }
+  },
+  "description": "To install dependencies:",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
