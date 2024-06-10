@@ -1,4 +1,4 @@
-import { cleanEnv, port, str, num } from 'envalid';
+import { cleanEnv, num, port, str } from 'envalid';
 
 export default cleanEnv(process.env, {
   // MONGO_URI: str(),
@@ -17,9 +17,17 @@ export default cleanEnv(process.env, {
   DISCORD_CLIENT_ID: str(),
   DISCORD_CLIENT_SECRET: str(),
   DISCORD_CALLBACK_URL: str(),
+
+  GOOGLE_CLIENT_ID: str(),
+  GOOGLE_CLIENT_SECRET: str(),
+  GOOGLE_CALLBACK_URL: str(),
   JWT_SECRET: str(),
   REFRESH_SECRET: str(),
   EXPIRE_JWT: num(),
   EXPIRE_REFRESH: num(),
 
+  CLOUD_NAME: str(),
+  CLOUD_API_KEY: str(),
+  CLOUD_API_SECRET: str(),
+  CLOUD_IMG_FOLDER: str(),
 });

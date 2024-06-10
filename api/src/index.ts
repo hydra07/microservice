@@ -17,5 +17,4 @@ async function main() {
     console.log('TypeORM connection error: ', error);
   }
 }
-
 await main();

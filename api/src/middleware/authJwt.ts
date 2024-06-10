@@ -21,10 +21,11 @@ const verifyToken = (
   next: NextFunction,
 ) => {
   const token = req.headers['x-access-token'] as string;
-
+  console.log('Token:', token);
   if (!token) {
     return res.status(403).send({ message: 'No token provided!' });
   }
+
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;

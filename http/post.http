@@ -1,26 +1,44 @@
 ### Create a new post
-POST http://localhost:3000/api/post HTTP/1.1
-content-type: application/json
+POST http://localhost:5000/api/post HTTP/1.1
+Content-Type: application/json
 
 {
-  "title": "Test title",
-  "author": "Test author",
-  "content": "Test content"
+  "title": "Tiêu đề của demo blog thứ 3",
+  "userId": "Demo user",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis ullamcorper ante. Mauris bibendum orci sit amet velit tempus, ac lacinia lacus malesuada. Ut ullamcorper malesuada nisi, id mollis est ultricies ut. Nulla et nisl nisl. Aliquam sed justo at turpis eleifend sodales. Phasellus dignissim eros et tortor hendrerit varius. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc elementum erat at justo sollicitudin consequat."
 }
 
 ### Get all posts
 GET http://localhost:3000/api/post HTTP/1.1
 
 ### Update a post
-PUT http://localhost:3000/api/post/664b13e845f3601588c49a07 HTTP/1.1
+PUT http://localhost:5000/api/post/6655fc49174382ffd7f1700d HTTP/1.1
 content-type: application/json
 
 {
-  "title": "Updated title",
-  "author": "Updated author",
-  "content": "Updated content"
+  "title": "Demo bài viết mới",
+  "userId": "Id Tác giả",
+  "createdAt": "2024-05-25T16:22:56.695Z",
+  "content":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis ullamcorper ante. Mauris bibendum orci sit amet velit tempus, ac lacinia lacus malesuada. Ut ullamcorper malesuada nisi, id mollis est ultricies ut. Nulla et nisl nisl. Aliquam sed justo at turpis eleifend sodales. Phasellus dignissim eros et tortor hendrerit varius. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc elementum erat at justo sollicitudin consequat. In hac habitasse platea dictumst. Donec consequat felis at enim ultrices tempor. Integer consequat nisi ac est fermentum accumsan. Proin faucibus enim id metus mattis, ac efficitur risus consequat. Nullam pellentesque risus eget mauris ultricies tristique. Cras vehicula ex eu urna tempus dapibus. Suspendisse hendrerit nunc in ligula varius feugiat. Sed hendrerit, neque nec bibendum eleifend, odio eros eleifend nisi, eget fermentum purus purus id ex. Sed consectetur ex id neque sollicitudin, nec lacinia lacus finibus. Nam at tellus id odio lacinia vulputate vitae ut nunc. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis vulputate, elit at volutpat ultrices, felis nunc malesuada purus, nec consequat risus libero nec ipsum. Vestibulum a eros vel libero egestas finibus. Sed feugiat auctor libero ac sollicitudin. Suspendisse potenti. Proin posuere tempus tellus. Suspendisse potenti. Morbi porta justo id dui placerat, et efficitur enim suscipit. Cras sodales aliquam accumsan. Ut pellentesque, orci ut lobortis tempor, ligula libero fermentum elit, sit amet iaculis purus ipsum vitae ipsum. Vivamus aliquam sagittis orci vel volutpat. Integer vel convallis sapien. Curabitur at tincidunt ipsum. Nulla facilisi. Curabitur convallis sapien nec lectus commodo, a pretium nisi placerat. Nullam in augue eget dolor ullamcorper convallis eu id arcu. Morbi cursus mi ac velit efficitur, sed vulputate nisi vulputate. Nunc ac ex lectus. Duis varius felis nec ligula vehicula, vel molestie ante semper. Maecenas non vestibulum leo. In nec magna ac magna feugiat elementum. In dapibus, justo vitae feugiat eleifend, elit turpis semper dolor, sit amet eleifend sapien erat eu magna. Vivamus ultricies lacus et mi varius, et malesuada purus ultricies. Integer at mi nec nunc commodo eleifend. Donec tristique commodo orci, sed iaculis lorem mattis id. Sed ac urna fermentum, vestibulum mauris eget, accumsan orci. Sed consectetur fermentum libero, in fermentum sem pulvinar non. In hac habitasse platea dictumst. Nam in felis vitae justo rhoncus varius. Nullam scelerisque lorem vel justo dictum, id tristique velit vulputate. Nam dapibus volutpat ante, id ultricies lectus egestas eget. Donec pharetra risus a interdum sagittis. Vestibulum at dui ultricies, rhoncus libero at, tincidunt eros. Suspendisse vel mauris eros. Cras accumsan, est id finibus feugiat, odio dolor aliquam ipsum, sit amet vestibulum dolor metus vitae nisl. Suspendisse eget tincidunt libero, et auctor enim. Aliquam condimentum nisl quis dui elementum sodales. Sed in odio justo. Maecenas vitae sem vel purus hendrerit viverra sed ac est. Phasellus auctor, nunc eu facilisis congue, nisi lorem volutpat sem, a venenatis metus tortor sed turpis. Maecenas sit amet lacus vel lacus vestibulum luctus. Cras aliquam libero at felis vulputate feugiat. Nullam vitae enim vitae odio mattis dictum. Mauris semper ligula ac est ultrices, a sodales justo pulvinar. Nullam nec metus nec quam egestas commodo ut vel sapien. Morbi auctor vehicula purus, id hendrerit libero blandit nec. In ut lorem vel purus dapibus fermentum. Integer sed consequat urna. Suspendisse potenti. Proin luctus ligula id justo varius, nec accumsan arcu feugiat. Mauris ac pulvinar libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed malesuada mattis arcu, at luctus magna rhoncus sit amet. Curabitur efficitur euismod mauris, id tempor nunc placerat id. Curabitur posuere turpis vel ex pellentesque, vitae iaculis tortor vestibulum. Sed tincidunt libero ut orci viverra convallis. Fusce feugiat sem et metus ultricies malesuada. Nullam accumsan felis ut nulla euismod, nec rhoncus libero luctus. Integer et felis ut mauris condimentum mattis. Phasellus semper, odio vel vehicula fringilla, dolor tortor sollicitudin leo, sit amet vulputate turpis lectus quis ex. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In hendrerit ante sit amet nunc pellentesque, et tempus quam vulputate. Sed euismod, leo non interdum iaculis, leo odio vehicula tellus, vitae lobortis tortor dui sit amet mauris. Sed lacinia, dolor vel facilisis congue, erat urna posuere leo, eu ultricies quam eros vitae est. Fusce pharetra lacinia tellus in mollis. Duis id lacus et purus efficitur pulvinar ut non metus. Aenean eu leo sit"
 }
+
+### Get a post
+GET http://localhost:5000/api/post/6655fc49174382ffd7f1700d HTTP/1.1
 
 ### Delete a post
 DELETE http://localhost:3000/api/post/664b13e845f3601588c49a07 HTTP/1.1
 Content-Type: application/json
+
+### Create a new comment
+POST http://localhost:3000/api/post/comment HTTP/1.1
+Content-Type: application/json
+
+{
+  "postId": "66558509b1850b59e406b768",
+  "userId": "Demo user2",
+  "content": "Demo content2"
+}
+
+
+
+
