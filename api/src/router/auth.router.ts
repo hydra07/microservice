@@ -51,7 +51,7 @@ router.get(
     res.json({ message: 'Google login successful' });
   },
 );
-router.post('/authenticate', authController.authenticate);
+// router.post('/authenticate', authController.authenticate);
 
 // Apply this middleware to protected routes
 router.get('/protected', authenticateJWT, (req: Request, res: Response) => {

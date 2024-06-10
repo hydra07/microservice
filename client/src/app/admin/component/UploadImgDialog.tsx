@@ -29,7 +29,7 @@ export default function UploadImgDialog() {
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <ImageUpload />
+              {/* <ImageUpload /> */}
             </div>
           </DialogContent>
         </Dialog>

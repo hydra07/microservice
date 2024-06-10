@@ -45,7 +45,7 @@ export function DataTable<TData, TValue>({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 5,
+        pageSize: 3,
       },
     },
     onSortingChange: setSorting,
@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
       </div>
-      <div className="rounded-md border h-[400px]">
+      <div className="rounded-md border h-[300px]">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

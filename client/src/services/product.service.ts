@@ -14,8 +14,8 @@ export const fetchProducts = async () => {
 export const createProduct = async (productData: ProductType) => {
   try {
     console.log(productData);
-    // const res = await http.post("api/products", productData);
-    // return res.data;
+    const res = await http.post("api/products", productData);
+    return res.data;
   } catch (error) {
     return null;
   }

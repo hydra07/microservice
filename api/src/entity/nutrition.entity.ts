@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "./product.entity";
 
 @Entity("nutritions")
 export class Nutrition extends BaseEntity {

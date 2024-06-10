@@ -9,14 +9,15 @@ interface MeasurementSelectProps {
 }
 
 const MeasurementSelect: React.FC<MeasurementSelectProps> = ({ value, onChange }) => {
-  const [measusrements, setMeasusrements] = useState<MeasurementType[]>([]);
+  const [measurements, setMeasurements] = useState<MeasurementType[]>([]);
 
   useEffect(() => {
     const fetchMeasurements = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/measurements");
         const data = await response.json();
-        setMeasusrements(data);
+        // console.log(data);
+        setMeasurements(data);
       } catch (error) {
         console.error("Error fetching measuremtnws:", error);
       }
@@ -31,9 +32,9 @@ const MeasurementSelect: React.FC<MeasurementSelectProps> = ({ value, onChange }
         <SelectValue placeholder="Select a measurement" />
       </SelectTrigger>
       <SelectContent>
-        {measusrements.map((measurement) => (
+        {measurements.map((measurement) => (
           <SelectItem key={measurement.id} value={measurement.id.toString()}>
-            {measurement.name}
+            {measurement.unit}
           </SelectItem>
         ))}
       </SelectContent>
