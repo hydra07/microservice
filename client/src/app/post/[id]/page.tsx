@@ -1,14 +1,19 @@
 import dynamic from 'next/dynamic';
-const Comment = dynamic(() => import('../Comment'));
-const Post = dynamic(() => import('../Post'));
+// import Comment from './Comment';
 export default async ({ params }: { params: { id: string } }) => {
-  // const post = await fetchingPost(params.id);
-  // console.log(post);
+  const Comment = dynamic(() => import('./Comment'));
+  const Post = dynamic(() => import('./Post'));
+  const SideBar = dynamic(() => import('./SideBar'));
   return (
     <>
-      <Post id={params.id}>
-        <Comment id={params.id} />
-      </Post>
+      <div className="container">
+        <div className="flex flex-row">
+          <Post id={params.id}>
+            <Comment id={params.id} />
+          </Post>
+          <SideBar />
+        </div>
+      </div>
     </>
   );
 };

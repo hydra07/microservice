@@ -12,7 +12,7 @@ class UserService {
 
   //find user by id
   async findUserById(id: string) {
-    console.log('sss', id);
+    // console.log('sss', id);
     return await this.userRepository.findOneBy({ id: id });
   }
 
