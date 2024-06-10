@@ -7,17 +7,25 @@ import { DataTable } from '../component/data-table';
 import UploadImgDialog from '../component/UploadImgDialog';
 import { createColumns } from './columns';
 import CreateProductCategoryDialog from './CreateProductCategoryDialog';
+import {SkeletonTable} from '../component/SkeletonTable';
 const ProductCategory = () => {
   const [data, setData] = useState<ProductCategoryType[]>([]);
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedData =
-          await ProductCategoryService.fetchProductCategories();
+        const fetchedData = await ProductCategoryService.fetchProductCategories();
+        //delay 2 seconds
+
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         setData(fetchedData);
       } catch (error) {
-        console.error('Error fetching product categories:', error);
+        console.error('Error fetching products:', error);
+        setError('Failed to fetch products.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -39,6 +47,17 @@ const ProductCategory = () => {
 
   const columns = createColumns(handleUpdateSuccess);
 
+  const skeletonColumns = [
+    //first headre  not display
+    
+    { header: { width: 'w-[0px]' } , cell: { width: 'w-[10px]' } },
+    { header: { width: 'w-3/5' }, cell: { width: 'w-3/5' } },
+    { header: { width: 'w-1/5' }, cell: { width: 'w-1/5' } },
+  ];
+
+  if (loading) {
+    return <SkeletonTable columns={skeletonColumns} rows={3} />;
+  }
   return (
     <>
       <h1>Product Category</h1>

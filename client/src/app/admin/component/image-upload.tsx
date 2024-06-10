@@ -1,5 +1,6 @@
 "use client";
-import http from "@/services/http";
+// import http from "@/services/http";
+
 import axios, { AxiosProgressEvent, CancelTokenSource } from "axios";
 import {
   AudioWaveform,
@@ -15,6 +16,7 @@ import { useDropzone } from "react-dropzone";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
 interface FileUploadProgress {
   progress: number;
   File: File;
@@ -58,7 +60,6 @@ interface ImageUploadProps {
   onUploadSuccess: (uploadedFilesData: { imageUrl: string; publicId: string }[]) => void;
 }
 
-
 export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
@@ -98,8 +99,6 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
     };
   };
 
-  // feel free to mode all these functions to separate utils
-  // here is just for simplicity
   const onUploadProgress = (
     progressEvent: AxiosProgressEvent,
     file: File,
@@ -189,15 +188,12 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
       });
 
       try {
-        // await Promise.all(fileUploadPromises);
-        // alert("All files uploaded successfully");
         const responses = await Promise.all(fileUploadPromises);
         const uploadedFilesData = responses.map((response) => ({
           imageUrl: response.data.url, // Assuming the API returns the URL of the uploaded image
           publicId: response.data.public_id, // Assuming the API returns the public ID of the uploaded image
         }));
         onUploadSuccess(uploadedFilesData);
-        alert("All files uploaded successfully");
       } catch (error) {
         console.error("Error uploading files: ", error);
       }
@@ -297,6 +293,7 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
           </p>
           <div className="space-y-2 pr-3">
             {uploadedFiles.map((file) => {
+              const previewUrl = URL.createObjectURL(file);
               return (
                 <div
                   key={file.lastModified}
@@ -304,7 +301,15 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
                 >
                   <div className="flex items-center flex-1 p-2">
                     <div className="text-white">
-                      {getFileIconAndColor(file).icon}
+                      {file.type.includes(FileTypes.Image) ? (
+                        <img
+                          src={previewUrl}
+                          alt={file.name}
+                          className="w-10 h-10 object-cover"
+                        />
+                      ) : (
+                        getFileIconAndColor(file).icon
+                      )}
                     </div>
                     <div className="w-full ml-2 space-y-1">
                       <div className="text-sm flex justify-between">
