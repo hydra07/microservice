@@ -1,3 +1,4 @@
+
 import { ColumnDef } from "@tanstack/react-table";
 import { ImgProductType, ProductType } from "CustomTypes";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,9 @@ const productImageURL =
   "https://res.cloudinary.com/djvlldzih/image/upload/v1717554614/letcook/uploads/images/product/";
 
 export const createColumns = (
-  handleUpdateSuccess: (updatedProduct: ProductType) => void
+  handleUpdateSuccess: (updatedProduct: ProductType) => void,
+  handleUpdateClick: (product: ProductType) => void
+
 ): ColumnDef<ProductType>[] => [
   {
     id: "actions",
@@ -41,7 +44,9 @@ export const createColumns = (
               Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View product details</DropdownMenuItem>
+            <DropdownMenuItem onClick={ () => handleUpdateClick(product) }>
+              Update product
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -52,11 +57,9 @@ export const createColumns = (
     header: () => <div className="text-right w-10">Title</div>,
     cell: ({ row }) => (
       <div className="flex gap-2 items-center">
-        {" "}
         <span className="truncate w-10 font-medium">
-          {" "}
-          {row.getValue("id")}{" "}
-        </span>{" "}
+          {row.getValue("id")}
+        </span>
       </div>
     ),
   },
@@ -78,7 +81,6 @@ export const createColumns = (
       );
     },
   },
-
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -99,7 +101,6 @@ export const createColumns = (
         </span>
       </div>
     ),
-
     enableResizing: false,
   },
   {

@@ -7,11 +7,13 @@ import { DataTable } from '../component/data-table';
 import { createColumns } from './columns';
 import CreateProductDialog from './CreateProductDialog';
 import { SkeletonTable } from '../component/SkeletonTable';
+import UpdateProductDialog from './UpdateProductDialog';
 
 const Product = () => {
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +46,12 @@ const Product = () => {
     setData((prevData) => [...prevData, newProduct]);
   };
 
-  const columns = createColumns(handleUpdateSuccess);
+  const handleUpdateClick = (product: ProductType) => {
+    setSelectedProduct(product);
+  };
+
+  const columns = createColumns(handleUpdateSuccess, handleUpdateClick);
+
 
   const skeletonColumns = [
     { header: { width: 'w-[50px]' }, cell: { width: 'w-8 h-8 rounded-full' } },
@@ -71,7 +78,9 @@ const Product = () => {
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={data} />
       </div>
-      {/* <UploadImgDialog /> */}
+      
+      {/* <UpdateProductDialog onUpdateSuccess={handleUpdateSuccess} selectedProduct={selectedProduct} /> */}
+
     </>
   );
 };

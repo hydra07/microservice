@@ -22,7 +22,7 @@ export type UserInfo = {
 };
 
 export type ProductCategoryType = {
-  id: string;
+  id: number;
   name?: string;
   isActive?: boolean;
 };
@@ -41,12 +41,12 @@ export type MeasurementType = {
 
 export type NutritionType = {
   id?: number;
-  calories?: number;
-  sugar?: number;
-  fat?: number;
-  sodium?: number;
-  carbs?: number;
-  fiber?: number;
+  calories: number;
+  sugar: number;
+  fat: number;
+  sodium: number;
+  carbs: number;
+  fiber: number;
 };
 
 export type ProductType = {
@@ -58,7 +58,7 @@ export type ProductType = {
   imgProducts: ImgProductType[];
   category: ProductCategoryType;
   is_activated: boolean;
-  amountToSell?: number;
+  amountToSell: number;
   averageWeight: number;
   measurement: MeasurementType;
   nutrition: NutritionType;

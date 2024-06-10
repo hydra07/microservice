@@ -25,6 +25,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ value, onChange }) => {
     fetchCategories();
   }, []);
 
+
   return (
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger className="w-full">
@@ -32,7 +33,7 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ value, onChange }) => {
       </SelectTrigger>
       <SelectContent>
         {categories.map((category) => (
-          <SelectItem key={category.id} value={category.id}>
+          <SelectItem key={category.id} value={category.id.toString()}>
             {category.name}
           </SelectItem>
         ))}
