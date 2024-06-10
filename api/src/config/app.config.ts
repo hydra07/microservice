@@ -55,7 +55,7 @@ app.use('/api/hello', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api', postRouter);
 app.use('/api', commentRouter);
-app.use('/api/recipe', recipeRouter);
+app.use('/api', recipeRouter);
 app.use('/api', productRouter);
 app.use('/api', measurementRouter);
 app.use('/api', categoryProductRouter);

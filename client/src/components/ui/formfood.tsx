@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import IngredientForm from './ingredientForm';
 import StepForm from './stepform';
-import axios from 'axios';
+import axios from '@/lib/axios';
 
 interface FormData {
     foodName: string;
@@ -45,7 +45,7 @@ const Form: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Prepare form data for API
+        // Chuẩn bị dữ liệu form để gửi đến API
         const formDataToSend = new FormData();
         formDataToSend.append('foodName', formData.foodName);
         formDataToSend.append('description', formData.description);
@@ -60,16 +60,17 @@ const Form: React.FC = () => {
             image: step.image ? step.image.name : null,
         }))));
 
-        try {
-            const res = await axios.post('/api', formDataToSend);
-            if (res.status === 200) {
-                console.log(res)
-            }
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        }
-        
+        // try {
+        //     const res = await axios.post('/api/recipes', formDataToSend);
+        //     if (res.status === 201) {
+        //         console.log('Recipe created successfully:', res.data);
+        //     }
+        // } catch (error) {
+        //     console.error('There was a problem with the fetch operation:', error);
+        // }
+        console.log(formData, 'gay');
     };
+
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="p-8 rounded-lg shadow-md w-full max-w-5xl">
@@ -108,7 +109,7 @@ const Form: React.FC = () => {
                             />
                         </div>
                         <div className="pr-3">
-                            <label htmlFor="portion">Thời gian nấu: </label>
+                            <label htmlFor="cookTime">Thời gian nấu: </label>
                             <input
                                 type="number"
                                 id="cookTime"
