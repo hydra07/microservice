@@ -5,6 +5,7 @@ import measurementRouter from '@/router/measurement.router';
 import postRouter from '@/router/post.router';
 import productRouter from '@/router/product.router';
 import uploadRouter from '@/router/upload.router';
+import recipeRouter from '@/router/recipe.router';
 import '@/strategies/discord-strategy';
 import '@/strategies/google-strategy';
 import env from '@/util/validateEnv';
@@ -54,6 +55,7 @@ app.use('/api/hello', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api', postRouter);
 app.use('/api', commentRouter);
+app.use('/api/recipe', recipeRouter);
 app.use('/api', productRouter);
 app.use('/api', measurementRouter);
 app.use('/api', categoryProductRouter);
