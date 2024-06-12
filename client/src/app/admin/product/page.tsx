@@ -1,6 +1,8 @@
 'use client';
+
 import * as ProductService from '@/services/product.service';
 import { ProductType } from 'CustomTypes';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { ThreeCircles } from 'react-loader-spinner';
 import { DataTable } from '../component/data-table';
@@ -13,13 +15,13 @@ const Product = () => {
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const fetchedData = await ProductService.fetchProducts();
-        
+
         console.log(fetchedData);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         setData(fetchedData);
@@ -73,16 +75,16 @@ const Product = () => {
 
   return (
     <>
+      <BreadcrumbProduct title="Product" />
       <h1>Product</h1>
       <CreateProductDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">
         <DataTable columns={columns} data={data} />
       </div>
-      
+
       {/* <UpdateProductDialog onUpdateSuccess={handleUpdateSuccess} selectedProduct={selectedProduct} /> */}
 
     </>
   );
 };
 export default Product;
-// export default isAuth(Product);

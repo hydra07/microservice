@@ -27,4 +27,7 @@ export class Post extends BaseEntity {
   })
   @Column('array')
   comments?: ObjectId[];
+
+  @Column('boolean')
+  isActivate?: boolean = false;
 }

@@ -5,4 +5,3 @@ export default function AdminDashboard() {
     </>
   );
 }
-// export default isAuth(AdminDashboard);
