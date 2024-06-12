@@ -61,11 +61,12 @@ const SidebarButton = ({
 }) => {
   return (
     // <div className="invisible lg:visible absolute top-[12px] -right-[16px] z-20 bg-white dark:bg-primary-foreground">
-    <Button
+    <button
       onClick={() => setIsOpen?.()}
-      className="rounded-md w-full h-8"
-      variant="outline"
-      size="icon"
+      className='outline-none focus:outline-none'
+    // className="rounded-md w-full h-8"
+    // variant="outline"
+    // size="icon"
     >
       <ChevronLeft
         className={cn(
@@ -73,7 +74,7 @@ const SidebarButton = ({
           isOpen === false ? 'rotate-180' : 'rotate-0',
         )}
       />
-    </Button>
+    </button >
     // </div>
   );
 };
