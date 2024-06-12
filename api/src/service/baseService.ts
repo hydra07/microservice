@@ -26,6 +26,7 @@ import { PaginatedResult } from "../@types/user";
         handleError(error as Error, "Error saving entity");
       }
     }
+    
   
     public async delete(options: FindOneOptions<ENTITY>): Promise<ENTITY | null> {
       try {
@@ -39,21 +40,39 @@ import { PaginatedResult } from "../@types/user";
       }
     }
   
+    // public async update(
+    //   options: FindOneOptions<ENTITY>,
+    //   data: Partial<ENTITY>
+    // ): Promise<ENTITY | null> {
+    //   try {
+    //     const entity = await this.repository.findOne(options);
+    //     if (!entity) {
+    //       return null;
+    //     }
+    
+    //     Object.assign(entity, data);
+    //     const updatedEntity = await this.repository.save(entity);
+    //     return updatedEntity;
+    //   } catch (error) {
+    //     return handleError(error as Error, "Error updating entity");
+    //   }
+    // }
     public async update(
       options: FindOneOptions<ENTITY>,
-      data: Partial<ENTITY>
+      data: DeepPartial<ENTITY>
     ): Promise<ENTITY | null> {
       try {
         const entity = await this.repository.findOne(options);
         if (!entity) {
+          // throw new Error('Entity not found');
           return null;
         }
-    
-        Object.assign(entity, data);
-        const updatedEntity = await this.repository.save(entity);
-        return updatedEntity;
+  
+        const updatedEntity = this.repository.merge(entity, data);
+        const savedEntity = await this.repository.save(updatedEntity);
+        return savedEntity;
       } catch (error) {
-        return handleError(error as Error, "Error updating entity");
+        return handleError(error as Error, 'Error updating entity');
       }
     }
   

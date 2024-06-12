@@ -192,28 +192,18 @@ const ProductImageUpload = forwardRef<ProductImageUploadHandle, ImageUploadProps
         );
       });
       
-      
-
       try {
         const responses = await Promise.all(fileUploadPromises);
-        // console.log(responses, 'in upload');
         const uploadedFilesData = responses.map((response) => ({
           imageUrl: response.data[0].imageUrl,
           publicId: response.data[0].publicId,
         }));
-
-        // newProduct.imgProducts = uploadedFilesData
-        // console.log(newProduct, 'in upload');
-        // console.log(uploadedFilesData, 'in upload');
-        console.log(uploadedFilesData , 'in upload');
         onUploadSuccess(uploadedFilesData);
   
-        // return uploadedFilesData; // Return the uploaded files data
 
       } catch (error) {
         console.error("Error uploading files: ", error);
         throw error; // Ensure to throw the error to handle it in the caller
-
       }
     };
 

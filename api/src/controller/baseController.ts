@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { ObjectLiteral } from "typeorm";
+import { ObjectLiteral, Entity } from 'typeorm';
 import BaseService from "../service/baseService";
+import { plainToInstance } from "class-transformer";
 
 export class BaseController<ENTITY extends ObjectLiteral> {
   protected service: BaseService<ENTITY>;
@@ -23,6 +24,7 @@ export class BaseController<ENTITY extends ObjectLiteral> {
     try {
       const id = req.params.id;
       const data = req.body;
+      
       const options = { where: { id: parseInt(id) } } as any;
       const updatedEntity = await this.service.update(options, data);
       if (!updatedEntity) {
@@ -34,6 +36,7 @@ export class BaseController<ENTITY extends ObjectLiteral> {
       next(error);
     }
   }
+  
 
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

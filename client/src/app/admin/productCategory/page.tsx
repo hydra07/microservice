@@ -18,7 +18,7 @@ const ProductCategory = () => {
         const fetchedData = await ProductCategoryService.fetchProductCategories();
         //delay 2 seconds
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // await new Promise((resolve) => setTimeout(resolve, 2000));
 
         setData(fetchedData);
       } catch (error) {
