@@ -23,7 +23,7 @@ ImageUploadRouter.post('/uploadImg', upload.array('files'), async (req: Request,
   try {
     const files = req.files as Express.Multer.File[];
     console.log('Files to upload:', files);
-    
+
     const uploads = await Promise.all(
       files.map(async (file) => {
         try {
@@ -35,6 +35,7 @@ ImageUploadRouter.post('/uploadImg', upload.array('files'), async (req: Request,
           await fs.unlink(file.path); // Remove file after successful upload
           // return result.public_id;
           //both public_id and secure_url
+          // console.log()
           return { imageUrl: result.secure_url, publicId: result.public_id };
         } catch (uploadError) {
           console.error('Error uploading file to Cloudinary:', uploadError);
@@ -50,5 +51,26 @@ ImageUploadRouter.post('/uploadImg', upload.array('files'), async (req: Request,
   }
 });
 
+// ImageUploadRouter.post(
+//   "/uploadImg",
+//   upload.array("files"),
+//   async (req: Request, res: Response) => {
+//     try {
+//       const files = req.files as Express.Multer.File[];
+
+//       //upload to local path file
+//       const filePaths = files.map((file) => file.path);
+//       res.json(filePaths);
+//     } catch (error) {
+//       console.error("Error processing file upload:", error);
+//       res.status(500).json({ error: "Error uploading files" });
+//     }
+//   }
+// );
+
+
+// ImageUploadRouter.post("/uploadImgCloudinary", async (req: Request, res: Response) => {
+
+// });
 
 export default ImageUploadRouter;

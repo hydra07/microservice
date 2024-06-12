@@ -3,7 +3,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class CategoryProduct extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id?: string;
+  id?: number;
 
   @Column()
   name?: string;
