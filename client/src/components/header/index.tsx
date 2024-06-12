@@ -2,10 +2,13 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 // import AuthButton from './AuthButton';
+import useSize from '@/hooks/useSize';
+import clsx from 'clsx';
 const AuthButton = dynamic(() => import('./AuthButton'), { ssr: false });
 const ModeButton = dynamic(() => import('./ModeButton'));
 export default function Header() {
   const [isAtTop, setIsAtTop] = useState(true);
+  const { size, setSize } = useSize({ name: 'header' });
   const handleScroll = () => {
     const scrollY = window.scrollY;
     if (scrollY > 0) {
@@ -23,10 +26,13 @@ export default function Header() {
 
   return (
     <header
-      className={`w-full py-[11px] fixed top-0 left-0 z-50 bg-black shadow-lg
-
-      ${isAtTop ? 'bg-opacity-20' : 'bg-opacity-70'}
-      `}
+      className={clsx(
+        `w-full py-[11px] fixed top-0 left-0 z-50 bg-slate-800 shadow-lg h-[${size}]`,
+        {
+          'bg-opacity-70': !isAtTop,
+          'bg-opacity-20': isAtTop,
+        },
+      )}
     >
       <div className="w-full px-14">
         <div className="flex justify-between gap-8">
@@ -37,7 +43,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-      {/* <Navbar /> */}
     </header>
   );
 }

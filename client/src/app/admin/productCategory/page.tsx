@@ -4,10 +4,19 @@ import { useEffect, useState } from 'react';
 import * as ProductCategoryService from '@/services/productCategory.service';
 import { ProductCategoryType } from 'CustomTypes';
 import { DataTable } from '../component/data-table';
-import UploadImgDialog from '../component/UploadImgDialog';
+// import UploadImgDialog from '../component/UploadImgDialog';
 import { createColumns } from './columns';
-import CreateProductCategoryDialog from './CreateProductCategoryDialog';
+// import CreateProductCategoryDialog from './CreateProductCategoryDialog';
+import dynamic from 'next/dynamic';
 const ProductCategory = () => {
+  const UploadImgDialog = dynamic(() => import('../component/UploadImgDialog'));
+  // const DataTable = dynamic(() =>
+  //   import('../component/data-table').then((mod) => mod.DataTable),
+  // );
+  const CreateProductCategoryDialog = dynamic(
+    () => import('./CreateProductCategoryDialog'),
+  );
+  const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
   const [data, setData] = useState<ProductCategoryType[]>([]);
 
   useEffect(() => {
@@ -41,6 +50,7 @@ const ProductCategory = () => {
 
   return (
     <>
+      <BreadcrumbProduct title="Product Category" />
       <h1>Product Category</h1>
       <CreateProductCategoryDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">

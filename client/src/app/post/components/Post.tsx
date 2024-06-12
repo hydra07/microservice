@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import useUploadFile from '@/hooks/useUploadFile';
 import axios from '@/lib/axios';
+import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
@@ -31,16 +32,21 @@ import { useForm } from 'react-hook-form';
 // }
 
 export default function FormPost(): ReactNode {
+  const { data: session, status } = useSession();
+  if (!session?.user) return null;
+
   const { InputFile, filePath } = useUploadFile();
+
   const form = useForm({
     defaultValues: {
       title: '',
       content: '',
+      userId: '',
       image: filePath,
     },
   });
   const onsubmit = async (data: any) => {
-    data.userId = 'Day la userId nek';
+    data.userId = session?.user.id;
     console.log(data);
     const res = await axios.post('/api/post', data);
     console.log(res.data);

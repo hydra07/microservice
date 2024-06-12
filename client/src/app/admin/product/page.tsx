@@ -1,6 +1,8 @@
 'use client';
+
 import * as ProductService from '@/services/product.service';
 import { ProductType } from 'CustomTypes';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { ThreeCircles } from 'react-loader-spinner';
 import { DataTable } from '../component/data-table';
@@ -11,7 +13,7 @@ const Product = () => {
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -69,6 +71,7 @@ const Product = () => {
 
   return (
     <>
+      <BreadcrumbProduct title="Product" />
       <h1>Product</h1>
       <CreateProductDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">
@@ -79,4 +82,3 @@ const Product = () => {
   );
 };
 export default Product;
-// export default isAuth(Product);
