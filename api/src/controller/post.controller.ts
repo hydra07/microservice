@@ -32,7 +32,7 @@ export default class PostController {
   };
   getAllPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const allPosts = await this.postService.getAllPosts();
+      const allPosts = await this.postService.getPostWithUser();
       res
         .status(200)
         // .json(allPosts.map((post) => this.postService.mapPostToDto(post)));
@@ -103,4 +103,24 @@ export default class PostController {
       next(error);
     }
   };
+
+  publicPost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const postId = req.params.id as string;
+      const isActivate = req.query.isActivate as string;
+      console.log(isActivate);
+      if (isActivate !== undefined) {
+        // Chuyển đổi giá trị của isActivate thành boolean
+        const isActive = isActivate.toLowerCase() === 'true';
+        await this.postService.publicPost(postId, isActive);
+      } else {
+        // Nếu không có isActivate thì thực hiện hành động private post
+        await this.postService.publicPost(postId, false);
+      }
+      const post = await this.postService.getPostById(postId)
+      res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

@@ -4,11 +4,20 @@ import { useEffect, useState } from 'react';
 import * as ProductCategoryService from '@/services/productCategory.service';
 import { ProductCategoryType } from 'CustomTypes';
 import { DataTable } from '../component/data-table';
-import UploadImgDialog from '../component/UploadImgDialog';
+// import UploadImgDialog from '../component/UploadImgDialog';
 import { createColumns } from './columns';
 import CreateProductCategoryDialog from './CreateProductCategoryDialog';
-import {SkeletonTable} from '../component/SkeletonTable';
+import dynamic from 'next/dynamic';
+import { SkeletonTable } from '../component/SkeletonTable';
 const ProductCategory = () => {
+  const UploadImgDialog = dynamic(() => import('../component/UploadImgDialog'));
+  // const DataTable = dynamic(() =>
+  //   import('../component/data-table').then((mod) => mod.DataTable),
+  // );
+  const CreateProductCategoryDialog = dynamic(
+    () => import('./CreateProductCategoryDialog'),
+  );
+  const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
   const [data, setData] = useState<ProductCategoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,8 +58,8 @@ const ProductCategory = () => {
 
   const skeletonColumns = [
     //first headre  not display
-    
-    { header: { width: 'w-[0px]' } , cell: { width: 'w-[10px]' } },
+
+    { header: { width: 'w-[0px]' }, cell: { width: 'w-[10px]' } },
     { header: { width: 'w-3/5' }, cell: { width: 'w-3/5' } },
     { header: { width: 'w-1/5' }, cell: { width: 'w-1/5' } },
   ];
@@ -60,6 +69,7 @@ const ProductCategory = () => {
   }
   return (
     <>
+      <BreadcrumbProduct title="Product Category" />
       <h1>Product Category</h1>
       <CreateProductCategoryDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">
