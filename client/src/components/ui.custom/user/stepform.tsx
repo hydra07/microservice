@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 interface Step {
     description: string;
     image: File | null;
@@ -17,12 +18,7 @@ const StepForm: React.FC<StepFormProps> = ({ steps, setSteps }) => {
 
     const handleStepChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, files } = event.target as HTMLInputElement & HTMLTextAreaElement;
-        const newSteps = steps.slice();
-        if (name === 'image' && files) {
-            newSteps[index] = { ...newSteps[index], image: files[0] };
-        } else {
-            newSteps[index] = { ...newSteps[index], [name]: value };
-        }
+        const newSteps = steps.map((step, i) => i === index ? { ...step, [name]: name === 'image' ? files?.[0] : value } : step);
         setSteps(newSteps);
     };
 
@@ -72,3 +68,4 @@ const StepForm: React.FC<StepFormProps> = ({ steps, setSteps }) => {
 };
 
 export default StepForm;
+

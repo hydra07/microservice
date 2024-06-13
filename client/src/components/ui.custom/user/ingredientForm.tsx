@@ -16,10 +16,9 @@ const IngredientForm: React.FC<IngredientFormProps> = ({ ingredients, setIngredi
         setIngredients([...ingredients, { name: '', quantity: 0, unit: '' }]);
     };
 
-    const handleIngredientChange = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = event.target;
-        const newIngredients = ingredients.slice();
-        newIngredients[index] = { ...newIngredients[index], [name]: value };
+    const handleIngredientChange = (index: number, field: keyof Ingredient, value: string) => {
+        const newIngredients = [...ingredients];
+        newIngredients[index] = { ...newIngredients[index], [field]: value };
         setIngredients(newIngredients);
     };
 
@@ -36,30 +35,27 @@ const IngredientForm: React.FC<IngredientFormProps> = ({ ingredients, setIngredi
                     <label>Nguyên liệu {index + 1}: </label>
                     <input
                         type="text"
-                        name="name"
                         value={ingredient.name}
-                        onChange={(e) => handleIngredientChange(index, e)}
+                        onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg w-[30%]"
                         placeholder={`Input ${index + 1}`}
                     />
                     <input
                         type="number"
-                        name="quantity"
-                        value={ingredient.quantity}
-                        onChange={(e) => handleIngredientChange(index, e)}
+                        value={ingredient.quantity.toString()}
+                        onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg w-[30%]"
                         placeholder={`Input ${index + 1}`}
                     />
                     <select
-                        name="unit"
                         value={ingredient.unit}
-                        onChange={(e) => handleIngredientChange(index, e)}
+                        onChange={(e) => handleIngredientChange(index, 'unit', e.target.value)}
                         className="border border-gray-300 p-2 rounded-lg-lg w-[28 %]"
                     >
                         <option value="">Chọn đơn vị</option>
-                        <option value="ingredientA">gram</option>
-                        <option value="ingredientB">kilogram</option>
-                        <option value="ingredientC">củ</option>
+                        <option value="gram">gram</option>
+                        <option value="kilogram">kilogram</option>
+                        <option value="củ">củ</option>
                     </select>
                 </div>
             ))}
@@ -82,3 +78,4 @@ const IngredientForm: React.FC<IngredientFormProps> = ({ ingredients, setIngredi
 };
 
 export default IngredientForm;
+

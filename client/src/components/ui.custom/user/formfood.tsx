@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import IngredientForm from './ingredientForm';
-import StepForm from './stepform';
+import IngredientForm from '@/components/ui.custom/user/ingredientForm';
+import StepForm from '@/components/ui.custom/user/stepform';
 import axios from '@/lib/axios';
 
 interface FormData {
@@ -8,10 +8,16 @@ interface FormData {
     description: string;
     portion: number;
     cookTime: number;
-    imageUrl: string;
-    image: File | null;
-    ingredients: { name: string; quantity: number; unit: string }[];
-    steps: { description: string; image: File | null }[];
+    imageUrl: string | null;
+    ingredients: {
+        name: string;
+        quantity: number;
+        unit: string;
+    }[];
+    steps: {
+        description: string;
+        image: File | null;
+    }[];
 }
 
 const Form: React.FC = () => {
@@ -20,8 +26,7 @@ const Form: React.FC = () => {
         description: '',
         portion: 0,
         cookTime: 0,
-        imageUrl: '',
-        image: null,
+        imageUrl: null,
         ingredients: [{ name: '', quantity: 0, unit: '' }],
         steps: [{ description: '', image: null }],
     });
@@ -31,7 +36,6 @@ const Form: React.FC = () => {
         if (name === 'imageUrl' && files) {
             setFormData({
                 ...formData,
-                image: files[0],
                 imageUrl: URL.createObjectURL(files[0]),
             });
         } else {
@@ -45,30 +49,30 @@ const Form: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Chuẩn bị dữ liệu form để gửi đến API
-        const formDataToSend = new FormData();
-        formDataToSend.append('foodName', formData.foodName);
-        formDataToSend.append('description', formData.description);
-        formDataToSend.append('portion', formData.portion.toString());
-        formDataToSend.append('cookTime', formData.cookTime.toString());
-        if (formData.image) {
-            formDataToSend.append('image', formData.image);
+        const { ingredients, steps } = formData;
+        const formDataToSend: any = {
+            foodName: formData.foodName,
+            description: formData.description,
+            portion: formData.portion,
+            cookTime: formData.cookTime,
+            ingredients,
+            steps,
+        };
+        if (formData.imageUrl) {
+            const formDataImage = new FormData();
+            formDataImage.append('image', formData.imageUrl );
+            const resImage = await axios.post('/api/images', formDataImage);
+            formDataToSend.imageUrl = resImage.data.imageUrl;
         }
-        formDataToSend.append('ingredients', JSON.stringify(formData.ingredients));
-        formDataToSend.append('steps', JSON.stringify(formData.steps.map((step) => ({
-            description: step.description,
-            image: step.image ? step.image.name : null,
-        }))));
 
-        // try {
-        //     const res = await axios.post('/api/recipes', formDataToSend);
-        //     if (res.status === 201) {
-        //         console.log('Recipe created successfully:', res.data);
-        //     }
-        // } catch (error) {
-        //     console.error('There was a problem with the fetch operation:', error);
-        // }
-        console.log(formData, 'gay');
+        try {
+            const res = await axios.post('/api/recipes', formDataToSend);
+            if (res.status === 201) {
+                console.log('Recipe created successfully:', res.data);
+            }
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
     };
 
     return (
@@ -146,3 +150,4 @@ const Form: React.FC = () => {
 };
 
 export default Form;
+

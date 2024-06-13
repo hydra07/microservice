@@ -33,7 +33,7 @@ export const createColumns = (handleUpdateSuccess: (updatedCategory: ProductCate
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(productCategory.id)}
+              onClick={() => navigator.clipboard.writeText(productCategory.id.toString() )}
             >
               Copy payment ID
             </DropdownMenuItem>

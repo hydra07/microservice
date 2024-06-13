@@ -28,6 +28,6 @@ export class Recipe extends BaseEntity {
     @Column({ type: "json", nullable: true })
     ingredients?: { name: string; quantity: number; unit: string }[];
 
-    @Column({ type: "json", nullable: true })
+    @Column({ type: "jsonb", nullable: true })
     steps?: { description: string; image: File | null }[];
 }

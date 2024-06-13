@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { ProductCategoryType } from "CustomTypes";
 import { set } from "date-fns";
+import { object } from "zod";
 
 interface CreateProductCategoryDialogProps {
   onCreateSuccess: (newCategory: ProductCategoryType) => void;
@@ -26,7 +27,7 @@ const CreateProductCategoryDialog: React.FC<
 > = ({ onCreateSuccess }) => {
   const [open, setOpen] = useState(false);
   const [newCategory, setNewCategory] = useState<ProductCategoryType>({
-    id: "",
+    id:0,
     name: "",
     isActive: true,
   });
@@ -44,7 +45,7 @@ const CreateProductCategoryDialog: React.FC<
       if (createdCategory) {
         onCreateSuccess(createdCategory);
         setOpen(false);
-        setNewCategory({ id: "", name: "", isActive: true });
+        setNewCategory({ id: 0, name: "", isActive: true });
       }
     } catch (error) {
       console.error("Error creating product category:", error);
