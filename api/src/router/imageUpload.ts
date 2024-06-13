@@ -71,7 +71,7 @@ ImageUploadRouter.post(
 );
 
 
-//delete image of product
+//delete image of product 
 ImageUploadRouter.delete("/uploadImg/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
