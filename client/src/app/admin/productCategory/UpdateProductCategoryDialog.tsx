@@ -16,14 +16,16 @@ import {
 import { ProductCategoryType } from "CustomTypes";
 import { set } from "date-fns";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+
 interface UpdateProductCategoryDialogProps {
   category: ProductCategoryType;
   onUpdateSuccess: (updatedCategory: ProductCategoryType) => void;
 }
 
-const UpdateProductCategoryDialog: React.FC<
-  UpdateProductCategoryDialogProps
-> = ({ category, onUpdateSuccess }) => {
+const UpdateProductCategoryDialog: React.FC<UpdateProductCategoryDialogProps> = ({
+   category, 
+   onUpdateSuccess
+ }) => {
   const [open, setOpen] = useState(false);
   const [updatedCategory, setUpdatedCategory] = useState<ProductCategoryType>({
     ...category,

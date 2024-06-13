@@ -18,6 +18,7 @@ import { validate } from "class-validator";
 export class ProductService extends BaseService<Product> {
   private nutritionService: NutritionService;
   private imgProductService: ImgProductService;
+
   constructor() {
     super(Product);
     this.nutritionService = new NutritionService();
@@ -54,6 +55,10 @@ export class ProductService extends BaseService<Product> {
       return handleError(error as Error, "Error saving product");
     }
   }
+  
 
   // add custom...
+  // public update(options: FindOneOptions<Product>, data: Partial<Product>): Promise<Product | null> {
+    
+  // }
 }

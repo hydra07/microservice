@@ -26,10 +26,12 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
   return (
     <div className="space-y-4">
       <CategorySelect
-        value={newProduct.category.id? newProduct.category.id.toString() : ""}
+        value={newProduct.category.id ? newProduct.category.id.toString() : ""}
         onChange={(value) => handleCategoryChange(parseInt(value || "0"))}
       />
-      {errors.categoryId && <p className="text-red-500 text-sm mt-1">{errors.categoryId}</p>}
+      {errors.categoryId && (
+        <p className="text-red-500 text-sm mt-1">{errors.categoryId}</p>
+      )}
 
       <TooltipWrapper label="Product Name">
         <InputField
@@ -39,7 +41,9 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           onChange={handleInputChange}
           type="text"
         />
-        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1 text-left">{errors.name}</p>
+        )}
       </TooltipWrapper>
 
       <TooltipWrapper label="Description">
@@ -60,7 +64,9 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           onChange={handleInputNumberChange}
           type="number"
         />
-        {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+        {errors.price && (
+          <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+        )}
       </TooltipWrapper>
 
       <TooltipWrapper label="Current Quantity">
@@ -71,7 +77,9 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           onChange={handleInputNumberChange}
           type="number"
         />
-        {errors.currentQuantity && <p className="text-red-500 text-sm mt-1">{errors.currentQuantity}</p>}
+        {errors.currentQuantity && (
+          <p className="text-red-500 text-sm mt-1">{errors.currentQuantity}</p>
+        )}
       </TooltipWrapper>
 
       <TooltipWrapper label="Amount to Sell">
@@ -82,7 +90,9 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           onChange={handleInputNumberChange}
           type="number"
         />
-        {errors.amountToSell && <p className="text-red-500 text-sm mt-1">{errors.amountToSell}</p>}
+        {errors.amountToSell && (
+          <p className="text-red-500 text-sm mt-1">{errors.amountToSell}</p>
+        )}
       </TooltipWrapper>
     </div>
   );

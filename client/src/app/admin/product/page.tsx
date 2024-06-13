@@ -52,7 +52,7 @@ const Product = () => {
     setSelectedProduct(product);
   };
 
-  const columns = createColumns(handleUpdateSuccess, handleUpdateClick);
+  const columns = createColumns(handleUpdateSuccess);
 
 
   const skeletonColumns = [

@@ -1,54 +1,24 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as ProductService from "@/services/product.service";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTrigger,
-  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ProductType, ImgProductType } from "CustomTypes";
-import ImageUpload from "../component/image-upload";
-import NutritionForm from "./NutritionForm";
-import BasicInfoForm from "./BasicInfoForm";
-import ProductImageUpload from "./ProductImageUpload";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { validateSchema } from "@/utils/validation.utils";
-import {
-  basicInfoSchema,
-  nutritionFormSchema,
-  BasicInfoData,
-  NutritionData,
-} from "@/validation/productSchema";
-
-const initialProductState: ProductType = {
-  id: 0,
-  name: "",
-  description: "",
-  currentQuantity: 0,
-  price: 0,
-  imgProducts: [],
-  category: { id: 0, name: "", isActive: true },
-  is_activated: true,
-  amountToSell: 0,
-  averageWeight: 0,
-  measurement: { id: 0, unit: "" },
-  nutrition: {
-    calories: 0,
-    sugar: 0,
-    fat: 0,
-    sodium: 0,
-    carbs: 0,
-    fiber: 0,
-  },
-};
+import BasicInfoFormUpdate from "./BasicInfoFormUpdate";
+import NutritionFormUpdate from "./NutritionFormUpdate";
+import UpdateImage from "./UpdateImage";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { productSchema, ProductFormData } from "@/validation/productSchema";
 
 interface UpdateProductDialogProps {
-  selectedProduct: ProductType | null;
+  selectedProduct: ProductType;
   onUpdateSuccess: (updatedProduct: ProductType) => void;
 }
 
@@ -61,231 +31,175 @@ const UpdateProductDialog: React.FC<UpdateProductDialogProps> = ({
   onUpdateSuccess,
 }) => {
   const [open, setOpen] = useState(false);
-  const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
-  const imageUploadRef = useRef<ProductImageUploadHandle>(null);
-  const [uploadedImages, setUploadedImages] = useState<ImgProductType[]>([]);
   const [currentTab, setCurrentTab] = useState(0);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [updatedProduct, setUpdatedProduct] = useState<ProductType>(initialProductState);
   const [loading, setLoading] = useState(false);
+  const imageUploadRef = useRef<ProductImageUploadHandle>(null);
 
-  useEffect(() => {
-    if (!open) {
-      setCurrentTab(0);
-    }
-  }, [open]);
+  const methods = useForm<ProductFormData>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: selectedProduct.name,
+      description: selectedProduct.description,
+      price: selectedProduct.price,
+      currentQuantity: selectedProduct.currentQuantity,
+      amountToSell: selectedProduct.amountToSell,
+      categoryId: selectedProduct.category.id,
+      measurementId: selectedProduct.measurement.id,
+      averageWeight: selectedProduct.averageWeight,
+      nutrition: selectedProduct.nutrition,
+      imgProducts: selectedProduct.imgProducts,
+    },
+  });
 
+  const {
+    control,
+    formState: { errors },
+    setValue,
+    trigger,
+    register,
+  } = methods;
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setUpdatedProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: value,
-    }));
-  };
-
-  const handleInputNumberChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setUpdatedProduct((prevProduct) => ({
-      ...prevProduct,
-      [name]: parseInt(value) || 0,
-    }));
-  };
-
-  const handleNutritionChange = (key: string, value: string) => {
-    setUpdatedProduct((prevProduct) => ({
-      ...prevProduct,
-      nutrition: {
-        ...prevProduct.nutrition,
-        [key]: parseInt(value) || 0,
-      },
-    }));
-  };
-
-  const handleCategoryChange = (value: number) => {
-    setUpdatedProduct((prevProduct) => ({
-      ...prevProduct,
-      category: {
-        ...prevProduct.category,
-        id: value,
-      },
-    }));
-  };
-
-  const handleMeasurementChange = (value: number) => {
-    setUpdatedProduct((prevProduct) => ({
-      ...prevProduct,
-      measurement: {
-        ...prevProduct.measurement,
-        id: value,
-      },
-    }));
-  };
-
-  const handleUpdateProduct = async (productData: ProductType) => {
+  const onSubmit = async () => {
     try {
-      //   const updatedProduct = await ProductService.updateProduct(productData);
-      if (updatedProduct) {
-        onUpdateSuccess(updatedProduct);
-        setOpen(false);
-        setUpdatedProduct(initialProductState);
-        setUploadedImages([]);
-        setCurrentTab(0);
-      }
-    } catch (error) {
+      setLoading(true);
+      const values = methods.getValues();
+      console.log("Form values:", values);
+
+      const uploadedImages = await triggerImageUpload().then((images) =>
+        images.map((image) => ({
+          ImageUrl: image.imageUrl,
+          publicId: image.publicId,
+          id: image.id,
+        }))
+      );
+
+      const updatedProduct = {
+        ...selectedProduct,
+        ...values,
+        imgProducts: uploadedImages.map((image) => ({
+          imageUrl: image.ImageUrl,
+          publicId: image.publicId,
+          id: image.id,
+        })),
+      };
+
+      // Call your update product service with updatedProduct
+      const data = await ProductService.updateProduct(updatedProduct);
+      // console.log("Response from update product:", response.data);
+
+      // console.error("Updated product object:", updatedProduct);
+      // Uncomment the line below to call the actual update function
+      onUpdateSuccess(data);
+      
+      setOpen(false);
+    } catch (error) { 
       console.error("Error updating product:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    setUpdatedProduct((prevProduct) => ({
-      ...prevProduct,
-      imgProducts: uploadedImages,
-    }));
-  }, [uploadedImages]);
 
-  const handleUploadSuccess = (
-    uploadedFilesData: { imageUrl: string; publicId: string }[]
-  ) => {
-    const productData = { ...updatedProduct, imgProducts: uploadedFilesData };
-    handleUpdateProduct(productData);
-  };
+  // const handleUploadSuccess = (
+  //   uploadedFilesData: { imageUrl: string; publicId: string }[]
+  // ) => {
+  //   const productData = { ...newProduct, imgProducts: uploadedFilesData };
+  //   handleCreateProduct(productData);
+  // };
 
-  const nextTab = () => setCurrentTab((prev) => prev + 1);
-  const prevTab = () => setCurrentTab((prev) => prev - 1);
-
-  const validateAndNextTab = () => {
-    if (currentTab === 0) {
-      const basicInfoData: BasicInfoData = {
-        name: updatedProduct.name,
-        description: updatedProduct.description,
-        price: updatedProduct.price,
-        currentQuantity: updatedProduct.currentQuantity,
-        amountToSell: updatedProduct.amountToSell,
-        categoryId: updatedProduct.category.id,
-      };
-      const { success, errors } = validateSchema(
-        basicInfoSchema,
-        basicInfoData
-      );
-      setErrors(errors);
-      if (success) nextTab();
-    } else if (currentTab === 1) {
-      const nutritionData: NutritionData = {
-        measurementId: updatedProduct.measurement.id,
-        averageWeight: updatedProduct.averageWeight,
-        nutrition: updatedProduct.nutrition,
-      };
-      const { success, errors } = validateSchema(
-        nutritionFormSchema,
-        nutritionData
-      );
-      setErrors(errors);
-      if (success) nextTab();
-    }
-  };
 
   const triggerImageUpload = async () => {
     if (imageUploadRef.current) {
-      setLoading(true);
       return await imageUploadRef.current.handleUpload();
     }
+    return [];
   };
 
+  const nextTab = async () => {
+    const valid = await trigger();
+    if (valid) {
+      setCurrentTab((prev) => prev + 1);
+    }
+  };
+  
+  const prevTab = () => setCurrentTab((prev) => prev - 1);
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="bg-blue-500 hover:bg-blue-600 text-white"
-        >
-          Update Product
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] p-6">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-semibold mb-2">
-            Update Product
-          </DialogTitle>
-        </DialogHeader>
+    <>
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(true);
+        }}
+      >
+        Update
+      </DropdownMenuItem>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[600px] p-6">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold mb-2">
+              Update Product
+            </DialogTitle>
+          </DialogHeader>
 
-        {currentTab === 0 && (
-          <div>
-            <h4 className="text-gray-500 mb-4">Basic information</h4>
-            <BasicInfoForm
-              newProduct={updatedProduct}
-              handleInputNumberChange={handleInputNumberChange}
-              handleInputChange={handleInputChange}
-              handleCategoryChange={handleCategoryChange}
-              errors={errors}
-            />
-          </div>
-        )}
+          <FormProvider {...methods}>
+            {currentTab === 0 && (
+              <div>
+                <h4 className="text-gray-500 mb-4">Basic information</h4>
+                <BasicInfoFormUpdate control={control} errors={errors} />
+              </div>
+            )}
 
-        {currentTab === 1 && (
-          <div>
-            <h4 className="text-gray-500 mb-4">Nutrition information</h4>
-            <NutritionForm
-              newProduct={updatedProduct}
-              handleInputChange={handleInputChange}
-              handleMeasurementChange={handleMeasurementChange}
-              handleInputNumberChange={handleInputNumberChange}
-              handleNutritionChange={handleNutritionChange}
-              errors={errors}
-            />
-          </div>
-        )}
+            {currentTab === 1 && (
+              <div>
+                <h4 className="text-gray-500 mb-4">Nutrition information</h4>
+                <NutritionFormUpdate control={control} errors={errors}  register={register}/>
+              </div>
+            )}
 
-        {currentTab === 2 && (
-          <div>
-            <h4 className="text-gray-500 mb-4">Media</h4>
-            <ProductImageUpload
-              ref={imageUploadRef}
-              newProduct={updatedProduct}
-              onUploadSuccess={handleUploadSuccess}
-            />
-          </div>
-        )}
+            {currentTab === 2 && (
+              <div>
+                <h4 className="text-gray-500 mb-4">Media</h4>
+                <UpdateImage
+                  newProduct={selectedProduct}
+                  ref={imageUploadRef}
+                  onUploadSuccess={(images) => setValue("imgProducts", images)}
+                />
+              </div>
+            )}
 
-        <DialogFooter className="mt-6 flex justify-between">
-          <Button
-            variant="outline"
-            onClick={prevTab}
-            disabled={currentTab === 0}
-            className="mr-2"
-          >
-            Previous
-          </Button>
-          {currentTab < 2 ? (
-            <Button
-              onClick={validateAndNextTab}
-              className="bg-blue-500 hover:bg-blue-600 text-white"
-              disabled={loading}
-            >
-              Next
-            </Button>
-          ) : (
-            <Button
-              onClick={triggerImageUpload}
-              className="bg-blue-500 hover:bg-blue-600 text-white"
-              disabled={loading}
-            >
-              {loading ? "Updating..." : "Update"}
-            </Button>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter className="mt-6 flex justify-between">
+              <Button
+                variant="outline"
+                onClick={prevTab}
+                disabled={currentTab === 0}
+                className="mr-2"
+              >
+                Previous
+              </Button>
+              {currentTab < 2 ? (
+                <Button
+                  onClick={nextTab}
+                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  className="bg-blue-500 hover:bg-blue-600 text-white"
+                  disabled={loading}
+                  onClick={onSubmit}
+                >
+                  {loading ? "Updating..." : "Update"}
+                </Button>
+              )}
+            </DialogFooter>
+          </FormProvider>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

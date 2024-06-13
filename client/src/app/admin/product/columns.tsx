@@ -1,4 +1,3 @@
-
 import { ColumnDef } from "@tanstack/react-table";
 import { ImgProductType, ProductType } from "CustomTypes";
 import { Button } from "@/components/ui/button";
@@ -13,14 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import UpdateProductDialog from "./UpdateProductDialog";
 
 const productImageURL =
   "https://res.cloudinary.com/djvlldzih/image/upload/v1717554614/letcook/uploads/images/product/";
 
 export const createColumns = (
-  handleUpdateSuccess: (updatedProduct: ProductType) => void,
-  handleUpdateClick: (product: ProductType) => void
-
+  handleUpdateSuccess: (updatedProduct: ProductType) => void
 ): ColumnDef<ProductType>[] => [
   {
     id: "actions",
@@ -44,9 +42,10 @@ export const createColumns = (
               Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={ () => handleUpdateClick(product) }>
-              Update product
-            </DropdownMenuItem>
+            <UpdateProductDialog
+              selectedProduct={product}
+              onUpdateSuccess={handleUpdateSuccess}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -57,9 +56,7 @@ export const createColumns = (
     header: () => <div className="text-right w-10">Title</div>,
     cell: ({ row }) => (
       <div className="flex gap-2 items-center">
-        <span className="truncate w-10 font-medium">
-          {row.getValue("id")}
-        </span>
+        <span className="truncate w-10 font-medium">{row.getValue("id")}</span>
       </div>
     ),
   },
@@ -111,17 +108,13 @@ export const createColumns = (
         {row.getValue("currentQuantity")}
       </span>
     ),
-    meta: { className: 'w-[120px] text-center' },
+    meta: { className: "w-[120px] text-center" },
   },
   {
     accessorKey: "price",
     header: () => <span className="font-semibold text-gray-700">Price</span>,
-    cell: ({ row }) => (
-      <span>
-        ${Number(row.getValue("price")).toFixed(2)}
-      </span>
-    ),
-    meta: { className: 'w-[100px] text-right' },
+    cell: ({ row }) => <span>${Number(row.getValue("price")).toFixed(2)}</span>,
+    meta: { className: "w-[100px] text-right" },
   },
   {
     accessorKey: "is_activated",
