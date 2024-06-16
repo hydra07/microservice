@@ -7,7 +7,7 @@ import {
   generateRefreshToken,
 } from '@/util/tokenGenerate';
 import env from '@/util/validateEnv';
-import { NextFunction, RequestWithUser, Response } from 'express';
+import { NextFunction, Request, RequestWithUser, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 export default class AuthController {
@@ -23,12 +23,33 @@ export default class AuthController {
         console.log(result);
         res.status(200).json({ user, jwtAccessToken, jwtRefreshToken });
       } else {
-        res.status(401).send('Unauthorized');
+        res.status(401).json({ message: 'Unauthorized' });
       }
     } catch (error) {
       next(error);
     }
   };
+
+  // authenticate: RequestHandler = async (
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ) => {
+  //   try {
+  //     const result = await this.authService.authenticate(req.body);
+  //     if (result) {
+  //       const { user, jwtAccessToken, jwtRefreshToken } = result;
+  //       console.log(result);
+  //       res.status(200).json({ user, jwtAccessToken, jwtRefreshToken });
+  //       next();
+  //     } else {
+  //       res.status(401).send("Unauthorized");
+  //       next();
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
 
   saveTokenToCookie = (req: RequestWithUser, res: Response) => {
     console.log('saveTokenToCookie');
