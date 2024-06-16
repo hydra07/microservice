@@ -27,4 +27,13 @@ declare module "next-auth" {
 
     }
   };
+  interface User {
+    id: string;
+    email: string;
+    username: string;
+    avatar: string;
+    accessToken: string;
+    refreshToken: string;
+    role: 'user' | 'admin';
+  }
 }

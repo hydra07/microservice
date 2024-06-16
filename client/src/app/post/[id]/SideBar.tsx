@@ -3,7 +3,7 @@ import axios from '@/lib/axios';
 import dynamic from 'next/dynamic';
 
 async function fetching() {
-  const res = await axios.get(`/api/post/`);
+  const res = await axios.get(`/api/post/all`);
   if (res.data) return res.data;
   return [];
 }

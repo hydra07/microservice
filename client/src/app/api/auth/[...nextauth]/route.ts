@@ -1,8 +1,10 @@
+import JWT from 'jsonwebtoken';
 import Google from 'next-auth/providers/google';
 // import { authOptions } from '@/server/auth';
 import axios from '@/lib/axios';
 import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth/next';
+async function refreshToken(token: any) {}
 
 const authOptions: AuthOptions = {
   secret: process.env.SECRET,
@@ -23,13 +25,13 @@ const authOptions: AuthOptions = {
       const res = await axios.post(`/api/auth/authenticate`, initUser);
       // const data = res.data; // {}
       if (res.data) {
-        (user as any).id = res.data.user.id;
-        (user as any).username = res.data.user.username;
-        (user as any).email = res.data.user.email;
-        (user as any).avatar = res.data.user.avatar;
-        (user as any).role = res.data.user.role;
-        (user as any).accessToken = res.data.jwtAccessToken;
-        (user as any).refreshToken = res.data.jwtRefreshToken;
+        user.id = res.data.user.id;
+        user.username = res.data.user.username;
+        user.email = res.data.user.email;
+        user.avatar = res.data.user.avatar;
+        user.role = res.data.user.role;
+        user.accessToken = res.data.jwtAccessToken;
+        user.refreshToken = res.data.jwtRefreshToken;
         return true;
       } else {
         return false;
@@ -37,13 +39,27 @@ const authOptions: AuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = (user as any).accessToken;
-        token.refreshToken = (user as any).refreshToken;
-        token.id = (user as any).id;
-        token.username = (user as any).username;
-        token.email = (user as any).email;
-        token.avatar = (user as any).avatar;
-        token.role = (user as any).role;
+        token.accessToken = user.accessToken;
+
+        JWT.verify(
+          user.accessToken,
+          process.env.JWT_SECRET as string,
+          async (err: any, decoded: any) => {
+            console.log('Decoded:', decoded);
+            //check if token is expired
+            if (decoded && decoded.exp < Date.now() / 1000) {
+              console.log('Token expired');
+              await refreshToken(token);
+            }
+          },
+        );
+
+        token.refreshToken = user.refreshToken;
+        token.id = user.id;
+        token.username = user.username;
+        token.email = user.email;
+        token.avatar = user.avatar;
+        token.role = user.role;
       }
       return { ...token, ...user };
     },
