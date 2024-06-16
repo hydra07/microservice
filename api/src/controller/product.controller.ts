@@ -10,6 +10,17 @@ import { plainToClass, plainToInstance } from "class-transformer";
 import { ProductDTO } from "@/dto/product.dto";
 import { DeepPartial } from "typeorm";
 
+type QueryParams = {
+  page?: string;
+  limit?: string;
+  keyword?: string;
+  fieldName?: keyof Product;
+  category?: string;
+  order?: 'ASC' | 'DESC';
+  orderBy?: keyof Product;
+};
+
+
 export default class ProductController extends BaseController<Product> {
   private productService: ProductService;
 
@@ -83,4 +94,51 @@ export default class ProductController extends BaseController<Product> {
       next(error);
     }
   }
+
+  async findByCategoryId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      // Corrected query options to use the relationship property name
+      const options = { where: { category: { id: id } } };
+      const products = await this.productService.findAll(options as any);
+      res.status(200).json(products);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // controller.ts
+async getProducts(req: Request, res: Response, next: NextFunction) {
+  const {
+    page = '1',
+    limit = '10',
+    keyword = '',
+    fieldName,
+    category = '',
+    order = 'ASC',
+    orderBy,
+  }: QueryParams = req.query;
+
+  try {
+    const categoryIds = category.split(',').map(Number).filter(Boolean);
+
+    const result = await this.productService.getProducts(
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      keyword,
+      fieldName,
+      categoryIds.length > 0 ? categoryIds : undefined,
+      order,
+      orderBy
+    );
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error getting products:', error);
+    next(error);
+  }
+}
+
+  
+  
 }

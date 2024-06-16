@@ -106,6 +106,14 @@ import { PaginatedResult } from "../@types/user";
         return handleError(error as Error, "Error getting single entity")
       }
     }
+
+    async findAll(options: FindOneOptions<ENTITY>) {
+      try {
+         return await this.repository.find(options);
+      } catch (error) {
+        return handleError(error as Error, "Error find entities");
+      }
+    }
   
     async getAllAndPaginate(
       page: number,

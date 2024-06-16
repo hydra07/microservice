@@ -83,13 +83,12 @@ const UpdateProductDialog: React.FC<UpdateProductDialogProps> = ({
         })),
       };
 
-      // Call your update product service with updatedProduct
       const data = await ProductService.updateProduct(updatedProduct);
-      // console.log("Response from update product:", response.data);
-
-      // console.error("Updated product object:", updatedProduct);
-      // Uncomment the line below to call the actual update function
-      onUpdateSuccess(data);
+      if (data) {
+        onUpdateSuccess(data);
+      }else{
+        console.log("Error updating product:", data);
+      }
       
       setOpen(false);
     } catch (error) { 

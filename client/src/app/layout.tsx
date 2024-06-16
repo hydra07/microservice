@@ -32,7 +32,7 @@ export default function RootLayout({
           >
             <Header />
             {/* <Navbar /> */}
-            <div className="pt-14">{children}</div>
+            <div className="pt-20">{children}</div>
           </ThemeProvider>
           {/* </StoreProvider> */}
         </SessionWrapper>

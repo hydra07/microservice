@@ -1,6 +1,6 @@
 import { Product } from "@/entity/product.entity";
 import BaseService from "./baseService";
-import { DeepPartial, FindOneOptions } from "typeorm";
+import { DeepPartial, FindOneOptions, FindOperatorType, ILike, In } from "typeorm";
 import { Nutrition } from "../entity/nutrition.entity";
 import { NutritionService } from "./nutrition.service";
 import { ImgProduct } from "../entity/imgProduct.entity";
@@ -14,6 +14,9 @@ import {
 } from "class-transformer";
 import { stringify } from "flatted";
 import { validate } from "class-validator";
+import { FindOperator } from "typeorm";
+import { totalmem } from "os";
+import { PaginatedResult } from "@/@types/user";
 
 export class ProductService extends BaseService<Product> {
   private nutritionService: NutritionService;
@@ -58,7 +61,50 @@ export class ProductService extends BaseService<Product> {
   
 
   // add custom...
-  // public update(options: FindOneOptions<Product>, data: Partial<Product>): Promise<Product | null> {
-    
-  // }
+ 
+// product.service.ts
+async getProducts(
+  page: number,
+  limit: number,
+  keyword: string,
+  fieldName: keyof Product | undefined,
+  categories: number[] | undefined,
+  order: 'ASC' | 'DESC',
+  orderBy: keyof Product | undefined
+): Promise<PaginatedResult<Product>> {
+  try {
+    const skip = (page - 1) * limit;
+    const where: Record<string, any> = {};
+
+    if (fieldName) {
+      where[fieldName] = ILike(`%${keyword}%`);
+    }
+
+    if (categories && categories.length > 0) {
+      where.category = { id: In(categories) };
+    }
+
+
+    console.log(where, 'where');
+    const [result, total] = await this.repository.findAndCount({
+      where,
+      order: {
+        ...(orderBy && order ? { [orderBy]: order } : {}),
+      },
+      take: limit,
+      skip,
+    });
+
+    return {
+      data: result,
+      total,
+      limit,
+      page,
+      lastPage: Math.ceil(total / limit),
+    };
+  } catch (error) {
+    throw new Error(`Error finding and paginating entities: ${error}`);
+  }
+}
+
 }

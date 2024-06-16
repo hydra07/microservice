@@ -10,12 +10,12 @@ import { createColumns } from './columns';
 import CreateProductDialog from './CreateProductDialog';
 import { SkeletonTable } from '../component/SkeletonTable';
 import UpdateProductDialog from './UpdateProductDialog';
-
+import BreadcrumbProduct from '../component/Breadcrumb';
 const Product = () => {
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
+  // const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
   useEffect(() => {
     const fetchData = async () => {
@@ -65,9 +65,7 @@ const Product = () => {
     { header: { width: 'w-[80px]' }, cell: { width: 'w-[60px]' } },
   ];
 
-  if (loading) {
-    return <SkeletonTable columns={skeletonColumns} rows={3} />;
-  }
+
 
   if (error) {
     return <div>{error}</div>;
@@ -78,8 +76,12 @@ const Product = () => {
       <BreadcrumbProduct title="Product" />
       <h1>Product</h1>
       <CreateProductDialog onCreateSuccess={handleCreateSuccess} />
-      <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={data} />
+      <div className="container mx-auto py-10">        
+        {loading ? (
+          <SkeletonTable columns={skeletonColumns} rows={3} />
+        ) : (
+          <DataTable columns={columns} data={data} />
+        )}
       </div>
 
       {/* <UpdateProductDialog onUpdateSuccess={handleUpdateSuccess} selectedProduct={selectedProduct} /> */}
