@@ -1,10 +1,16 @@
-import JWT from 'jsonwebtoken';
 import Google from 'next-auth/providers/google';
 // import { authOptions } from '@/server/auth';
 import axios from '@/lib/axios';
 import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth/next';
-async function refreshToken(token: any) {}
+async function refreshToken(expired: string) {
+  const expiryDate = new Date(expired);
+  console.log(Date.now() / 1000 - expiryDate.getTime() / 1000);
+  // if (Date.now() / 1000 > expired.getTime() / 1000) {
+  //   console.log('Token expired');
+  //   return;
+  // }
+}
 
 const authOptions: AuthOptions = {
   secret: process.env.SECRET,
@@ -14,6 +20,9 @@ const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
+  session: {
+    maxAge: 15 * 60, //15 minutes
+  },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       const initUser: User = {
@@ -38,21 +47,21 @@ const authOptions: AuthOptions = {
       }
     },
     async jwt({ token, user }) {
+      console.log('jwt chay');
       if (user) {
         token.accessToken = user.accessToken;
-
-        JWT.verify(
-          user.accessToken,
-          process.env.JWT_SECRET as string,
-          async (err: any, decoded: any) => {
-            console.log('Decoded:', decoded);
-            //check if token is expired
-            if (decoded && decoded.exp < Date.now() / 1000) {
-              console.log('Token expired');
-              await refreshToken(token);
-            }
-          },
-        );
+        // JWT.verify(
+        //   user.accessToken,
+        //   process.env.JWT_SECRET as string,
+        //   async (err: any, decoded: any) => {
+        //     console.log('Decoded:', decoded);
+        //     //check if token is expired
+        //     if (decoded && decoded.exp < Date.now() / 1000) {
+        //       console.log('Token expired');
+        //       await refreshToken(token);
+        //     }
+        //   },
+        // );
 
         token.refreshToken = user.refreshToken;
         token.id = user.id;
@@ -71,6 +80,8 @@ const authOptions: AuthOptions = {
       session.user.email = token.email as string;
       session.user.avatar = token.avatar as string;
       session.user.role = token.role as 'user' | 'admin';
+      // console.log(session.expires);
+      console.log(refreshToken(session.expires));
       return session;
     },
   },

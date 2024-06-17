@@ -1,4 +1,5 @@
 import { MongoDataSource } from '@/config/db.config';
+import { notificationService } from '@/config/socket.config';
 import { Comment } from '@/entity/comment.entity';
 import { Post } from '@/entity/post.entity';
 import UserService from '@/service/user.service';
@@ -205,6 +206,13 @@ class PostService {
         },
       });
       post.isActivate = isActivate;
+      notificationService.createNotification({
+        title: `Bài đăng "${post.title}" của bạn đã được ${
+          isActivate ? 'công khai' : 'ẩn'
+        }`,
+        content: `Post ${isActivate ? 'activated' : 'deactivated'}`,
+        userId: post.userId,
+      });
       return await this.postRepository.save(post);
     } catch (error) {
       throw new Error('Post not found');

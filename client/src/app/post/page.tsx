@@ -1,19 +1,6 @@
-"use client";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import axios from "@/lib/axios";
-import { formatDate } from "@/utils/date.utils";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import ListPost from "./components/ListPost";
-import { useSearchParams } from "next/navigation";
+'use client';
+import { useSearchParams } from 'next/navigation';
+import ListPost from './components/ListPost';
 // async function fetching() {
 //   try {
 //     const res = await axios.get(`/api/post/`);
@@ -65,8 +52,6 @@ import { useSearchParams } from "next/navigation";
 //   );
 // }
 export default function PostList() {
-  const searchParams = useSearchParams();
-  const query = searchParams.get("tag") ?? null;
-  console.log(query);
-  return <ListPost tag={query}/>;
+  const query = useSearchParams().get('tag') ?? null;
+  return <ListPost tag={query} />;
 }

@@ -16,6 +16,7 @@ import {
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useCallback } from 'react';
 // import { useAppDispatch } from '../../lib/hooks';
+import Notification from '../Notification';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 export default function AuthButton() {
@@ -66,19 +67,22 @@ export default function AuthButton() {
 
   const userAvatar = useCallback(() => {
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Avatar>
-            <AvatarImage src={session?.user.avatar as string}></AvatarImage>
-            <AvatarFallback>{'OK'}</AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56 flex flex-col">
-          <DropdownMenuItem className="w-full" onClick={handleLogout}>
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex flex-row space-x-2">
+        <Notification />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar>
+              <AvatarImage src={session?.user.avatar as string}></AvatarImage>
+              <AvatarFallback>{'OK'}</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56 flex flex-col">
+            <DropdownMenuItem className="w-full" onClick={handleLogout}>
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     );
   }, [status]);
 

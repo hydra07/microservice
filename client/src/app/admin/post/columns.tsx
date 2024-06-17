@@ -38,10 +38,7 @@ export const createColumns = (): ColumnDef<any>[] => [
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <EditTags
-              postId={post._id}
-              currentTags={post.tags}
-            />
+            <EditTags postId={post._id} currentTags={post.tags} />
             <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -11,7 +11,18 @@ export function getInitials(fullName: string): string {
     return fullName.slice(0, 2).toUpperCase();
   } else {
     // Lấy chữ cái đầu tiên của hai từ đầu tiên
-    const initials = words.map(word => word.charAt(0)).join('').toUpperCase();
+    const initials = words
+      .map((word) => word.charAt(0))
+      .join('')
+      .toUpperCase();
     return initials.slice(0, 2);
   }
+}
+
+/**
+ * Thay khoảng trống giữa các từ bằng dấu gạch ngang, xóa bỏ các ký tự đặc biệt và chuyển tất cả các ký tự thành chữ thường.
+ */
+export function slugify(text: string): string {
+  return text.toLowerCase().replace(/ /g, '-');
+  // .replace(/[^\w-]+/g, '');// Xóa bỏ các ký tự đặc biệt
 }

@@ -1,19 +1,19 @@
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from "typeorm";
 
-@Entity('notification')
+@Entity("notification")
 export class Notification {
   @ObjectIdColumn()
   _id?: string;
 
-  @Column('text')
+  @Column("text")
   title?: string;
 
-  @Column('text')
+  @Column("text")
   content?: string;
 
-  @Column('date')
+  @Column("date")
   createAt?: Date;
 
-  @Column('text')
+  @Column("text")
   userId?: string;
 }

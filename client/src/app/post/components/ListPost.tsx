@@ -120,7 +120,6 @@ export function PostCard({ post }: { post: PostType }) {
             </span>
           </Link>
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            {/* May 15, 2023 */}
             {formatISODateToLongDate(post.createdAt)}
           </span>
         </div>
@@ -213,7 +212,7 @@ export function Tags({ tags }: { tags?: { name: string }[] }) {
       {tags &&
         tags.map((tag) => (
           <Link
-            href={`/post?tag=${tag.name.toLowerCase().replace(/\s+/g, '')}`}
+            href={`/post?tag=${tag.name}`}
             className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors duration-300 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
             prefetch={false}
           >
