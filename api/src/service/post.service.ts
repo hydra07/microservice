@@ -114,6 +114,7 @@ class PostService {
           comments: true,
         },
       });
+      console.log(JSON.stringify(post));
       const postWithUser = await (async () => {
         const { userId, ...postWithoutUserId } = post;
         const user = await this.UserService.findUserById(userId!);
