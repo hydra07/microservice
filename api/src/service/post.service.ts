@@ -59,8 +59,27 @@ class PostService {
     return await this.commentRepository.find();
   }
 
-  async getPostWithUser() {
-    const post = await this.postRepository.find({
+  async getPostWithUser(tag?: string, skip?: number, take?: number) {
+    const query: any = {};
+    const options: any = {
+      order: {
+        createdAt: 'DESC',
+      },
+    };
+    if (tag) {
+      query.tags = { name: tag };
+    }
+
+    if (take) {
+      options.take = take; // Giới hạn số lượng kết quả
+    }
+    if (skip) {
+      options.skip = skip; // Bỏ qua số lượng kết quả
+    }
+    // console.log(tag, skip, take);
+    query.isActivate = true;
+    const [posts, total] = await this.postRepository.findAndCount({
+      where: query,
       select: [
         '_id',
         'title',
@@ -70,10 +89,11 @@ class PostService {
         'isActivate',
         'tags',
       ],
+      ...options,
     });
 
     const postWithUser = await Promise.all(
-      post.map(async (post) => {
+      posts.map(async (post) => {
         const { userId, ...postWithoutUserId } = post;
         const user = await this.UserService.findUserById(userId!);
         if (user) {
@@ -97,7 +117,7 @@ class PostService {
         }
       }),
     );
-    return postWithUser;
+    return { postWithUser, total };
   }
 
   async getPostById(id: string): Promise<any> {
@@ -213,6 +233,7 @@ class PostService {
         }`,
         content: `Post ${isActivate ? 'activated' : 'deactivated'}`,
         userId: post.userId,
+        createdAt: new Date(),
       });
       return await this.postRepository.save(post);
     } catch (error) {

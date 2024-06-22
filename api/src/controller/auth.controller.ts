@@ -20,7 +20,7 @@ export default class AuthController {
       const result = await this.authService.authenticate(req.body);
       if (result) {
         const { user, jwtAccessToken, jwtRefreshToken } = result;
-        console.log(result);
+        // console.log(result);
         res.status(200).json({ user, jwtAccessToken, jwtRefreshToken });
       } else {
         res.status(401).json({ message: 'Unauthorized' });

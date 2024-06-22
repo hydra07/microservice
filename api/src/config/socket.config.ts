@@ -1,5 +1,5 @@
 import app from '@/config/app.config';
-import NotificationService from '@/service/notification.service';
+import NotificationService from '@/service/notification.socket.service';
 import env from '@/util/validateEnv';
 import { NextFunction, Request, Response } from 'express';
 import { createServer } from 'http';

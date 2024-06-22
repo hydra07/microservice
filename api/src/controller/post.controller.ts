@@ -32,17 +32,26 @@ export default class PostController {
   };
   getAllPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const tag = req.query.tag;
-      let post;
-      if (tag) {
-        post = await this.postService.getAllPostByTag(tag as string);
-      } else {
-        post = await this.postService.getPostWithUser();
-      }
-      res
-        .status(200)
-        // .json(allPosts.map((post) => this.postService.mapPostToDto(post)));
-        .json(post);
+      const tag = req.query.tag ? (req.query.tag as string) : undefined;
+      const skip = req.query.skip
+        ? parseInt(req.query.skip as string)
+        : undefined;
+      const take = req.query.take
+        ? parseInt(req.query.take as string)
+        : undefined;
+
+      const { postWithUser: post, total } =
+        await this.postService.getPostWithUser(tag, skip, take);
+
+      return (
+        res
+          .status(200)
+          // .json(allPosts.map((post) => this.postService.mapPostToDto(post)));
+          .json({
+            post,
+            total,
+          })
+      );
     } catch (error) {
       // res.status(500).json({ message: 'Failed to fetch posts', error });
       next(error);
@@ -52,8 +61,8 @@ export default class PostController {
     try {
       // const tag = req.query.tag as string;
       const tag = req.params.tag as string;
-      console.log(tag);
-
+      const take = req.query.take as string;
+      const skip = req.query.skip as string;
       const posts = await this.postService.getAllPostByTag(tag);
       res.status(200).json(posts);
     } catch (error) {
@@ -126,7 +135,7 @@ export default class PostController {
     try {
       const postId = req.params.id as string;
       const isActivate = req.query.isActivate as string;
-      console.log(isActivate);
+      // console.log(isActivate);
       if (isActivate !== undefined) {
         // Chuyển đổi giá trị của isActivate thành boolean
         const isActive = isActivate.toLowerCase() === 'true';

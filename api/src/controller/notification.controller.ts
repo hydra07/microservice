@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { io } from '../config/socket.config';
-import NotificationService from '../service/notification.service';
+import NotificationService from '../service/notification.socket.service';
 class NotificationController {
   private notificationService = new NotificationService(io);
   // async addNotification
   // }
-  
+
   async getNotificationByUserId(
     req: Request,
     res: Response,

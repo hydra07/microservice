@@ -5,7 +5,7 @@ import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth/next';
 async function refreshToken(expired: string) {
   const expiryDate = new Date(expired);
-  console.log(Date.now() / 1000 - expiryDate.getTime() / 1000);
+  // console.log(Date.now() / 1000 - expiryDate.getTime() / 1000);
   // if (Date.now() / 1000 > expired.getTime() / 1000) {
   //   console.log('Token expired');
   //   return;
@@ -47,7 +47,7 @@ const authOptions: AuthOptions = {
       }
     },
     async jwt({ token, user }) {
-      console.log('jwt chay');
+      // console.log('jwt chay');
       if (user) {
         token.accessToken = user.accessToken;
         // JWT.verify(

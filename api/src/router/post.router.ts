@@ -6,8 +6,10 @@ const router = Router();
 const postController = new PostController();
 router
   // .get('/post', postController.getListPost)
+  .get('/post', postController.getAllPost)
   .post('/post', upload('post', 'image'), postController.createPost);
-router.get('/post/all', postController.getAllPost);
+// router.get('/post/all', postController.getAllPost);
+
 router.get('/post/tag', postController.getUniqueTags);
 router.get('/post/tag/:tag', postController.getPostByTag);
 router

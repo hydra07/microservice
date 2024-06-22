@@ -32,7 +32,7 @@ export default function Post({ id, children }: any) {
     const fecthing = async () => {
       try {
         const res = await axios.get(`/api/post/${id}`);
-        console.log(res.data);
+        // console.log(res.data);
         setPost(res.data);
         setIsloading(true);
       } catch (error) {}
@@ -52,6 +52,14 @@ export default function Post({ id, children }: any) {
     return <div>Post not found</div>;
   }
 
+  return post.isActivate ? (
+    <PostPage post={post} children={children} />
+  ) : (
+    <div>Post not found</div>
+  );
+}
+
+function PostPage({ post, children }: any) {
   return (
     <div className="grid grid-cols-[300px_1fr] gap-8 py-12 px-4 md:px-6 lg:px-8">
       <div className="sticky top-16 self-start space-y-6">
@@ -105,6 +113,7 @@ export default function Post({ id, children }: any) {
     </div>
   );
 }
+
 function BreadcrumbPost({ title }: { title: string }) {
   // const Link = dynamic(() => import('@/components/Link'));
   return (

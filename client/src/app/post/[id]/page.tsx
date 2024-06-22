@@ -16,14 +16,14 @@
 //     </>
 //   );
 // };
-import PostDemo from '../components/DemoPost';
+import Post from '../components/DemoPost';
 import Comment from './Comment';
 export default async ({ params }: { params: { id: string } }) => {
   return (
     <>
-      <PostDemo id={params.id}>
+      <Post id={params.id}>
         <Comment id={params.id} />
-      </PostDemo>
+      </Post>
     </>
   );
 };

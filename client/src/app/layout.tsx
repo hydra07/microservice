@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google';
 // import StoreProvider from '../components/StoreProvider';
 import './globals.css';
 
+import { Toaster } from '@/components/ui/toaster';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ['latin'] });
@@ -37,6 +38,7 @@ export default function RootLayout({
             {/* <Navbar /> */}
             <div className="pt-14">{children}</div>
             <ToastContainer />
+            <Toaster />
           </ThemeProvider>
           {/* </StoreProvider> */}
         </SessionWrapper>
