@@ -62,6 +62,7 @@ export type ProductType = {
   averageWeight: number;
   measurement: MeasurementType;
   nutrition: NutritionType;
+  quantity?: number;
 };
 
 }

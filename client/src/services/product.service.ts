@@ -20,3 +20,12 @@ export const createProduct = async (productData: ProductType) => {
     return null;
   }
 };
+
+export const updateProduct = async (productData: ProductType) => {
+  try {
+    const res = await http.put(`api/products/${productData.id}`, productData);
+    return res.data;
+  } catch (error) {
+    return null;
+  }
+};
