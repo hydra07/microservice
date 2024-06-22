@@ -42,7 +42,16 @@ const PostgresDataSource = new DataSource({
 
   synchronize: true,
   logging: false,
-  entities: [User, RefreshToken, CategoryProduct, Product, Nutrition, Measurement, ImgProduct, Recipe],
+  entities: [
+    User,
+    RefreshToken,
+    CategoryProduct,
+    Product,
+    Nutrition,
+    Measurement,
+    ImgProduct,
+    Recipe,
+  ],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000,

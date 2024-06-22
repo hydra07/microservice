@@ -1,13 +1,13 @@
-import { PostgresDataSource } from '@/config/db.config';
-import { RefreshToken } from '@/entity/refreshToken.entity';
-import { User } from '@/entity/user.entity';
-import UserService from '@/service/user.service';
+import { PostgresDataSource } from "@/config/db.config";
+import { RefreshToken } from "@/entity/refreshToken.entity";
+import { User } from "@/entity/user.entity";
+import UserService from "@/service/user.service";
 import {
   generateAccessToken,
   generateRefreshToken,
-} from '@/util/tokenGenerate';
-import env from '@/util/validateEnv';
-import { UserRole } from '../@types/user.d';
+} from "@/util/tokenGenerate";
+import env from "@/util/validateEnv";
+import { UserRole } from "../@types/user.d";
 export default class AuthService {
   private userService = new UserService();
 
@@ -38,18 +38,18 @@ export default class AuthService {
 
         user.refreshTokenId = refreshTokenEntity.id;
         await this.userService.saveUser(user);
-        console.log('User found:', user);
+        console.log("User found:", user);
         return {
           user,
           jwtAccessToken,
           jwtRefreshToken,
         };
       } else {
-        console.log('User not found');
+        console.log("User not found");
         return null;
       }
     } catch (error) {
-      console.error('Error in authenticate:', error);
+      console.error("Error in authenticate:", error);
     }
   }
 }

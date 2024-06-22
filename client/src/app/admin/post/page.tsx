@@ -1,9 +1,11 @@
 'use client';
 import axios from '@/lib/axios';
 import { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import BreadcrumbTitle from '../component/Breadcrumb';
-import { DataTable } from '../component/data-table';
 import { createColumns } from './columns';
+import { DataTable } from './data-table';
 export default function Post() {
   const [data, setData] = useState<any[]>([]);
   useEffect(() => {
@@ -22,6 +24,7 @@ export default function Post() {
     <>
       <BreadcrumbTitle title="Post" />
       <PostTable data={data} />
+      <ToastContainer />
     </>
   );
 }

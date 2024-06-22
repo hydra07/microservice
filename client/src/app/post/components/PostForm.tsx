@@ -11,10 +11,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import useUploadFile from '@/hooks/useUploadFile';
 import axios from '@/lib/axios';
-import { useSession } from 'next-auth/react';
-import dynamic from 'next/dynamic';
 import { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -30,13 +27,11 @@ import { useForm } from 'react-hook-form';
 //     </Dialog>
 //   );
 // }
-
-export default function FormPost(): ReactNode {
-  const { data: session, status } = useSession();
-  if (!session?.user) return null;
-
+import Editor from '@/components/Editor';
+import useUploadFile from '@/hooks/useUploadFile';
+import { toast } from 'react-toastify';
+export default function FormPost({ user }: any): ReactNode {
   const { InputFile, filePath } = useUploadFile();
-
   const form = useForm({
     defaultValues: {
       title: '',
@@ -46,12 +41,16 @@ export default function FormPost(): ReactNode {
     },
   });
   const onsubmit = async (data: any) => {
-    data.userId = session?.user.id;
+    data.userId = user.id;
     console.log(data);
     const res = await axios.post('/api/post', data);
-    console.log(res.data);
+    // console.log(res.data);
+    if (res.status === 201) {
+      toast.success('Post successfully added');
+      // form.reset();
+    }
   };
-  const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
+  // const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
   return (
     <Form {...form}>
       <form

@@ -1,7 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { CollapseMenuButton } from '@/components/ui/collapmenubutton';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Tooltip,
   TooltipContent,
@@ -21,7 +20,7 @@ export default function SideBar({ isOpen }: { isOpen: boolean }) {
   // const [isOpen, setIsOpen] = useState<boolean | undefined>(true);
   return (
     <>
-      <ScrollArea className="[&>div>div[style]]:!block w-full">
+      <div className="[&>div>div[style]]:!block w-full">
         <nav className="mt-8 h-full w-full">
           <ul
             className={cn(
@@ -138,7 +137,7 @@ export default function SideBar({ isOpen }: { isOpen: boolean }) {
             </li> */}
           </ul>
         </nav>
-      </ScrollArea>
+      </div>
     </>
   );
 }
