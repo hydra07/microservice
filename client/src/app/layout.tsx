@@ -6,6 +6,10 @@ import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
 // import StoreProvider from '../components/StoreProvider';
 import './globals.css';
+
+import { Toaster } from '@/components/ui/toaster';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ['latin'] });
 const SessionWrapper = dynamic(() => import('@/components/SessionWrapper'), {
   ssr: false,
@@ -33,8 +37,9 @@ export default function RootLayout({
           >
             <Header />
             {/* <Navbar /> */}
-            <div className="pt-20">{children}</div>
-        
+            <div className="pt-14">{children}</div>
+            <ToastContainer />
+            <Toaster />
           </ThemeProvider>
           {/* </StoreProvider> */}
         </SessionWrapper>

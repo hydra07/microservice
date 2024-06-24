@@ -32,24 +32,51 @@ export default class PostController {
   };
   getAllPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const allPosts = await this.postService.getPostWithUser();
-      res
-        .status(200)
-        // .json(allPosts.map((post) => this.postService.mapPostToDto(post)));
-        .json(allPosts);
+      const tag = req.query.tag ? (req.query.tag as string) : undefined;
+      const skip = req.query.skip
+        ? parseInt(req.query.skip as string)
+        : undefined;
+      const take = req.query.take
+        ? parseInt(req.query.take as string)
+        : undefined;
+
+      const { postWithUser: post, total } =
+        await this.postService.getPostWithUser(tag, skip, take);
+
+      return (
+        res
+          .status(200)
+          // .json(allPosts.map((post) => this.postService.mapPostToDto(post)));
+          .json({
+            post,
+            total,
+          })
+      );
     } catch (error) {
       // res.status(500).json({ message: 'Failed to fetch posts', error });
       next(error);
     }
   };
-  getListPost = async (req: Request, res: Response, next: NextFunction) => {
+  getPostByTag = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const listPosts = await this.postService.getListPost();
-      res.status(200).json(listPosts);
+      // const tag = req.query.tag as string;
+      const tag = req.params.tag as string;
+      const take = req.query.take as string;
+      const skip = req.query.skip as string;
+      const posts = await this.postService.getAllPostByTag(tag);
+      res.status(200).json(posts);
     } catch (error) {
       next(error);
     }
   };
+  // getListPost = async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     const listPosts = await this.postService.getListPost();
+  //     res.status(200).json(listPosts);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
   getPostById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const postId = req.params.id;
@@ -108,7 +135,7 @@ export default class PostController {
     try {
       const postId = req.params.id as string;
       const isActivate = req.query.isActivate as string;
-      console.log(isActivate);
+      // console.log(isActivate);
       if (isActivate !== undefined) {
         // Chuyển đổi giá trị của isActivate thành boolean
         const isActive = isActivate.toLowerCase() === 'true';
@@ -117,10 +144,28 @@ export default class PostController {
         // Nếu không có isActivate thì thực hiện hành động private post
         await this.postService.publicPost(postId, false);
       }
-      const post = await this.postService.getPostById(postId)
+      const post = await this.postService.getPostById(postId);
       res.status(200).json(post);
     } catch (error) {
       next(error);
     }
-  }
+  };
+  addTags = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const postId = req.params.id;
+      const tags = req.body.tags;
+      const post = await this.postService.addTagToPost(postId, tags);
+      res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
+  };
+  getUniqueTags = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const tags = await this.postService.getAllUniqueTags();
+      res.status(200).json(tags);
+    } catch (error) {
+      next(error);
+    }
+  };
 }

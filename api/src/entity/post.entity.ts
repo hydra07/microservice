@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { BaseEntity, Column, Entity, ObjectIdColumn, OneToMany } from 'typeorm';
 import { Comment } from './comment.entity';
+
 @Entity('post')
 export class Post extends BaseEntity {
   @ObjectIdColumn()
@@ -30,4 +31,14 @@ export class Post extends BaseEntity {
 
   @Column('boolean')
   isActivate?: boolean = false;
+
+  @Column(() => PostTag)
+  tags?: PostTag[];
+}
+
+export class PostTag {
+  // @ObjectIdColumn()
+  // _id!: ObjectId;
+  @Column('text')
+  name?: string;
 }

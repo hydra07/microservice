@@ -1,11 +1,18 @@
 'use client';
-import dynamic from 'next/dynamic';
 
+import UserWrapper from '@/components/UserWrapper';
+import useAuth from '@/hooks/useAuth';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import FormPost from '../components/PostForm';
 export default () => {
-  const FormPost = dynamic(() => import('../components/Post'), { ssr: false });
+  const { user } = useAuth();
   return (
-    <div className="mx-10">
-      <FormPost />
-    </div>
+    <UserWrapper>
+      <div className="mx-10">
+        <FormPost user={user} />
+        <ToastContainer />
+      </div>
+    </UserWrapper>
   );
 };

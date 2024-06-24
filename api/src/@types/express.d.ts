@@ -6,6 +6,13 @@ declare module 'express' {
   }
 
   export interface RequestWithUser extends Request {
-    user?: User;
+    user?:
+      | {
+          id: string;
+          role: 'user' | 'admin';
+          iat: number;
+          exp: number;
+        }
+      | User;
   }
 }

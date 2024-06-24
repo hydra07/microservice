@@ -1,0 +1,3 @@
+### GET noti
+GET http://localhost:3000/api/notification?take=3&skip=3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExODMwMzYyMDMwMzc2OTI4NzM3NCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxODg3MzI1NywiZXhwIjoxNzE5NDc4MDU3fQ.lqW6X_RAFEokMpwcAaN7RuglMZvscytaK15h76Wrs1Q

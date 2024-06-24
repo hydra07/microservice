@@ -1,26 +1,28 @@
 import { MongoDataSource } from '@/config/db.config';
 import { Notification } from '@/entity/notification.entity';
-import { Server } from 'socket.io';
-
-export class NotificationService {
-  private socketIo: Server;
+export default class NotificationService {
   private notificationRepository = MongoDataSource.getRepository(Notification);
-  constructor(socketIo: Server) {
-    this.socketIo = socketIo;
-  }
-
-  async createNotification(notification: Notification) {
-    console.log('notification: ', notification);
-    const savedNotification = await this.notificationRepository.save(
-      notification,
-    );
-    console.log('savedNotification', savedNotification);
-    this.socketIo.emit('notification', savedNotification);
-    return savedNotification;
-  }
-
-  async getNotifications() {
-    const notifications = await this.notificationRepository.find();
-    return notifications;
+  async getNotificationsByUserId(userId: string, skip?: number, take?: number) {
+    const query = { userId };
+    const options: any = {
+      // sort: { createdAt: -1 }, // Sắp xếp theo thời gian tạo giảm dần
+      // select: ['_id', 'title', 'content', 'createdAt'],
+      order: {
+        createdAt: 'DESC',
+      },
+    };
+    if (take) {
+      options.take = take; // Giới hạn số lượng kết quả
+    }
+    if (skip) {
+      options.skip = skip; // Bỏ qua số lượng kết quả
+    }
+    const [notifications, total] =
+      await this.notificationRepository.findAndCount({
+        where: query,
+        ...options,
+      });
+    // console.log(notifications, total);
+    return { notifications, total };
   }
 }
