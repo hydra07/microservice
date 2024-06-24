@@ -20,11 +20,10 @@ const Product = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedData = await ProductService.fetchProducts();
-
-        console.log(fetchedData);
-        // await new Promise((resolve) => setTimeout(resolve, 2000));
-        setData(fetchedData);
+        const fetchedData = await ProductService.getAllProducts();
+        if(fetchedData) {
+          setData(fetchedData);
+        }
       } catch (error) {
         console.error('Error fetching products:', error);
         setError('Failed to fetch products.');

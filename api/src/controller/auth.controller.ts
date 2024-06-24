@@ -7,7 +7,7 @@ import {
   generateRefreshToken,
 } from '@/util/tokenGenerate';
 import env from '@/util/validateEnv';
-import { NextFunction, RequestWithUser, Response } from 'express';
+import { NextFunction, RequestWithUser, Response, Request } from 'express';
 import jwt from 'jsonwebtoken';
 
 export default class AuthController {

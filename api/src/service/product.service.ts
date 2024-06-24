@@ -1,6 +1,6 @@
 import { Product } from "@/entity/product.entity";
 import BaseService from "./baseService";
-import { DeepPartial, FindOneOptions, FindOperatorType, ILike, In } from "typeorm";
+import { DeepPartial, FindOneOptions, FindOperatorType, ILike, In, MoreThan } from "typeorm";
 import { Nutrition } from "../entity/nutrition.entity";
 import { NutritionService } from "./nutrition.service";
 import { ImgProduct } from "../entity/imgProduct.entity";
@@ -58,8 +58,6 @@ export class ProductService extends BaseService<Product> {
       return handleError(error as Error, "Error saving product");
     }
   }
-  
-
   // add custom...
  
 // product.service.ts
@@ -70,7 +68,8 @@ async getProducts(
   fieldName: keyof Product | undefined,
   categories: number[] | undefined,
   order: 'ASC' | 'DESC',
-  orderBy: keyof Product | undefined
+  orderBy: keyof Product | undefined,
+  inStock: boolean
 ): Promise<PaginatedResult<Product>> {
   try {
     const skip = (page - 1) * limit;
@@ -82,6 +81,10 @@ async getProducts(
 
     if (categories && categories.length > 0) {
       where.category = { id: In(categories) };
+    }
+
+    if (inStock) {
+      where.currentQuantity = MoreThan(0);
     }
 
 

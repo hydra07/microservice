@@ -129,7 +129,8 @@ async getProducts(req: Request, res: Response, next: NextFunction) {
       fieldName,
       categoryIds.length > 0 ? categoryIds : undefined,
       order,
-      orderBy
+      orderBy,
+      true //instock ,get all product have currentQuantity > 0
     );
 
     res.json(result);

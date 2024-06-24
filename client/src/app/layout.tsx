@@ -1,4 +1,5 @@
 import Header from '@/components/header';
+import Footer from '@/components/footer';
 import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
@@ -21,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={inter.className}>
+      <body className={`${inter.className} w-screen overflow-x-hidden`}>
         <SessionWrapper>
           {/* <StoreProvider> */}
           <ThemeProvider
@@ -33,6 +34,7 @@ export default function RootLayout({
             <Header />
             {/* <Navbar /> */}
             <div className="pt-20">{children}</div>
+        
           </ThemeProvider>
           {/* </StoreProvider> */}
         </SessionWrapper>

@@ -1,36 +1,46 @@
 "use client";
-
-import { useState, useMemo, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationNext,
-} from "@/components/ui/pagination";
-import { SearchIcon } from "lucide-react";
-import { ProductCategoryType, ProductType } from "CustomTypes";
-import * as ProductService from "@/services/product.service";
-import * as ProductCategoryService from "@/services/productCategory.service";
-import dynamic from "next/dynamic";
-
+import React, { useState, useEffect } from 'react';
+import { ProductType, ProductCategoryType } from 'CustomTypes';
+import * as ProductService from '@/services/product.service';
+import * as ProductCategoryService from '@/services/productCategory.service';
+import useFromStore from '@/hooks/useFromStore';
+import { useCartStore } from '../../store/useCartStore';
+import Cart from '@/components/cart/Cart';
+import Header from './component/Header';
+import SortFilterPanel from './component/SortFilterPanel';
+import PaginationComponent from './component/Pagination';
+import ProductItem from './component/ProductItem';
+import useDebounce from '@/hooks/useDebounce';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Component() {
-  const [sortBy, setSortBy] = useState<string>("featured");
+  const [sortBy, setSortBy] = useState<string>('featured');
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [products, setProducts] = useState<ProductType[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [limit] = useState(5);
   const imgNotFoundUrl = process.env.NEXT_PUBLIC_IMG_NOTFOUND;
   const [categories, setCategories] = useState<ProductCategoryType[]>([]);
-  const DynamicLink = dynamic(() => import("@/components/Link"));
+  const [isLoading, setIsLoading] = useState(false);
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 400);
+  const STOCK_EXCEEDED_ERROR = "Quantity exceeds available stock!";
+
+  const toastConfig = {
+    position: "top-right" as const,
+    autoClose: 1000,
+    hideProgressBar: false,
+    newestOnTop: false,
+    closeOnClick: true,
+    rtl: false,
+    pauseOnFocusLoss: true,
+    draggable: true,
+    pauseOnHover: true,
+    theme: "light" as const,
+  };
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -42,30 +52,34 @@ export default function Component() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const sortOrder = sortBy === "low" ? "ASC" : sortBy === "high" ? "DESC" : "ASC";
-      const orderBy = "price";
-
-      const data = await ProductService.fetchProducts({
-        page,
-        limit,
-        keyword: searchTerm,
-        category: selectedCategories.join(","),
-        order: sortOrder,
-        orderBy,
-      });
-
-      setProducts(data.data);
-      setTotalPages(Math.ceil(data.total / limit));
+      setIsLoading(true); // Set loading to true at the start of the fetch operation
+      const sortOrder = sortBy === 'low' ? 'ASC' : sortBy === 'high' ? 'DESC' : 'ASC';
+      const orderBy = 'price';
+      try {
+        const data = await ProductService.fetchProducts({
+          page,
+          limit,
+          keyword: debouncedSearchTerm,
+          category: selectedCategories.join(','),
+          order: sortOrder,
+          orderBy,
+          fieldName: 'name',
+        });
+        setProducts(data.data);
+        setTotalPages(Math.ceil(data.total / limit));
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        // Optionally handle the error, e.g., by setting an error state
+      } finally {
+        setIsLoading(false); // Set loading to false once the fetch operation is complete
+      }
     };
     fetchProducts();
-  }, [page, limit, searchTerm, selectedCategories, sortBy]);
+  }, [page, limit, debouncedSearchTerm, selectedCategories, sortBy]);
 
   const handleSortChange = (value: string) => {
     setSortBy(value);
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    setPage(1);
   };
 
   const handleCategoryFilter = (categoryId: number) => {
@@ -74,188 +88,42 @@ export default function Component() {
         ? prevSelectedCategories.filter((id) => id !== categoryId)
         : [...prevSelectedCategories, categoryId]
     );
+    setPage(1);
   };
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
 
-  const filteredProducts = useMemo(() => {
-    const searchFiltered = products.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const filtered = searchFiltered.filter((product) =>
-      selectedCategories.length === 0
-        ? true
-        : selectedCategories.includes(product.category.id)
-    );
-
-    switch (sortBy) {
-      case "low":
-        return filtered.sort((a, b) => a.price - b.price);
-      case "high":
-        return filtered.sort((a, b) => b.price - a.price);
-      default:
-        return filtered;
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (value === '') {
+      setSearchTerm('');
+    } else if (searchTerm !== '' || !value.startsWith(' ')) {
+      setSearchTerm(value);
     }
-  }, [products, selectedCategories, sortBy, searchTerm]);
+  };
 
   return (
-    <div className="w-full">
-      <header className="bg-gray-100 dark:bg-gray-800 py-4 px-6">
-        <div className="container mx-auto flex items-center justify-center">
-          <div className="relative w-full max-w-md">
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400" />
-            <Input
-              onChange={handleSearchChange}
-              value={searchTerm}
-              type="text"
-              placeholder="Search product..."
-              className="w-full rounded-md bg-white px-10 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-950 dark:text-gray-50"
-            />
-          </div>
-        </div>
-      </header>
+    <div className="w-full"> 
+      <Header searchTerm={searchTerm} onSearchChange={handleSearchChange} isLoading={isLoading} />
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-[240px_1fr] gap-8 py-8">
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 shadow-md">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">
-            Sort By
-          </h3>
-          <div className="space-y-2">
-            <RadioGroup value={sortBy} onValueChange={handleSortChange}>
-              {/* <Label className="flex items-center gap-2 font-normal">
-                <RadioGroupItem
-                  value="featured"
-                  className="text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="text-gray-700 dark:text-gray-300">
-                  Featured
-                </span>
-              </Label> */}
-              <Label className="flex items-center gap-2 font-normal">
-                <RadioGroupItem
-                  value="low"
-                  className="text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="text-gray-700 dark:text-gray-300">
-                  Price: Low to High
-                </span>
-              </Label>
-              <Label className="flex items-center gap-2 font-normal">
-                <RadioGroupItem
-                  value="high"
-                  className="text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="text-gray-700 dark:text-gray-300">
-                  Price: High to Low
-                </span>
-              </Label>
-              {/* <Label className="flex items-center gap-2 font-normal">
-                <RadioGroupItem
-                  value="newest"
-                  className="text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="text-gray-700 dark:text-gray-300">Newest</span>
-              </Label> */}
-            </RadioGroup>
-          </div>
-          <h3 className="text-lg font-semibold mt-6 mb-4 text-gray-800 dark:text-gray-200">
-            Filter By
-          </h3>
-          <div className="space-y-2">
-            {categories.map((category) => (
-              <Label
-                key={category.id}
-                className="flex items-center gap-2 font-normal"
-              >
-                <Checkbox
-                  checked={selectedCategories.includes(category.id)}
-                  onCheckedChange={() => handleCategoryFilter(category.id)}
-                  className="text-indigo-600 focus"
-                />
-                <span className="text-gray-700 dark:text-gray-300">
-                  {category.name}
-                </span>
-              </Label>
-            ))}
-          </div>
-        </div>
+        <SortFilterPanel
+          sortBy={sortBy}
+          selectedCategories={selectedCategories}
+          categories={categories}
+          onSortChange={handleSortChange}
+          onCategoryFilter={handleCategoryFilter}
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white dark:bg-gray-950 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-800"
-            >
-              <DynamicLink href={`/product/${product.id}`} className="block">
-                <img
-                  src={product.imgProducts?.[0]?.imageUrl ?? imgNotFoundUrl}
-                  alt={product.name}
-                  width={400}
-                  height={300}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold">{product.name}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 line-clamp-2">
-                    {product.description.length > 20
-                      ? product.description.substring(0, 20) + "..."
-                      : product.description}
-                  </p>
-                  <div className="mt-4 font-medium text-primary-500">
-                    ${product.price.toFixed(2)}
-                  </div>
-                  <button className="mt-4 w-full bg-green-300 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300">
-                    Add to Cart
-                  </button>
-                </div>
-              </DynamicLink>
-            </div>
+          {products.map((product) => (
+            <ProductItem key={product.id} product={product} imgNotFoundUrl={imgNotFoundUrl as string} />
           ))}
         </div>
       </div>
-      <div className="bg-gray-100 dark:bg-gray-800 py-6">
-        <div className="container mx-auto">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={() => handlePageChange(page - 1)}
-                  aria-disabled={page <= 1}
-                  tabIndex={page <= 1 ? -1 : undefined}
-                  className={
-                    page <= 1 ? "pointer-events-none opacity-50" : undefined
-                  }
-                />
-              </PaginationItem>
-              {[...Array(totalPages)].map((_, index) => (
-                <PaginationItem key={index}>
-                  <PaginationLink
-                    href="#"
-                    isActive={index + 1 === page}
-                    onClick={() => handlePageChange(index + 1)}
-                  >
-                    {index + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={() => handlePageChange(page + 1)}
-                  aria-disabled={page >= totalPages}
-                  tabIndex={page >= totalPages ? -1 : undefined}
-                  className={
-                    page >= totalPages ? "pointer-events-none opacity-50" : undefined
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      </div>
+      <PaginationComponent page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+      <Cart />
+      <ToastContainer {...toastConfig} />
     </div>
   );
 }
-

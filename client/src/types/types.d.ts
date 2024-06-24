@@ -62,7 +62,18 @@ declare module "CustomTypes" {
     averageWeight: number;
     measurement: MeasurementType;
     nutrition: NutritionType;
-    quantity?: number;
+    quantity: number;
+  };
+
+  export type CheckoutFormType = {
+    name: string;
+    phone: string;
+    email: string;
+    paymentMethod: string;
+    ward: string; // Add this line if 'ward' is a field in your form
+    province: string; // Add this line if 'province' is a field in your form
+    district: string; // Add this line if 'district' is a field in your form
+    address: string;
   };
 
   export interface PaginatedProducts {
@@ -70,7 +81,7 @@ declare module "CustomTypes" {
     limit;
     page;
     data: ProductType[];
-  };
+  }
 
   export interface QueryParams {
     page?: number;
@@ -80,6 +91,22 @@ declare module "CustomTypes" {
     category?: string;
     order?: string;
     orderBy?: string;
-}
+  }
 
+  export interface CartItem {
+    productId: number;
+    quantity: number;
+    subtotal: number;
+  }
+
+  export interface CheckoutPayload {
+    name?: string;
+    phone?: string;
+    email?: string;
+    id?: string; //user
+    paymentMethod?: string;
+    shipAddress?: string;
+    cart?: CartItem[];
+    totalPrice?: number;
+  }
 }
