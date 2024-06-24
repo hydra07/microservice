@@ -8,7 +8,7 @@ import { Measurement } from "@/entity/measurement.entity";
 
 
 export default class MeasurementController extends BaseController<Measurement> {
-    constructor() {
-      super(new MeasurementService());
+    constructor(service: MeasurementService) {
+      super(service);
     }
 }

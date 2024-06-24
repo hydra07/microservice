@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import IngredientForm from '@/components/ui.custom/user/ingredientForm';
 import StepForm from '@/components/ui.custom/user/stepform';
 import axios from '@/lib/axios';
+import { MeasurementType } from 'CustomTypes';
 
 interface FormData {
     foodName: string;
@@ -30,7 +31,7 @@ const Form: React.FC = () => {
         ingredients: [{ name: '', quantity: 0, unit: '' }],
         steps: [{ description: '', image: null }],
     });
-
+    const [measurements, setMeasurements] = useState<MeasurementType[]>([]);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, files } = e.target as HTMLInputElement & HTMLTextAreaElement;
         if (name === 'imageUrl' && files) {
@@ -74,7 +75,18 @@ const Form: React.FC = () => {
             console.error('There was a problem with the fetch operation:', error);
         }
     };
-
+    useEffect (() => {
+        const fetchMeasurements = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/measurements');
+                const data = await response.json();
+                setMeasurements(data);
+            } catch (error) {
+                console.error('Error fetching measurements:', error);
+            }
+        };
+        fetchMeasurements();
+    })
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="p-8 rounded-lg shadow-md w-full max-w-5xl">
@@ -137,6 +149,7 @@ const Form: React.FC = () => {
                     <IngredientForm
                         ingredients={formData.ingredients}
                         setIngredients={(ingredients) => setFormData({ ...formData, ingredients })}
+                        measurements={measurements}
                     />
                     <StepForm
                         steps={formData.steps}

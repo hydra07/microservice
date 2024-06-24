@@ -12,7 +12,7 @@ const Page = () => {
     const [data, setData] = useState<MeasurementType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
+    const [measurements, setMeasurements] = useState<MeasurementType[]>([]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -20,7 +20,7 @@ const Page = () => {
                 // Delay 2 seconds
 
                 await new Promise((resolve) => setTimeout(resolve, 2000));
-
+                setMeasurements(fetchedData);
                 setData(fetchedData);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -67,7 +67,7 @@ const Page = () => {
             <div className="container mx-auto py-10">
                 <DataTable columns={columns} data={data} />
             </div>
-            <UploadImgDialog />
+            {/* <UploadImgDialog /> */}
         </>
     );
 };

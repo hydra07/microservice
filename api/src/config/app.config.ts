@@ -22,16 +22,17 @@ const app = express();
 
 app.use(
   cors({
-    origin: env.CLIENT_URL, // Replace with your client domain
-    credentials: true,
+    origin:  'http://localhost:4000' ,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Replace with your client domain
+    
   }),
 );
 
-app.use(
-  cors({
-    origin: env.CLIENT_URL,
-  }),
-);
+// app.use(
+//   cors({
+//     origin:'http://localhost:4000',
+//   }),
+// );
 app.use(Cookieparser());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));

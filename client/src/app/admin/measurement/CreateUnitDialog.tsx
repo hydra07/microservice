@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as MeasurementService from "@/services/measurement.service";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,23 +26,43 @@ const CreateUnitDialog: React.FC<CreateUnitDialogProps> = ({ onCreateSuccess }) 
     const [open, setOpen] = useState(false);
     const [newUnit, setNewUnit] = useState<MeasurementType>({
         id: 0,
-        unit: "",
+        name: "",
+        isActive: true
     });
-
+    const [error, setError] = useState('');
+    const [exist, setExist] = useState<MeasurementType[]>([]);
+    
+    useEffect(()=>{
+        const fetchExist = async () => {
+            const units= await MeasurementService.fetchMeasurements();
+            setExist(units);
+        
+        };
+        fetchExist();
+    }, [])
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
+        const {name, value} = e.target;
+        if(name === 'name' && exist.some((unit) => unit.name === value)) {
+            setError('Name must be unique');
+            return;
+        }
+        setError('');
         setNewUnit({ ...newUnit, [e.target.name]: e.target.value });
     };
 
     const handleCreateUnit = async () => {
         try {
-            const createdUnit =
-                await MeasurementService.createMeasurement(newUnit);
+            if(error || exist.some((unit) => unit.name === newUnit.name)) {
+                setError('Name must be unique');
+                return;
+            }
+            const createdUnit = await MeasurementService.createMeasurement(newUnit);
             if (createdUnit) {
                 onCreateSuccess(createdUnit);
                 setOpen(false);
-                setNewUnit({ id: 0, unit: "" });
+                setNewUnit({ id: 0, name: "" , isActive: true});
             }
         } catch (error) {
             console.error("Error creating measurement unit:", error);
@@ -69,12 +89,27 @@ const CreateUnitDialog: React.FC<CreateUnitDialogProps> = ({ onCreateSuccess }) 
                         </label>
                         <Input
                             id="unit"
-                            name="unit"
-                            value={newUnit.unit}
+                            name="name"
+                            value={newUnit.name}
                             onChange={handleInputChange}
                             className="col-span-3"
                         />
                     </div>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="isActive" className="text-right col-span-1 font-semibold">
+                        Active
+                    </label>
+                    <Input
+                        id="isActive"
+                        name="isActive"
+                        type="checkbox"
+                        checked={newUnit.isActive}
+                        onChange={(e) =>
+                            setNewUnit({ ...newUnit, isActive: e.target.checked })
+                        }
+                        className="col-span-3"
+                    />
                 </div>
                 <DialogFooter className="mt-6">
                     <Button variant="outline" onClick={() => setOpen(false)} className="mr-2">

@@ -4,7 +4,7 @@ export const fetchMeasurements = async (): Promise<
     MeasurementType[]
 > => {
     try {
-        const res = await http.get("api/measurement");
+        const res = await http.get("api/measurements");
         return res.data;
     } catch (err) {
         console.error("Error fetching measurements:", err);
@@ -13,15 +13,15 @@ export const fetchMeasurements = async (): Promise<
 }
 export const createMeasurement = async (
     measurementData: MeasurementType
-): Promise<MeasurementType | null> => {
+): Promise<MeasurementType> => {
     try {
-        const res = await http.post("api/measurement", {
-            name: measurementData.unit
+        const res = await http.post("api/measurements", {
+            name: measurementData.name
     })
 return res.data;
 }catch (error) {
         console.error("Error creating measurement:", error);
-        return null;
+        return {} as MeasurementType;
     }
 } 
 
@@ -29,8 +29,8 @@ export const updateMeasurement = async (
     measurementData: MeasurementType
 ): Promise<MeasurementType | null> => {
     try {
-        const res = await http.put(`api/measurement/${measurementData.id}`, {
-            name: measurementData.unit
+        const res = await http.put(`api/measurements/${measurementData.id}`, {
+            name: measurementData.name
         })
         return res.data;
     } catch (error) {

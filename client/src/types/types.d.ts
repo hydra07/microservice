@@ -36,7 +36,8 @@ export type ImgProductType = {
 
 export type MeasurementType = {
   id: number;
-  unit: string;
+  name: string;
+  isActive?: boolean;
 };
 
 export type NutritionType = {

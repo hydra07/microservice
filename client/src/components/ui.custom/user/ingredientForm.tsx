@@ -1,3 +1,4 @@
+import { MeasurementType } from 'CustomTypes';
 import React, { useState } from 'react';
 
 interface Ingredient {
@@ -9,9 +10,10 @@ interface Ingredient {
 interface IngredientFormProps {
     ingredients: Ingredient[];
     setIngredients: (ingredients: Ingredient[]) => void;
+    measurements: MeasurementType[];
 }
 
-const IngredientForm: React.FC<IngredientFormProps> = ({ ingredients, setIngredients }) => {
+const IngredientForm: React.FC<IngredientFormProps> = ({ ingredients, setIngredients, measurements }) => {
     const handleAddIngredient = () => {
         setIngredients([...ingredients, { name: '', quantity: 0, unit: '' }]);
     };
@@ -53,9 +55,11 @@ const IngredientForm: React.FC<IngredientFormProps> = ({ ingredients, setIngredi
                         className="border border-gray-300 p-2 rounded-lg-lg w-[28 %]"
                     >
                         <option value="">Chọn đơn vị</option>
-                        <option value="gram">gram</option>
-                        <option value="kilogram">kilogram</option>
-                        <option value="củ">củ</option>
+                        {measurements.map((measurement) => (
+                            <option key={measurement.id} value={measurement.name}>
+                                {measurement.name}
+                            </option>
+                        ))}
                     </select>
                 </div>
             ))}
