@@ -1,8 +1,8 @@
-import { MongoDataSource } from '@/config/db.config';
-import { Comment } from '@/entity/comment.entity';
-import { Post } from '@/entity/post.entity';
+import {MongoDataSource} from '@/config/db.config';
+import {Comment} from '@/entity/comment.entity';
+import {Post} from '@/entity/post.entity';
 import UserService from '@/service/user.service';
-import { ObjectId } from 'mongodb';
+import {ObjectId} from 'mongodb';
 
 // interface CommentWithUser extends Comment {
 //   user: {
@@ -25,7 +25,7 @@ class CommentService {
     }
     const postId = new ObjectId(id);
     try {
-      const post = await this.postRepository.findOneOrFail({
+      return await this.postRepository.findOneOrFail({
         where: {
           _id: postId,
         },
@@ -33,7 +33,6 @@ class CommentService {
           comments: true,
         },
       });
-      return post;
     } catch (error) {
       throw new Error('Post not found');
     }
@@ -45,12 +44,11 @@ class CommentService {
     }
     const commentId = new ObjectId(id);
     try {
-      const comment = await this.commentRepository.findOneOrFail({
+      return await this.commentRepository.findOneOrFail({
         where: {
           _id: commentId,
         },
       });
-      return comment;
     } catch (error) {
       throw new Error('Comment not found');
     }
@@ -58,10 +56,9 @@ class CommentService {
 
   async findPost(id: ObjectId): Promise<Post> {
     try {
-      const post = await this.postRepository.findOneByOrFail({
+      return await this.postRepository.findOneByOrFail({
         _id: id,
       });
-      return post;
     } catch (error) {
       throw new Error('Post not found');
     }
@@ -78,30 +75,29 @@ class CommentService {
       },
     });
 
-    const commentsWithUser = await Promise.all(
-      comments.map(async (comment) => {
-        const { userId, ...commentWithoutUserId } = comment;
-        const user = await this.UserService.findUserById(userId!);
-        if (user) {
-          return {
-            ...commentWithoutUserId,
-            user: {
-              username: user.username,
-              avatar: user.avatar,
-            },
-          };
-        } else {
-          return {
-            ...commentWithoutUserId,
-            user: {
-              username: undefined,
-              avatar: undefined,
-            },
-          };
-        }
-      }),
+    return await Promise.all(
+        comments.map(async (comment) => {
+          const {userId, ...commentWithoutUserId} = comment;
+          const user = await this.UserService.findUserById(userId!);
+          if (user) {
+            return {
+              ...commentWithoutUserId,
+              user: {
+                username: user.username,
+                avatar: user.avatar,
+              },
+            };
+          } else {
+            return {
+              ...commentWithoutUserId,
+              user: {
+                username: undefined,
+                avatar: undefined,
+              },
+            };
+          }
+        }),
     );
-    return commentsWithUser;
   }
 
   async newComment(
@@ -173,13 +169,12 @@ class CommentService {
     await this.commentRepository.save(comment);
     await this.updateRight(parent);
     const comments = await this.getAllComments();
-    comments
-      .filter((_comment) => _comment.left >= comment.right)
-      .forEach(async (_comment) => {
-        _comment.left += 2;
-        _comment.right += 2;
-        await this.commentRepository.save(_comment);
-      });
+    for (const _comment1 of comments
+        .filter((_comment) => _comment.left >= comment.right)) {
+          _comment1.left += 2;
+          _comment1.right += 2;
+          await this.commentRepository.save(_comment1);
+        }
   }
 }
 export default CommentService;

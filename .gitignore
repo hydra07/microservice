@@ -3,3 +3,7 @@
 uploads/
 
 clients/
+
+
+.idea/
+qodana.yaml

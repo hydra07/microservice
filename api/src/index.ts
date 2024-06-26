@@ -6,9 +6,9 @@ import "dotenv/config";
 async function main() {
   try {
     // await createConnection();
-    MongoDataSource.initialize();
+    await MongoDataSource.initialize();
     console.log("Connected to the Mongodb");
-    PostgresDataSource.initialize();
+    await PostgresDataSource.initialize();
     console.log("Connected to the Postgres");
     server.listen(env.PORT, () =>
       console.log(`Server is running on port http://localhost:${env.PORT}`),

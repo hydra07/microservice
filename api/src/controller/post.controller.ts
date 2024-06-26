@@ -30,7 +30,7 @@ export default class PostController {
       next(error);
     }
   };
-  getAllPost = async (req: Request, res: Response, next: NextFunction) => {
+  getPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const tag = req.query.tag ? (req.query.tag as string) : undefined;
       const skip = req.query.skip
@@ -69,14 +69,14 @@ export default class PostController {
       next(error);
     }
   };
-  // getListPost = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     const listPosts = await this.postService.getListPost();
-  //     res.status(200).json(listPosts);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
+  getAllPost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const listPosts = await this.postService.getAllPosts();
+      res.status(200).json(listPosts);
+    } catch (error) {
+      next(error);
+    }
+  };
   getPostById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const postId = req.params.id;

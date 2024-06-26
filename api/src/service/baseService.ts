@@ -1,17 +1,10 @@
 // src/service/baseService.ts
-import {
-    DeepPartial,
-    EntityTarget,
-    FindOneOptions,
-    ILike,
-    ObjectLiteral,
-    Repository,
-  } from "typeorm";
-  import { PostgresDataSource } from "../config/db.config";
-  import handleError from "../util/handleError";
-import { PaginatedResult } from "../@types/user";
+import {DeepPartial, EntityTarget, FindOneOptions, ILike, ObjectLiteral, Repository,} from "typeorm";
+import {PostgresDataSource} from "../config/db.config";
+import handleError from "../util/handleError";
+import {PaginatedResult} from "@/@types/user";
 
-  export default class BaseService<ENTITY extends ObjectLiteral> {
+export default class BaseService<ENTITY extends ObjectLiteral> {
     protected repository: Repository<ENTITY>;
   
     constructor(entity: EntityTarget<ENTITY>) {
@@ -69,8 +62,7 @@ import { PaginatedResult } from "../@types/user";
         }
   
         const updatedEntity = this.repository.merge(entity, data);
-        const savedEntity = await this.repository.save(updatedEntity);
-        return savedEntity;
+        return await this.repository.save(updatedEntity);
       } catch (error) {
         return handleError(error as Error, 'Error updating entity');
       }
