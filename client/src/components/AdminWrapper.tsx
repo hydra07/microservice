@@ -1,10 +1,11 @@
 import useAuth from '@/hooks/useAuth';
 import Loading from './Loading';
 import ErrorAccessDenied from './error/ErrorAccessDenied';
+import {ReactNode} from "react";
 
 const AdminWrapper = ({
-  children,
-}: Readonly<{ children: React.ReactNode }>) => {
+  children, handlePage
+}: Readonly<{ children: ReactNode,handlePage?:ReactNode }>) => {
   const { user, status } = useAuth();
   if (status === 'loading') return <Loading />;
   if (!user)
@@ -16,10 +17,12 @@ const AdminWrapper = ({
     );
   if (user.role !== 'admin')
     return (
+        handlePage ? handlePage : (
       <ErrorAccessDenied
         status={status}
         message="You must be an admin to access this page."
       />
+            )
     );
   return <>{children}</>;
 };

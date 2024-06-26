@@ -1,10 +1,10 @@
-import useAuth from '@/hooks/useAuth';
-import { useAuthFormToggle } from '@/hooks/useAuthFormToggle';
-import { useEffect } from 'react';
-import Loading from './Loading';
-import ErrorAccessDenied from './error/ErrorAccessDenied';
+import useAuth from "@/hooks/useAuth";
+import { useAuthFormToggle } from "@/hooks/useAuthFormToggle";
+import { ReactNode, useEffect } from "react";
+import Loading from "./Loading";
+import ErrorAccessDenied from "./error/ErrorAccessDenied";
 
-const UserWrapper = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+const UserWrapper = ({ children }: Readonly<{ children: ReactNode }>) => {
   const { user, status } = useAuth();
   const { setIsOpen } = useAuthFormToggle();
   useEffect(() => {
@@ -12,7 +12,7 @@ const UserWrapper = ({ children }: Readonly<{ children: React.ReactNode }>) => {
       setIsOpen(true);
     }
   }, [user, setIsOpen]);
-  if (status === 'loading') return <Loading />;
+  if (status === "loading") return <Loading />;
   if (!user)
     return (
       <ErrorAccessDenied
