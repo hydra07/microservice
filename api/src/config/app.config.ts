@@ -36,11 +36,6 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(passport.initialize());
 
-app.use(Cookieparser());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
-app.use(passport.initialize());
 
 app.use("/uploads", express.static(path.join(__dirname, "../../../uploads")));
 app.use("/api/hello", (req, res) => {
@@ -52,9 +47,6 @@ routers.forEach(({ path, router }) => {
   app.use(path, router);
 });
 
-app.use((req, res, next) => {
-  next(createHttpError(404, 'Not found'));
-});
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   let errorMessage = 'An unknown error occurred';
@@ -65,6 +57,10 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   }
   console.log(error);
   res.status(statusCode).json({ error: errorMessage });
+});
+
+app.use((req, res, next) => {
+  next(createHttpError(404, 'Not found'));
 });
 
 export default app;

@@ -1,24 +1,28 @@
 "use client";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { useMemo, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
+import useAuth from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useMemo, useCallback } from "react";
 import * as OrderService from "@/services/order.service";
-import { CartItem, CheckoutFormType, CheckoutPayload, ProductType } from "CustomTypes";
+import { CartItemType, CheckoutFormType, CheckoutPayload, ProductType } from "CustomTypes";
 import { checkoutFormSchema } from "@/utils/validation.utils";
 import useFromStore from "@/hooks/useFromStore";
 import { useCartStore } from "@/store/useCartStore";
 import CheckoutForm from "./component/CheckoutForm";
 import CartSummaryTable from "./component/CartSummaryTable";
 import OrderReview from "./component/OrderReview";
+import { getItemList } from "@/utils/commons.utils";
+
 
 export default function Component() {
   console.log("Component re-render"); 
 
-  const { data: session, status } = useSession();
+  const { user, status } = useAuth();
+
   const cart = useFromStore(useCartStore, (state) => state.cart);
+  const checkout = useFromStore(useCartStore, (state) => state.checkout);
 
   const totalPrice = useMemo(() => {
     return cart
@@ -32,9 +36,9 @@ export default function Component() {
   const form = useForm<CheckoutFormType>({
     resolver: zodResolver(checkoutFormSchema),
     defaultValues: {
-      name: session?.user?.username || "",
+      name: user?.username || "",
       phone: "",
-      email: session?.user?.email || "",
+      email: user?.email || "",
       paymentMethod: "cod",
       address: "",
       district: "",
@@ -42,31 +46,38 @@ export default function Component() {
     },
   });
 
-  const getItemList = useCallback((cart: ProductType[]): CartItem[] => {
-    return cart.map((item: ProductType) => ({
-      productId: item.id,
-      quantity: item.quantity,
-      subtotal: item.price * item.quantity,
-    }));
-  }, []);
+  useEffect(() => {
+    if (user) {
+      form.setValue("name", user.username || "");
+      form.setValue("email", user.email || "");
+    }
+  }, [user, form]);
+
+  // const getItemList = useCallback((cart: ProductType[]): CartItem[] => {
+  //   return cart.map((item: ProductType) => ({
+  //     productId: item.id,
+  //     quantity: item.quantity,
+  //     subtotal: item.price * item.quantity,
+  //   }));
+  // }, [cart]);
 
   const onSubmit =(formData: CheckoutFormType) => {
-    console.error("SUBMIT");
     const payload: CheckoutPayload = {
-      id: session?.user?.id,
+      id: user?.id,
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
       paymentMethod: formData.paymentMethod,
       shipAddress: `${formData.address}, ${formData.ward}, ${formData.district}`,
-      cart: getItemList(cart!),
+      orderItems: getItemList(cart!),
     }
 
-    OrderService.createOrder(payload).then((data) => {
-      if (data) {
-        console.log("Order created", data);
-      }
-    });
+    try {
+      const order = OrderService.createOrder(payload);
+    } catch (error) {
+      console.error("checkout failed", error)
+    }
+    
   };
 
   return (

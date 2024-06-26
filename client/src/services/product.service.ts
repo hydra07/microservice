@@ -13,7 +13,6 @@ export const fetchProducts = async (params: QueryParams) => {
   console.log('queryString', queryString);
   const response = await  http.get(`/api/shop/products?${queryString}`);
   const data = await response.data;
-  console.log('data', data);
   return data;
 };
 

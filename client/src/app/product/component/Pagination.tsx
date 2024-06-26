@@ -20,8 +20,8 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
   onPageChange,
 }) => {
   return (
-    <div className=" dark:bg-gray-800 py-6">
-      <div className="container mx-auto">
+    <div className="py-6">
+      <div className=" mx-auto">
         <Pagination>
           <PaginationContent>
             <PaginationItem>

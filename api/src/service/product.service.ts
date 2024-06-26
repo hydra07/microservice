@@ -1,12 +1,12 @@
 import { Product } from "@/entity/product.entity";
 import BaseService from "./baseService";
-import { DeepPartial, FindOneOptions, FindOperatorType, ILike, In, MoreThan } from "typeorm";
+import { DeepPartial, FindManyOptions, FindOneOptions, FindOperatorType, ILike, In, MoreThan } from "typeorm";
 import { Nutrition } from "../entity/nutrition.entity";
 import { NutritionService } from "./nutrition.service";
+import { ProductDTO } from "@/dto/product-related.dto";
 import { ImgProduct } from "../entity/imgProduct.entity";
 import { ImgProductService } from "./imgProduct.service";
 import handleError from "../util/handleError";
-import { ProductDTO } from "@/dto/product.dto";
 import {
   classToPlain,
   instanceToPlain,
@@ -18,7 +18,7 @@ import { FindOperator } from "typeorm";
 import { totalmem } from "os";
 import { PaginatedResult } from "@/@types/user";
 
-export class ProductService extends BaseService<Product> {
+export default class ProductService extends BaseService<Product> {
   private nutritionService: NutritionService;
   private imgProductService: ImgProductService;
 
@@ -41,6 +41,13 @@ export class ProductService extends BaseService<Product> {
     }
   }
   
+  async getMultiple(options: FindManyOptions<Product>): Promise<Product[]> {
+    try {
+      return await this.repository.find(options);
+    } catch (error) {
+      throw new Error(`Error fetching multiple products: ${error}`);
+    }
+  }
 
   async saveDTO(dto: DeepPartial<ProductDTO>): Promise<Product | undefined> {
     try {

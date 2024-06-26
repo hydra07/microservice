@@ -73,7 +73,7 @@ const Product = () => {
   return (
     <>
       <BreadcrumbProduct title="Product" />
-      <h1>Product</h1>
+      
       <CreateProductDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">        
         {loading ? (

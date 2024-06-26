@@ -68,6 +68,7 @@ const OtherColor = {
   fillColor: "fill-gray-400",
 };
 
+// eslint-disable-next-line react/display-name
 const ProductImageUpload = forwardRef<ProductImageUploadHandle, ImageUploadProps>(
   ({ newProduct, onUploadSuccess }, ref) => {
     const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);

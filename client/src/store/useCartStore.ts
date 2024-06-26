@@ -70,7 +70,6 @@ export const useCartStore = create(
       },
       //increase or decrease the quantity of a product in the cart
       updateCartItem: (product: ProductType, quantity: number) => {
-
         const cart = get().cart;
         const cartItem = cart.find((item) => item.id === product.id);
         const updatedCart = cart.map((item) =>
@@ -82,22 +81,15 @@ export const useCartStore = create(
           cart: updatedCart,
           totalPrice: state.totalPrice + product.price * quantity,
         }));
-
       },
 
-      checkout:(data : CheckoutPayload) => {
-        //handle checkout
-        OrderService.createOrder(data).then((data) => {
-          if (data) {
-            set((state) => ({
-              cart: [],
-              totalItems: 0,
-              totalPrice: 0,
-            }));
-          }
-        });
-        
-      }
+      checkout: (data: CheckoutPayload) => {
+        set((state) => ({
+          cart: [],
+          totalItems: 0,
+          totalPrice: 0,
+        }));
+      },
     }),
     {
       name: "cart-storage",
@@ -114,7 +106,6 @@ export const useCartStore = create(
     }
   )
 );
-
 
 //do luong product o trong local store khong kiem tra duoc so voi db
 //handle checkout neu so luong trong kho khong du

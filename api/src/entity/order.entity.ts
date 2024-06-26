@@ -6,9 +6,9 @@ import {
   ManyToOne,
   JoinColumn,
   BaseEntity,
-  OneToOne,
 } from "typeorm";
 import { User } from "./user.entity";
+import { OrderItem } from "./orderItem.entity";
 
 @Entity("orders")
 export class Order extends BaseEntity {
@@ -17,10 +17,38 @@ export class Order extends BaseEntity {
 
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: "user_id" })
-  user!: User;
+  user?: User;
 
   @Column()
-  total!: number;
+  name?: string;
 
+  @Column()
+  total?: number;
+
+  @Column()
+  status?: string;
+
+  @Column()
+  shipAddress?: string;
+
+  @Column()
+  phone?: string;
+
+  @Column()
+  email?: string;
+
+  @Column()
+  paymentMethod?: string;
+
+  @OneToMany(() => OrderItem, orderItem => orderItem.order, { eager: true, cascade: true })
+  orderItems?: OrderItem[];
+
+  //create date
+  @Column()
+  createdAt?: Date;
+
+  @Column({ nullable: true })
+  shipDate?: Date; 
   
+
 }

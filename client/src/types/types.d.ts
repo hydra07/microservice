@@ -93,20 +93,20 @@ declare module "CustomTypes" {
     orderBy?: string;
   }
 
-  export interface CartItem {
+  export interface CartItemType {
     productId: number;
     quantity: number;
     subtotal: number;
   }
 
   export interface CheckoutPayload {
+    id?: string; //user
     name?: string;
     phone?: string;
     email?: string;
-    id?: string; //user
     paymentMethod?: string;
     shipAddress?: string;
-    cart?: CartItem[];
+    orderItems?: CartItem[];
     totalPrice?: number;
   }
 }

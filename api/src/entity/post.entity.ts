@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { BaseEntity, Column, Entity, ObjectIdColumn, OneToMany } from 'typeorm';
 import { Comment } from './comment.entity';
+import OrderController from '@/controller/order.controller';
 
 @Entity('post')
 export class Post extends BaseEntity {
@@ -42,3 +43,4 @@ export class PostTag {
   @Column('text')
   name?: string;
 }
+

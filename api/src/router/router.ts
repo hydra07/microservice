@@ -8,6 +8,7 @@ import uploadRouter from '@/router/upload.router';
 import recipeRouter from '@/router/recipe.router';
 import orderRouter from '@/router/order.router';
 import ImageUploadRouter from '@/router/imageUpload';
+import notificationRouter from '@/router/notification.router';
 
 export default [
   { path: '/api/auth', router: authRouter },
@@ -20,4 +21,5 @@ export default [
   { path: '/api', router: orderRouter },
   { path: '/api', router: uploadRouter },
   { path: '/api', router: ImageUploadRouter },
+  {path :'/api',  router: notificationRouter},
 ];

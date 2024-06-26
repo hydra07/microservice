@@ -28,17 +28,13 @@ export default function Header() {
 
   return (
     <header
-<<<<<<< HEAD
-      className={clsx(
-        `w-screen py-[11px] fixed top-0 left-0 z-50 bg-slate-800 shadow-lg  h-[${size}]`,
-=======
       className={cn(
         `w-full py-[11px] fixed top-0 left-0 z-50 bg-slate-800 shadow-lg h-[${size}] backdrop-blur-md`,
->>>>>>> master
+
         {
           "bg-opacity-70": !isAtTop,
           "bg-opacity-20": isAtTop,
-        },
+        }
       )}
     >
       <div className="w-full px-14">

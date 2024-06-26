@@ -1,13 +1,13 @@
 import { BaseController } from "./baseController";
 import { Product } from "@/entity/product.entity";
-import { ProductService } from "@/service/product.service";
+import  ProductService  from "@/service/product.service";
 import { Request, Response, NextFunction } from "express";
 import { CategoryProduct } from "../entity/categoryProduct.entity";
-import { CategoryProductService } from "@/service/categoryProduct.service";
+import  CategoryProductService from "@/service/categoryProduct.service";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 import { plainToClass, plainToInstance } from "class-transformer";
-import { ProductDTO } from "@/dto/product.dto";
+import { ProductDTO } from "@/dto/product-related.dto";
 import { DeepPartial } from "typeorm";
 
 type QueryParams = {

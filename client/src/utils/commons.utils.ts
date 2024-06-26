@@ -1,4 +1,4 @@
-import { QueryParams } from "CustomTypes";
+import { CartItemType, ProductType, QueryParams } from "CustomTypes";
 
 export const buildQueryString = (params: QueryParams): string => {
     const queryParams = new URLSearchParams();
@@ -32,4 +32,12 @@ export const buildQueryString = (params: QueryParams): string => {
     }
 
     return queryParams.toString();
+};
+
+export const getItemList = (cart: ProductType[]): CartItemType[] => {
+    return cart.map((item: ProductType) => ({
+        productId: item.id,
+        quantity: item.quantity,
+        subtotal: item.price * item.quantity,
+    }));
 };
