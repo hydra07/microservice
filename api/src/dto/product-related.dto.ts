@@ -1,9 +1,15 @@
 import { Expose, Transform, Type } from 'class-transformer';;
-import { ImgProductDTO } from './imgProduct.dto';
 import { CategoryProduct } from '../entity/categoryProduct.entity';
 import { Measurement } from '@/entity/measurement.entity';
 import { Nutrition } from '@/entity/nutrition.entity';
 
+export class CategoryProductDTO {
+    @Expose()
+    id!: number;
+
+    @Expose()
+    name?: string;
+}
 export class ProductDTO {
   @Expose()
   id?: number;
@@ -45,3 +51,19 @@ export class ProductDTO {
   @Type(() => Nutrition)
   nutrition?: Nutrition;
 }
+
+
+
+
+export class ImgProductDTO {
+    @Expose()  
+    id!: number;
+  
+    @Expose()
+    imageUrl!: string;
+  
+    @Expose()
+    publicId!: string;
+    
+}
+

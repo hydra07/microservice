@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
 export const resolveIndexId = (req: Request, res: Response, next: NextFunction) => {
-  const parsedId = parseInt(req.params.id);
-
-  if (isNaN(parsedId)) return res.sendStatus(400);
-
+  const { id } = req.params;
+  if (!id || isNaN(Number(id))) {
+    return res.status(400).send({ error: "Invalid ID syntax. ID must be an integer." });
+  }
   next();
 };
 

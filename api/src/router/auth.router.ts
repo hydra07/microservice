@@ -38,6 +38,7 @@ router.post('/authenticate', authController.authenticate);
 // );
 
 // router.get('/google', passport.authenticate('google', { session: false }));
+
 // router.get("/google", passport.authenticate("google"));
 // router.get(
 //   "/callback/google",
@@ -51,9 +52,16 @@ router.post('/authenticate', authController.authenticate);
 //   },
 // );
 //
+
 // Apply this middleware to protected routes
 router.get('/protected', requireAuth, (req: Request, res: Response) => {
   console.log('Accessed protected route');
   res.json({ message: 'This is a protected route', user: req.user });
 });
+
+
+router.get('/CheckAccessToken', (req: Request, res: Response) => {
+  
+}) 
+
 export default router;

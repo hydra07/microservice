@@ -2,10 +2,11 @@
 import { CategoryProduct } from "@/entity/categoryProduct.entity";
 import BaseService from "./baseService";
 
-export class CategoryProductService extends BaseService<CategoryProduct> {
+export default class CategoryProductService extends BaseService<CategoryProduct> {
   constructor() {
     super(CategoryProduct);
   }
 
   // add custom...
 }
+

@@ -9,6 +9,7 @@ import { createColumns } from './columns';
 import CreateProductCategoryDialog from './CreateProductCategoryDialog';
 import dynamic from 'next/dynamic';
 import { SkeletonTable } from '../component/SkeletonTable';
+import BreadcrumbProduct from '../component/Breadcrumb';
 const ProductCategory = () => {
   const UploadImgDialog = dynamic(() => import('../component/UploadImgDialog'));
   // const DataTable = dynamic(() =>
@@ -17,7 +18,7 @@ const ProductCategory = () => {
   const CreateProductCategoryDialog = dynamic(
     () => import('./CreateProductCategoryDialog'),
   );
-  const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
+  // const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
   const [data, setData] = useState<ProductCategoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,16 +65,23 @@ const ProductCategory = () => {
     { header: { width: 'w-1/5' }, cell: { width: 'w-1/5' } },
   ];
 
-  if (loading) {
-    return <SkeletonTable columns={skeletonColumns} rows={3} />;
-  }
+  // if (loading) {
+  //   return 
+  //   <SkeletonTable columns={skeletonColumns} rows={3} />;
+  // }
   return (
     <>
       <BreadcrumbProduct title="Product Category" />
       <h1>Product Category</h1>
       <CreateProductCategoryDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">
-        <DataTable columns={columns} data={data} />
+       
+        {loading ? (
+          <SkeletonTable columns={skeletonColumns} rows={3} />
+        ) : (
+          <DataTable columns={columns} data={data} />
+        )}
+
       </div>
 
       {/* <ImageUpload /> */}

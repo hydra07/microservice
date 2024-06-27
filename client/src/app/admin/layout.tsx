@@ -4,6 +4,7 @@ import { useSidebarToggle } from '@/hooks/useSideBarToggle';
 import { cn } from '@/lib/utils';
 import { useStore } from 'zustand';
 import SideBar from './component/SideBar';
+// eslint-disable-next-line import/no-anonymous-default-export, react/display-name
 export default ({
   children,
 }: Readonly<{
