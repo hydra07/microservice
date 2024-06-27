@@ -109,4 +109,28 @@ declare module "CustomTypes" {
     orderItems?: CartItem[];
     totalPrice?: number;
   }
+
+  
+  export interface OrderType {
+    id: string;
+    userId?: string;
+    createAt: string;
+    shipDate?: string;
+    total: number;
+    status: string;
+    items: OrderItemType[]; 
+    name?: string;
+    phone?: string;
+    email?: string;
+    paymentMethod?: string;
+    shipAddress?: string;
+  } 
+
+  export interface OrderItemType {
+    productId?: number;
+    name: string;
+    quantity: number;
+    price: number;
+    image: string;
+  }
 }

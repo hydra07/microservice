@@ -173,4 +173,12 @@ export default class BaseService<ENTITY extends ObjectLiteral> {
       );
     }
   }
+
+  async findByOptions(options: FindOneOptions<ENTITY>) {
+    try {
+      return await this.repository.find(options);
+    } catch (error) {
+      return handleError(error as Error, "Error finding by options");
+    }
+  }
 }

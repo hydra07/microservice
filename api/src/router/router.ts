@@ -22,4 +22,5 @@ export default [
   { path: '/api', router: uploadRouter },
   { path: '/api', router: ImageUploadRouter },
   {path :'/api',  router: notificationRouter},
+  
 ];
