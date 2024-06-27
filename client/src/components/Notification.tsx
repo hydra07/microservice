@@ -1,8 +1,8 @@
-import useNotification from '@/hooks/useNotification';
-import { formatDistanceToNow, parseISO } from 'date-fns';
-import { Bell, Loader2 } from 'lucide-react';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
+import useNotification from "@/hooks/useNotification";
+import { formatDistanceToNow, parseISO } from "date-fns";
+import { Bell, Loader2 } from "lucide-react";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,22 +11,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import InfiniteScroll from './ui/infinity-scoll';
-import { ScrollArea } from './ui/scroll-area';
+} from "./ui/dropdown-menu";
+import InfiniteScroll from "./ui/infinity-scoll";
+import { ScrollArea } from "./ui/scroll-area";
 
 export default function Notification() {
   const { status, notification, checkNoti, next, state } = useNotification();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="w-10" asChild>
-        <Button
-          className="relative"
-          variant="ghost"
-          size="icon"
-          // onClick={() => checkNoti?.handleRemoveNoti()}
-        >
+        <Button className="relative" variant="ghost" size="icon">
           {checkNoti?.unread !== 0 && (
             <Badge
               className="absolute -top-3 -right-0 z-50 px-0.5 "
@@ -44,10 +38,9 @@ export default function Notification() {
         <DropdownMenuGroup>
           <ScrollArea className="[&>div>div[style]]:!block w-full h-72">
             {Array.isArray(notification) &&
-              notification.map((item) => {
-                // console.log(item);
-                return <NotificationItem notification={item} />;
-              })}
+              notification.map((item) => (
+                <NotificationItem key={item._id} notification={item} />
+              ))}
             <div className="flex justify-center">
               {state && (
                 <InfiniteScroll

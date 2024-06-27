@@ -23,6 +23,11 @@ import { formatISODateToLongDate } from '@/utils/date.utils';
 import { getInitials } from '@/utils/string.utils';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import useAuth from "@/hooks/useAuth";
+import AdminWrapper from "@/components/AdminWrapper";
+
+
+
 
 export default function Post({ id, children }: any) {
   const [post, setPost] = useState<any>();
@@ -55,7 +60,11 @@ export default function Post({ id, children }: any) {
   return post.isActivate ? (
     <PostPage post={post} children={children} />
   ) : (
-    <div>Post not found</div>
+    <AdminWrapper
+    handlePage={<>Post not found</>}
+    >
+      <PostPage post={post} children={children} />
+    </AdminWrapper>
   );
 }
 

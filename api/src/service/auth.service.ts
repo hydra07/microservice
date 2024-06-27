@@ -7,7 +7,7 @@ import {
   generateRefreshToken,
 } from "@/util/tokenGenerate";
 import env from "@/util/validateEnv";
-import { UserRole } from "../@types/user.d";
+import { UserRole } from "@/@types/user.d";
 export default class AuthService {
   private userService = new UserService();
 
