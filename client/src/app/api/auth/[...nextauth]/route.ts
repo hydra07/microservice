@@ -21,7 +21,7 @@ const authOptions: AuthOptions = {
     }),
   ],
   session: {
-    maxAge: 15 * 60, //15 minutes
+    maxAge: 1000 * 60, //15 minutes
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {

@@ -1,6 +1,7 @@
 import { PostgresDataSource } from '@/config/db.config';
 import { RefreshToken } from '@/entity/refreshToken.entity';
 import { User } from '@/entity/user.entity';
+import { generateAccessToken, generateRefreshToken } from "@/util/tokenGenerate";
 
 class UserService {
   private userRepository = PostgresDataSource.getRepository(User);
@@ -21,6 +22,10 @@ class UserService {
     return await this.refreshTokenRepository.findOneBy({
       id: user?.refreshTokenId,
     });
+  }
+
+  async findUserByRefreshToken(refreshToken: string): Promise<User | null> {
+    return await this.userRepository.findOneBy({ refreshTokenId: refreshToken });
   }
 }
 

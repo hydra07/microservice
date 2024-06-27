@@ -103,3 +103,9 @@
   width: 500px;
   height: auto;
 }
+
+/* Apply this style globally, e.g., in your main CSS file */
+html {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

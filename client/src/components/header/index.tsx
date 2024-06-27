@@ -30,10 +30,11 @@ export default function Header() {
     <header
       className={cn(
         `w-full py-[11px] fixed top-0 left-0 z-50 bg-slate-800 shadow-lg h-[${size}] backdrop-blur-md`,
+
         {
           "bg-opacity-70": !isAtTop,
           "bg-opacity-20": isAtTop,
-        },
+        }
       )}
     >
       <div className="w-full px-14">
