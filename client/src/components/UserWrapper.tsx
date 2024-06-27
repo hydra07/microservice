@@ -8,10 +8,11 @@ const UserWrapper = ({ children }: Readonly<{ children: ReactNode }>) => {
   const { user, status } = useAuth();
   const { setIsOpen } = useAuthFormToggle();
   useEffect(() => {
-    if (!user) {
+    console.log(user, status);
+    if (!user && status === "unauthenticated") {
       setIsOpen(true);
     }
-  }, [user, setIsOpen]);
+  }, [user, setIsOpen, status]);
   if (status === "loading") return <Loading />;
   if (!user)
     return (
