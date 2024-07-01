@@ -126,15 +126,24 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
     }));
   };
 
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen) {
+      // Reset all states when dialog is closed
+      setNewProduct(initialProductState);
+      setErrors({});
+      setUploadedImages([]);
+      setCurrentTab(0);
+      setLoading(false);
+    }
+  };
+
   const handleCreateProduct = async (productData: ProductType) => {
     try {
       const createdProduct = await ProductService.createProduct(productData);
       if (createdProduct) {
         onCreateSuccess(createdProduct);
-        setOpen(false);
-        setNewProduct(initialProductState);
-        setUploadedImages([]);
-        setCurrentTab(0);
+        handleOpenChange(false);
       }
     } catch (error) {
       console.error("Error creating product:", error);
@@ -199,7 +208,7 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
           variant="outline"

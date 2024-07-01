@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 // import Product from "../admin/product/page";
 
+// eslint-disable-next-line react/display-name, import/no-anonymous-default-export
 export default () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);

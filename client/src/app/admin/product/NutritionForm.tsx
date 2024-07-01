@@ -27,7 +27,7 @@
     errors
   }) => {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 space-x-4">
         {/* <TooltipWrapper label="Measurement Name" sideStyle="right"> */}
           <MeasurementSelect
             // value={newProduct.measurement.id.toString()}          

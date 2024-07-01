@@ -6,6 +6,7 @@ import {
   ShoppingBag,
   Tag,
   Users,
+  ShoppingBasket
 } from 'lucide-react';
 
 type Submenu = {
@@ -67,6 +68,14 @@ export function getMenuList(pathname: string): Group[] {
           icon: Bookmark,
           submenus: [],
         },
+        
+        {
+          href: '/admin/orders',
+          label: 'Orders',
+          active: pathname.includes('/orders'),
+          icon: ShoppingBasket,
+          submenus: [],
+        },
         {
           href: '/tags',
           label: 'Tags',
@@ -74,6 +83,7 @@ export function getMenuList(pathname: string): Group[] {
           icon: Tag,
           submenus: [],
         },
+       
         {
           href: '/admin/post',
           label: 'Post',

@@ -13,10 +13,15 @@ import {
 export default function MenuList() {
   const { user, status } = useAuth();
   return (
-    <div className="flex flex-row space-x-6">
+    <div className="flex flex-row space-x-6 font-serif">
       <div>
         <Link className={buttonVariants({ variant: 'ghost' })} href="/">
           <span className="font-bold text-lg">Home</span>
+        </Link>
+      </div>
+      <div>
+        <Link className={buttonVariants({ variant: 'ghost' })} href="/product">
+          <span className="font-bold text-lg">Product</span>
         </Link>
       </div>
       <div>

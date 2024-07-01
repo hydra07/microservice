@@ -26,13 +26,20 @@ const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
         </div>
         <div>
           <p className="text-lg font-medium">Ship Info</p>
-          <p className="text-sm text-muted-foreground">Peter</p>
-          <p className="text-sm text-muted-foreground">pett@gmail.com</p>
-          <p className="text-sm text-muted-foreground">0978787666</p>
-          <p className="text-sm text-muted-foreground">123 sanFrabsisco</p>
+          <p className="text-sm text-muted-foreground">{order.name}</p>
+          <p className="text-sm text-muted-foreground">{order.email}</p>
+          <p className="text-sm text-muted-foreground">{order.phone}</p>
+          <p className="text-sm text-muted-foreground">{order.shipAddress}</p>
         </div>
         <div className="text-right">
-          <p className="text-lg font-medium">${order.total.toFixed(2)}</p>
+          <p className="text-lg font-medium">
+            {
+              new Intl.NumberFormat("vi", {
+                style: "currency",
+                currency: "VND",
+              }).format(order.total)
+            }
+          </p>
           <p
             className={`text-sm ${
               order.status === "pending"
@@ -62,8 +69,8 @@ const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
             </Button>
           )}
         </div>
-        <CollapsibleContent className="p-4 bg-gray-50">
-          <OrderItems items={order.items} />
+        <CollapsibleContent className="p-4 bg-gray-50 dark:bg-slate-900">
+          <OrderItems items={order.orderItems} />
         </CollapsibleContent>
       </Collapsible>
     </motion.div>

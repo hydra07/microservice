@@ -26,8 +26,8 @@ const Header: React.FC<HeaderProps> = ({ searchTerm, onSearchChange, isLoading }
   };
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 py-4 ">
-      <div className="container flex items-center ">
+    <div className="bg-gray-100 dark:bg-gray-800">
+      <div className=" flex items-center ">
         <div className="relative w-full max-w-md">
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400" />
           <Input

@@ -13,7 +13,7 @@ const TabButtons = ({ activeTab, setActiveTab }: {
 }) => {
   return (
     <div className="flex flex-wrap gap-2 sm:gap-4">
-      {["pending", "shipping", "complete"].map((status) => (
+      {["pending", "shipping", "completed"].map((status) => (
         <Button
           key={status}
           variant={activeTab === status ? "default" : "outline"}

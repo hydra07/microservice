@@ -2,14 +2,12 @@
 
 import * as ProductService from '@/services/product.service';
 import { ProductType } from 'CustomTypes';
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { ThreeCircles } from 'react-loader-spinner';
 import { DataTable } from '../component/data-table';
 import { createColumns } from './columns';
 import CreateProductDialog from './CreateProductDialog';
 import { SkeletonTable } from '../component/SkeletonTable';
-import UpdateProductDialog from './UpdateProductDialog';
+import UpdateProductDialog from './UpdateProductDialog';  
 import BreadcrumbProduct from '../component/Breadcrumb';
 const Product = () => {
   const [data, setData] = useState<ProductType[]>([]);

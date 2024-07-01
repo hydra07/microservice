@@ -1,28 +1,29 @@
 "use client";
+
 import { useMemo, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import Link from "next/link";
-import useAuth from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
+import useAuth from "@/hooks/useAuth";
 import * as OrderService from "@/services/order.service";
-import { CartItemType, CheckoutFormType, CheckoutPayload, ProductType } from "CustomTypes";
+import {
+  CartItemType,
+  CheckoutFormType,
+  CheckoutPayload,
+  ProductType,
+} from "CustomTypes";
 import { checkoutFormSchema } from "@/utils/validation.utils";
 import useFromStore from "@/hooks/useFromStore";
 import { useCartStore } from "@/store/useCartStore";
 import CheckoutForm from "./component/CheckoutForm";
 import CartSummaryTable from "./component/CartSummaryTable";
 import OrderReview from "./component/OrderReview";
-import { getItemList } from "@/utils/commons.utils";
-
+import UserWrapper from "@/components/UserWrapper";
+import { useRouter } from "next/navigation";
 
 export default function Component() {
-  console.log("Component re-render"); 
-
-  const { user, status } = useAuth();
-
+  const router = useRouter();
+  const { user } = useAuth();
   const cart = useFromStore(useCartStore, (state) => state.cart);
-  const checkout = useFromStore(useCartStore, (state) => state.checkout);
 
   const totalPrice = useMemo(() => {
     return cart
@@ -53,15 +54,24 @@ export default function Component() {
     }
   }, [user, form]);
 
-  // const getItemList = useCallback((cart: ProductType[]): CartItem[] => {
-  //   return cart.map((item: ProductType) => ({
-  //     productId: item.id,
-  //     quantity: item.quantity,
-  //     subtotal: item.price * item.quantity,
-  //   }));
-  // }, [cart]);
+  const getItemList = useCallback((cart: ProductType[]): CartItemType[] => {
+    return cart.map((item: ProductType) => ({
+      productId: item.id,
+      quantity: item.quantity,
+      subtotal: item.price * item.quantity,
+    }));
+  }, []);
 
-  const onSubmit =(formData: CheckoutFormType) => {
+  const onCheckoutSuccess = () => {
+       router.push("/checkoutSuccess");
+  };
+
+  const onSubmit = async (formData: CheckoutFormType) => {
+    if (!cart || cart.length === 0) {
+      console.error("Cannot submit order: No items in cart.");
+      return;
+    }
+
     const payload: CheckoutPayload = {
       id: user?.id,
       name: formData.name,
@@ -69,46 +79,52 @@ export default function Component() {
       email: formData.email,
       paymentMethod: formData.paymentMethod,
       shipAddress: `${formData.address}, ${formData.ward}, ${formData.district}`,
-      orderItems: getItemList(cart!),
-    }
+      orderItems: getItemList(cart),
+    };
 
     try {
-      const order = OrderService.createOrder(payload);
+      const data = await OrderService.createOrder(payload);
+      
+      onCheckoutSuccess();
     } catch (error) {
-      console.error("checkout failed", error)
+      console.error("Checkout failed", error);
     }
-    
   };
 
   return (
-    <div className="">
+    <UserWrapper>
       <main className="flex-1 py-8 px-4 md:px-8">
         <div className="container mx-auto grid md:grid-cols-[2fr_1fr] gap-8">
           <div className="space-y-8">
             <section>
-              <h2 className="text-2xl font-semibold mb-4">Cart Summary</h2> 
+              <h2 className="text-2xl font-semibold mb-4">Cart Summary</h2>
               <div className="border rounded-lg overflow-hidden">
-                <CartSummaryTable cart={cart!} />
+                {cart && cart.length > 0 ? (
+                  <CartSummaryTable cart={cart} />
+                ) : (
+                  <p className="p-4">Your cart is empty.</p>
+                )}
               </div>
               <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-between font-semibold">
                   <span>Total</span>
                   <span>
-                    {
-                      new Intl.NumberFormat("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      }).format(totalPrice)
-                    }
+                    {new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    }).format(totalPrice)}
                   </span>
                 </div>
               </div>
             </section>
             <CheckoutForm form={form} onSubmit={onSubmit} />
           </div>
-          <OrderReview totalPrice={totalPrice} onPlaceOrder={form.handleSubmit(onSubmit)} />
+          <OrderReview
+            totalPrice={totalPrice}
+            onPlaceOrder={form.handleSubmit(onSubmit)}
+          />
         </div>
       </main>
-    </div>
+    </UserWrapper>
   );
 }

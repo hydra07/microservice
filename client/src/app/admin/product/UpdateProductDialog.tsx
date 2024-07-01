@@ -59,6 +59,31 @@ const UpdateProductDialog: React.FC<UpdateProductDialogProps> = ({
     register,
   } = methods;
 
+
+  const resetForm = () => {
+    methods.reset({
+      name: selectedProduct.name,
+      description: selectedProduct.description,
+      price: selectedProduct.price,
+      currentQuantity: selectedProduct.currentQuantity,
+      amountToSell: selectedProduct.amountToSell,
+      categoryId: selectedProduct.category.id,
+      measurementId: selectedProduct.measurement.id,
+      averageWeight: selectedProduct.averageWeight,
+      nutrition: selectedProduct.nutrition,
+      imgProducts: selectedProduct.imgProducts,
+    });
+    setCurrentTab(0);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen) {
+      resetForm();
+      setLoading(false);
+    }
+  };
+
   const onSubmit = async () => {
     try {
       setLoading(true);
@@ -86,6 +111,7 @@ const UpdateProductDialog: React.FC<UpdateProductDialogProps> = ({
       const data = await ProductService.updateProduct(updatedProduct);
       if (data) {
         onUpdateSuccess(data);
+        handleOpenChange(false);
       }else{
         console.log("Error updating product:", data);
       }
@@ -134,7 +160,7 @@ const UpdateProductDialog: React.FC<UpdateProductDialogProps> = ({
       >
         Update
       </DropdownMenuItem>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[600px] p-6">
           <DialogHeader>
             <DialogTitle className="text-lg font-semibold mb-2">

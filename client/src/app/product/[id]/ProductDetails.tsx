@@ -95,7 +95,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
           </div>
         </div>
         {/* <Button size="lg">Add to Cart</Button> */}
-        <div className="sticky bottom-0 bg-white dark:bg-gray-900 p-4 border-t">
+        <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t">
           <Button size="lg" className="w-full">
             Add to Cart
           </Button>

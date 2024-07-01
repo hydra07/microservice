@@ -15,9 +15,7 @@ const ProductCategory = () => {
   // const DataTable = dynamic(() =>
   //   import('../component/data-table').then((mod) => mod.DataTable),
   // );
-  const CreateProductCategoryDialog = dynamic(
-    () => import('./CreateProductCategoryDialog'),
-  );
+  
   // const BreadcrumbProduct = dynamic(() => import('../component/Breadcrumb'));
   const [data, setData] = useState<ProductCategoryType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +70,6 @@ const ProductCategory = () => {
   return (
     <>
       <BreadcrumbProduct title="Product Category" />
-      <h1>Product Category</h1>
       <CreateProductCategoryDialog onCreateSuccess={handleCreateSuccess} />
       <div className="container mx-auto py-10">
        
@@ -85,7 +82,7 @@ const ProductCategory = () => {
       </div>
 
       {/* <ImageUpload /> */}
-      <UploadImgDialog />
+      {/* <UploadImgDialog /> */}
     </>
   );
 };

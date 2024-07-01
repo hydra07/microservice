@@ -242,7 +242,7 @@ import RelatedProducts from "./RelatedProducts";
 import ErrorBoundary from "../component/ErrorBoundary";
 import { Metadata } from "next";
 import { metadata as layoutMetadata } from "../../layout";
-import { Breadcrumb } from "../component/Breadcrumb";
+import { Breadcrumb } from "../../../components/Breadcrumb";
 import ProductSkeleton from "../component/ProductSkeleton";
 import { delay } from "framer-motion";
 // export const metadata: Metadata = {
@@ -300,7 +300,7 @@ export default function ProductDetailPage({
 
   return (
     <ErrorBoundary>
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-8 py-6 bg-white dark:bg-slate-600">
         <Breadcrumb
           items={[
             { label: "Home", link: "/" },
@@ -308,16 +308,18 @@ export default function ProductDetailPage({
             { label: product!.name },
           ]}
         />
-        <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3 items-start">
-          <div className="md:col-span-1 lg:col-span-2">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2 items-start">
+          <div className="md:col-span-1 lg:col-span-1">
             <ProductImage product={product} />
           </div>
-          <div className="md:col-span-1">
-            <ProductDetails product={product} />
+          <div className="md:col-span-1 lg:col-span-1">
+            <div className="flex flex-col">
+              <ProductDetails product={product} />
+            </div>
+            <div className="mt-16">
+              <RelatedProducts products={relatedProducts} />
+            </div>
           </div>
-        </div>
-        <div className="mt-8">
-          <RelatedProducts products={relatedProducts} />
         </div>
       </div>
     </ErrorBoundary>

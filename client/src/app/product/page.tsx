@@ -13,7 +13,7 @@ import ProductItem from "./component/ProductItem";
 import useDebounce from "@/hooks/useDebounce";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Breadcrumb } from "./component/Breadcrumb";
+import { Breadcrumb } from "../../components/Breadcrumb";
 export default function Component() {
   const [sortBy, setSortBy] = useState<string>("featured");
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
@@ -137,15 +137,16 @@ export default function Component() {
                 imgNotFoundUrl={imgNotFoundUrl as string}
               />
             ))}
-          </div>
-          <div className="mt-6">
-            <PaginationComponent
-              page={page}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+          
           </div>
         </div>
+      </div>
+      <div className="flex justify-center">
+        <PaginationComponent
+          page={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
       <Cart />
       <ToastContainer {...toastConfig} />

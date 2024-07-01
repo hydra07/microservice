@@ -29,7 +29,7 @@ const NutritionFormUpdate: React.FC<NutritionFormProps> = ({
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 space-x-4">
       <Controller
         control={control}
         name="measurementId"

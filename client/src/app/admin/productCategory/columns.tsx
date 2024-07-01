@@ -53,16 +53,24 @@ export const createColumns = (handleUpdateSuccess: (updatedCategory: ProductCate
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="w-40 text-center">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       );
     },
-    maxSize: 20,
+    cell: ({ row }) => (
+      <div className="w-40 text-center">
+        <span className=" truncate block font-medium">
+          {row.getValue("name")}
+        </span>
+      </div>
+    ),
     enableResizing: false,
   },
   {
