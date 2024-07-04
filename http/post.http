@@ -8,8 +8,13 @@ Content-Type: application/json
   "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis ullamcorper ante. Mauris bibendum orci sit amet velit tempus, ac lacinia lacus malesuada. Ut ullamcorper malesuada nisi, id mollis est ultricies ut. Nulla et nisl nisl. Aliquam sed justo at turpis eleifend sodales. Phasellus dignissim eros et tortor hendrerit varius. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc elementum erat at justo sollicitudin consequat."
 }
 
-### Get all posts
-GET http://localhost:3000/api/post/all HTTP/1.1
+### Get posts public
+GET http://localhost:3000/api/post?tag=Travel&take=1&skip=1 HTTP/1.1
+
+
+### GET All Post
+GET http://localhost:3000/api/post/all
+
 
 ### Update a post
 PUT http://localhost:5000/api/post/6655fc49174382ffd7f1700d HTTP/1.1
@@ -23,7 +28,7 @@ content-type: application/json
 }
 
 ### Get a post
-GET http://localhost:5000/api/post/6655fc49174382ffd7f1700d HTTP/1.1
+GET http://localhost:3000/api/post/6662cacfb9f28faf32eddb68 HTTP/1.1
 
 ### Delete a post
 DELETE http://localhost:3000/api/post/66606e6ece2ae0aca524af12 HTTP/1.1
@@ -40,5 +45,22 @@ Content-Type: application/json
 }
 
 
+### Add Tags
+POST http://localhost:3000/api/post/tag/666c71c9b0bc9f76cddedd37 HTTP/1.1
+Content-Type: application/json
+
+{
+  "tags": [
+    "demotag1",
+    "demotag2",
+    "tag3"
+  ]
+}
 
 
+### Get all tags
+GET http://localhost:3000/api/post/tag HTTP/1.1
+
+
+### Get all posts by tag
+GET http://localhost:3000/api/post/tag/tag3 HTTP/1.1

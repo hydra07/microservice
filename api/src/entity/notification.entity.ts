@@ -11,8 +11,8 @@ export class Notification {
   @Column('text')
   content?: string;
 
-  @Column('date')
-  createAt?: Date;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt?: Date;
 
   @Column('text')
   userId?: string;

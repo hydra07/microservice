@@ -11,6 +11,7 @@ interface InputFieldProps {
   ) => void;
 }
 
+// eslint-disable-next-line react/display-name
 const InputField = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputFieldProps>(
   ({ name, placeholder, value, type = "text", onChange }, ref) => {
     return (

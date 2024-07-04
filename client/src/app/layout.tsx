@@ -1,10 +1,15 @@
 import Header from '@/components/header';
+import Footer from '@/components/footer';
 import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { Inter } from 'next/font/google';
 // import StoreProvider from '../components/StoreProvider';
 import './globals.css';
+
+import { Toaster } from '@/components/ui/toaster';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ['latin'] });
 const SessionWrapper = dynamic(() => import('@/components/SessionWrapper'), {
   ssr: false,
@@ -21,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={inter.className}>
+      <body className={`${inter.className} w-screen overflow-x-hidden`}>
         <SessionWrapper>
           {/* <StoreProvider> */}
           <ThemeProvider
@@ -33,6 +38,8 @@ export default function RootLayout({
             <Header />
             {/* <Navbar /> */}
             <div className="pt-14">{children}</div>
+            <ToastContainer />
+            <Toaster />
           </ThemeProvider>
           {/* </StoreProvider> */}
         </SessionWrapper>

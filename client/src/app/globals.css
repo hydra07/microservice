@@ -35,7 +35,6 @@
     --radius: 0.5rem;
   }
 
-
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -79,7 +78,7 @@
 /* config scrollbar */
 ::-webkit-scrollbar {
   /* margin-left: 10px; */
-  width: 10px;
+  width: 0px;
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
@@ -94,7 +93,7 @@
 }
 
 .ql-video {
-  width: 100%;
+  width: 80%;
   height: auto;
   /* Đảm bảo rằng video giữ nguyên tỷ lệ khung hình ngay cả khi kích thước của nó thay đổi */
   aspect-ratio: 16 / 9;
@@ -103,4 +102,10 @@
 .content img {
   width: 500px;
   height: auto;
+}
+
+/* Apply this style globally, e.g., in your main CSS file */
+html {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }

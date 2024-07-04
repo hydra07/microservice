@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ObjectLiteral, Entity } from 'typeorm';
+import { ObjectLiteral, Entity, ILike } from "typeorm";
 import BaseService from "../service/baseService";
 import { plainToInstance } from "class-transformer";
 
@@ -24,7 +24,7 @@ export class BaseController<ENTITY extends ObjectLiteral> {
     try {
       const id = req.params.id;
       const data = req.body;
-      
+
       const options = { where: { id: parseInt(id) } } as any;
       const updatedEntity = await this.service.update(options, data);
       if (!updatedEntity) {
@@ -36,7 +36,6 @@ export class BaseController<ENTITY extends ObjectLiteral> {
       next(error);
     }
   }
-  
 
   async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -63,7 +62,11 @@ export class BaseController<ENTITY extends ObjectLiteral> {
     }
   }
 
-  async getSingle(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getSingle(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const id = req.params.id;
       const options = { where: { id: parseInt(id) } } as any;
@@ -78,7 +81,11 @@ export class BaseController<ENTITY extends ObjectLiteral> {
     }
   }
 
-  async paginate(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async paginate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const page = parseInt(req.query.page as string, 10) || 1;
       const limit = parseInt(req.query.limit as string, 10) || 10;
@@ -86,7 +93,12 @@ export class BaseController<ENTITY extends ObjectLiteral> {
       const fieldName = req.query.fieldName as string;
       let result;
       if (keyword && fieldName) {
-        result = await this.service.findAndPaginate(page, limit, keyword, fieldName);
+        result = await this.service.findAndPaginate(
+          page,
+          limit,
+          keyword,
+          fieldName
+        );
       } else {
         result = await this.service.getAllAndPaginate(page, limit);
       }
@@ -96,16 +108,44 @@ export class BaseController<ENTITY extends ObjectLiteral> {
     }
   }
 
-  async findAndPaginate(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async findAndPaginate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const page = parseInt(req.query.page as string, 10) || 1;
       const limit = parseInt(req.query.limit as string, 10) || 10;
       const keyword = req.query.keyword as string;
       const fieldName = req.query.fieldName as string;
-      const result = await this.service.findAndPaginate(page, limit, keyword, fieldName);
+      const result = await this.service.findAndPaginate(
+        page,
+        limit,
+        keyword,
+        fieldName
+      );
       res.status(200).json(result);
     } catch (error) {
       next(error);
     }
+  }
+
+  async findAll(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const keyword = req.query.keyword as string;
+      const fieldName = req.query.fieldName as string;
+      const options = {
+        where: {
+          [fieldName]: ILike(`%${keyword}%`),
+        },
+      } as any;
+        console.log(options);
+      // const result = await this.service.findAll(options);
+      // res.status(200).json(result);
+    } catch (error) {}
   }
 }

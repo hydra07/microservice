@@ -1,5 +1,4 @@
 import NextAuth from "next-auth/next";
-
 declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
@@ -27,4 +26,13 @@ declare module "next-auth" {
 
     }
   };
+  interface User {
+    id: string;
+    email: string;
+    username: string;
+    avatar: string;
+    accessToken: string;
+    refreshToken: string;
+    role: 'user' | 'admin';
+  }
 }

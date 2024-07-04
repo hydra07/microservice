@@ -1,11 +1,10 @@
-import { NextFunction, Request, Response,RequestWithUser } from 'express';
+import { NextFunction, Request, RequestWithUser, Response } from 'express';
 import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 //env
 import { UserRole } from '@/@types/user.d';
 import env from '@/util/validateEnv';
 
 const { TokenExpiredError } = jwt;
-
 
 const catchError = (res: Response, error: JsonWebTokenError) => {
   if (error instanceof TokenExpiredError) {
@@ -25,7 +24,6 @@ const verifyToken = (
   if (!token) {
     return res.status(403).send({ message: 'No token provided!' });
   }
-
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
@@ -85,4 +83,26 @@ const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { authenticateJWT, isValidRole, verifyToken };
+const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+  }
+  const parts = authHeader.split(' ');
+  if (parts.length !== 2) {
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+  }
+  const [scheme, token] = parts;
+  if (!/^Bearer$/i.test(scheme)) {
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+  }
+  jwt.verify(token, env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    }
+    req.user = decoded;
+    next();
+  });
+};
+
+export { authenticateJWT, isValidRole, requireAuth, verifyToken };

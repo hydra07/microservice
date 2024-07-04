@@ -45,6 +45,7 @@ const initialProductState: ProductType = {
     carbs: 0,
     fiber: 0,
   },
+  quantity: 0
 };
 
 interface CreateProductDialogProps {
