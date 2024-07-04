@@ -2,26 +2,24 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
 import { Spinner } from './ui/spinner';
 
 export default function NavigationEvents() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleStart = () => setLoading(true);
-    const handleComplete = () => {
-      setTimeout(() => setLoading(false), 300);
-    };
+    const handleComplete = () => setLoading(false);
 
-    handleStart();
-    
+    window.addEventListener('navigationStart', handleStart);
+    window.addEventListener('navigationComplete', handleComplete);
+
     return () => {
-      handleComplete();
+      window.removeEventListener('navigationStart', handleStart);
+      window.removeEventListener('navigationComplete', handleComplete);
     };
-  }, [pathname, searchParams]);
+  }, []);
 
   if (!loading) return null;
 

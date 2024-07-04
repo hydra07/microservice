@@ -9,26 +9,27 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
+import CustomLink from '../CustomLink';
 
 export default function MenuList() {
   const { user, status } = useAuth();
   return (
     <div className="flex flex-row space-x-6 font-serif">
       <div>
-        <Link className={buttonVariants({ variant: 'ghost' })} href="/">
+        <CustomLink className={buttonVariants({ variant: 'ghost' })} href="/">
           <span className="font-bold text-lg">Home</span>
-        </Link>
+        </CustomLink>
       </div>
       <div>
-        <Link className={buttonVariants({ variant: 'ghost' })} href="/product">
+        <CustomLink className={buttonVariants({ variant: 'ghost' })} href="/product">
           <span className="font-bold text-lg">Product</span>
-        </Link>
+        </CustomLink>
       </div>
       <div>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link
+              <CustomLink
                 className={cn(
                   buttonVariants({ variant: 'ghost' }),
                   'font-bold text-lg',
@@ -36,16 +37,16 @@ export default function MenuList() {
                 href="/post"
               >
                 Post
-              </Link>
+              </CustomLink>
             </TooltipTrigger>
             <TooltipContent>
               <div className="rounded shadow-lg">
-                <Link
+                <CustomLink
                   className={buttonVariants({ variant: 'ghost' })}
                   href="/post/add"
                 >
                   Create a new post
-                </Link>
+                </CustomLink>
               </div>
             </TooltipContent>
           </Tooltip>
@@ -56,7 +57,7 @@ export default function MenuList() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link
+                <CustomLink
                   className={cn(
                     buttonVariants({ variant: 'ghost' }),
                     'font-bold text-lg',
@@ -64,11 +65,11 @@ export default function MenuList() {
                   href="/admin"
                 >
                   Admin
-                </Link>
+                </CustomLink>
               </TooltipTrigger>
               <TooltipContent className="md:w-[300px]">
                 <div className="flex flex-col rounded shadow-lg space-y-3 p-2">
-                  <Link
+                  <CustomLink
                     className={cn(
                       buttonVariants({ variant: 'ghost' }),
                       'flex flex-row space-x-2 self-start',
@@ -77,8 +78,8 @@ export default function MenuList() {
                   >
                     <ShoppingBag />
                     <span>Manage Product</span>
-                  </Link>
-                  <Link
+                  </CustomLink>
+                  <CustomLink
                     className={cn(
                       buttonVariants({ variant: 'ghost' }),
                       'flex flex-row space-x-2 self-start',
@@ -87,7 +88,7 @@ export default function MenuList() {
                   >
                     <Edit />
                     <span>Manage Post</span>
-                  </Link>
+                  </CustomLink>
                 </div>
               </TooltipContent>
             </Tooltip>
