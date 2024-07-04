@@ -278,7 +278,11 @@ export default function ProductDetailPage({
           productData.category.id
         );
         if (relatedData) {
-          setRelatedProducts(relatedData);
+          const filteredRelatedProducts = relatedData.filter(
+            (product) =>
+              product.currentQuantity > 0 && product.id !== productData.id
+          );
+          setRelatedProducts(filteredRelatedProducts);
         }
       } catch (error) {
         console.error("Error fetching product:", error);

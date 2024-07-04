@@ -100,7 +100,8 @@ declare module "CustomTypes" {
   }
 
   export interface CheckoutPayload {
-    id?: string; //user
+    id?: number; //order id
+    userId?: string; //user id
     name?: string;
     phone?: string;
     email?: string;

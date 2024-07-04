@@ -68,3 +68,14 @@ export const updateOrderStatus = async (orderId: number, status: string, reason?
     throw error;
   }
 };
+
+
+export const getOrderById = async (orderId: number): Promise<OrderType | null> => {
+  try {
+    const response = await http.get(`${API_URL}/${orderId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    return null;
+  }
+}

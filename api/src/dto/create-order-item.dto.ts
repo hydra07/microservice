@@ -13,8 +13,12 @@ export class CreateOrderItemDto {
 }
 
 export class CreateOrderDto {
+  @IsOptional()
+  id?: number;
+
   @IsString()
-  id!: string;
+  userId!: string; //user id
+
 
   @IsString()
   name!: string;

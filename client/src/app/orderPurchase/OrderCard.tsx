@@ -18,20 +18,20 @@ const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
       className="border-b last:border-b-0"
     >
       <div className="flex justify-between p-4">
-        <div>
+        <div className="w-1/4">
           <p className="text-lg font-medium">Order #{order.id}</p>
           <p className="text-sm text-muted-foreground">
             {format(new Date(order.createAt), "MMM d, yyyy")}
           </p>
         </div>
-        <div>
+        <div className="w-1/2">
           <p className="text-lg font-medium">Ship Info</p>
           <p className="text-sm text-muted-foreground">{order.name}</p>
           <p className="text-sm text-muted-foreground">{order.email}</p>
           <p className="text-sm text-muted-foreground">{order.phone}</p>
           <p className="text-sm text-muted-foreground">{order.shipAddress}</p>
         </div>
-        <div className="text-right">
+        <div className="w-1/4 text-right">
           <p className="text-lg font-medium">
             {
               new Intl.NumberFormat("vi", {
@@ -52,7 +52,6 @@ const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
             {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
           </p>
         </div>
-    
       </div>
       <Collapsible>
         <div className="flex items-center justify-between">

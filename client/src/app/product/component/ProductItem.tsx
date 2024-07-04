@@ -75,7 +75,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) =>
             {new Intl.NumberFormat("vi-VN", {
               style: "currency",
               currency: "VND",
-            }).format("20000")}
+            }).format(product.price)}
           </div>
         </div>
       </div>

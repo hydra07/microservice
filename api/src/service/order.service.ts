@@ -13,6 +13,7 @@ import {
 import { OrderItem } from "@/entity/orderItem.entity";
 import { EntityManager, In } from "typeorm";
 import { Product } from "@/entity/product.entity";
+import moment from "moment";
 
 /**
  * Represents the result of an order creation attempt.
@@ -41,19 +42,23 @@ export class OrderService extends BaseService<Order> {
    * @throws {NotFoundError} If the user is not found.
    */
   private async dtoToEntity(createOrderDto: CreateOrderDto): Promise<Order> {
-    const user = await this.userService.findUserById(createOrderDto.id);
+    const user = await this.userService.findUserById(createOrderDto.userId);
     if (!user) {
       throw new NotFoundError("User not found");
     }
 
     const order = Object.assign(new Order(), {
-      ...createOrderDto,
+      id: createOrderDto.id,
       user,
-      status: "pending",
+      name: createOrderDto.name,
+      shipAddress: createOrderDto.shipAddress,
+      phone: createOrderDto.phone,
+      email: createOrderDto.email,
+      paymentMethod: createOrderDto.paymentMethod,
       createdAt: new Date(),
+      status: "pending",
     });
-
-    delete order.id;
+    
     return order;
   }
 
@@ -143,6 +148,10 @@ export class OrderService extends BaseService<Order> {
     createOrderDto: CreateOrderDto
   ): Promise<OrderCreationResult> {
     try {
+      if(!createOrderDto.id){
+        const date = new Date();
+        createOrderDto.id = parseInt( moment(date).format("DDHHmmss"));
+      }
       return await PostgresDataSource.transaction(
         async (transactionalEntityManager) => {
           const insufficientProducts = await this.checkProductQuantities(

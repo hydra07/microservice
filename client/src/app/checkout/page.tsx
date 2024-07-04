@@ -19,11 +19,13 @@ import CartSummaryTable from "./component/CartSummaryTable";
 import OrderReview from "./component/OrderReview";
 import UserWrapper from "@/components/UserWrapper";
 import { useRouter } from "next/navigation";
+import * as CheckoutService from "@/services/checkout.service";
 
 export default function Component() {
   const router = useRouter();
   const { user } = useAuth();
   const cart = useFromStore(useCartStore, (state) => state.cart);
+  const { clearCart, setCheckoutPayload } = useCartStore();
 
   const totalPrice = useMemo(() => {
     return cart
@@ -62,18 +64,15 @@ export default function Component() {
     }));
   }, []);
 
-  const onCheckoutSuccess = () => {
-       router.push("/checkoutSuccess");
-  };
-
   const onSubmit = async (formData: CheckoutFormType) => {
     if (!cart || cart.length === 0) {
       console.error("Cannot submit order: No items in cart.");
       return;
     }
+    
 
     const payload: CheckoutPayload = {
-      id: user?.id,
+      userId: user?.id,
       name: formData.name,
       phone: formData.phone,
       email: formData.email,
@@ -82,10 +81,23 @@ export default function Component() {
       orderItems: getItemList(cart),
     };
 
+    setCheckoutPayload(payload);
+
     try {
-      const data = await OrderService.createOrder(payload);
-      
-      onCheckoutSuccess();
+      if (formData.paymentMethod === "cod") {
+        const order = await OrderService.createOrder(payload);
+        if (order) {
+          clearCart();
+          router.push('/orderSuccess');
+        }
+      } else if (formData.paymentMethod === "vnpay") {
+        const vnpayUrl = await CheckoutService.createVNPayUrl(totalPrice);
+        if (vnpayUrl) {
+          window.location.href = vnpayUrl;
+        }
+      } else {
+        console.error("Unsupported payment method");
+      }
     } catch (error) {
       console.error("Checkout failed", error);
     }

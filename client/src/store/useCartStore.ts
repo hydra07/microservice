@@ -7,6 +7,8 @@ interface State {
   cart: ProductType[];
   totalItems: number;
   totalPrice: number;
+  checkoutPayload: CheckoutPayload | null;
+
 }
 
 interface MigratedState extends State {
@@ -17,7 +19,10 @@ interface Actions {
   addToCart: (Item: ProductType) => void;
   removeFromCart: (Item: ProductType) => void;
   updateCartItem: (Item: ProductType, quantity: number) => void;
-  checkout: (data: CheckoutPayload) => void;
+  clearCart: () => void;
+  setCheckoutPayload: (payload: CheckoutPayload) => void;
+  getCheckoutPayload: () => CheckoutPayload | null;
+  clearCheckoutPayload: () => void
 }
 
 type PersistedState = State & Partial<{ totalProducts: number }>; // Partial type is used to make the field optional
@@ -26,6 +31,7 @@ const INITIAL_STATE: State = {
   cart: [],
   totalItems: 0,
   totalPrice: 0,
+  checkoutPayload: null,
 };
 
 //* In Zustand, persist middleware can be used to persist the state in the browser’s local storage, allowing the state to be maintained even after the page is reloaded or the browser is closed.
@@ -36,6 +42,7 @@ export const useCartStore = create(
       cart: INITIAL_STATE.cart,
       totalItems: INITIAL_STATE.totalItems,
       totalPrice: INITIAL_STATE.totalPrice,
+      checkoutPayload: INITIAL_STATE.checkoutPayload,
       addToCart: (product: ProductType) => {
         const cart = get().cart;
         const cartItem = cart.find((item) => item.id === product.id);
@@ -83,12 +90,21 @@ export const useCartStore = create(
         }));
       },
 
-      checkout: (data: CheckoutPayload) => {
+      clearCart: () => {
         set((state) => ({
           cart: [],
           totalItems: 0,
           totalPrice: 0,
         }));
+      },
+      setCheckoutPayload: (payload: CheckoutPayload) => {
+        set({ checkoutPayload: payload });
+      },
+      getCheckoutPayload: () => {
+        return get().checkoutPayload;
+      },
+      clearCheckoutPayload: () => {
+        set({ checkoutPayload: null });
       },
     }),
     {

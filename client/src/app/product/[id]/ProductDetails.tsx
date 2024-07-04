@@ -55,7 +55,12 @@ export default function ProductDetails({ product }: { product: ProductType }) {
       </div>
       <div className="grid gap-4">
         <div className="flex items-center justify-between">
-          <div className="text-4xl font-bold">${product.price.toFixed(2)}</div>
+          <div className="text-4xl font-bold">{
+            new Intl.NumberFormat("vi", {
+              style: "currency",
+              currency: "VND",
+            }).format(product.price)            
+          }</div>
           <div className="text-gray-500 dark:text-gray-400">
             {product.quantity} in stock
           </div>

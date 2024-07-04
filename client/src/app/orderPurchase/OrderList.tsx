@@ -9,7 +9,7 @@ import { OrderType } from "CustomTypes";
 import { Spinner } from "@/components/ui/spinner";
 
 
-const ordersPerPage = 5;
+const ordersPerPage = 3;
 interface OrderListProps {
     orders: OrderType[];
     activeTab: string;
