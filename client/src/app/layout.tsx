@@ -10,6 +10,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NavigationEvents from '@/components/NavigationEvents';
 const inter = Inter({ subsets: ['latin'] });
 const SessionWrapper = dynamic(() => import('@/components/SessionWrapper'), {
   ssr: false,
@@ -35,6 +36,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            {/* <NavigationEvents /> */}
             <Header />
             {/* <Navbar /> */}
             <div className="pt-14">{children}</div>
