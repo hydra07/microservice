@@ -11,7 +11,7 @@ import { validate } from "class-validator";
 import { Logger } from "@/util/logger"; // Assume you have a logger utility
 import ProductService from "@/service/product.service";
 import UserService from "@/service/user.service";
-import { FindOneOptions } from "typeorm";
+import { FindOneOptions, In } from "typeorm";
 import { OrderType } from "@/@types/order";
 
 export default class OrderController extends BaseController<Order> {
@@ -24,7 +24,6 @@ export default class OrderController extends BaseController<Order> {
     super(service);
     this.orderService = service;
   }
-
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -63,36 +62,48 @@ export default class OrderController extends BaseController<Order> {
     }
   }
 
-  async findOrderByUserAndStatus(req: Request, res: Response, next: NextFunction) : Promise<void>{
+  async findOrderByUserAndStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = req.query.userId as string;
       const status = req.query.status as string;
+      const statuses =
+        status === "pending" ? ["pending", "cancelling"] : [status];
       const options: FindOneOptions<Order> = {
-        where: { user: { id: userId }, status: status }
-      };      
+        where: { user: { id: userId }, status: In(statuses) },
+      };
       const orders = await this.orderService.findByOptions(options);
       const data = orders.map((order) => this.transformOrderData(order));
-      res.status(200).json(data); 
+      res.status(200).json(data);
     } catch (error) {
       Logger.error("Failed to find order", error);
       next(error);
     }
   }
 
-  async updateOrderStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateOrderStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     const orderId = req.params.id;
     const { status, reason } = req.body;
 
     try {
-        const order = await this.orderService.updateOrderStatus(parseInt(orderId), status, reason);
-        res.status(200).json(this.transformOrderData(order));
+      const order = await this.orderService.updateOrderStatus(
+        parseInt(orderId),
+        status,
+        reason
+      );
+      res.status(200).json(this.transformOrderData(order));
     } catch (error) {
-        Logger.error("Failed to update order status", error);
-        next(error);
+      Logger.error("Failed to update order status", error);
+      next(error);
     }
-  } 
-
-   
+  }
 
   async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -118,13 +129,13 @@ export default class OrderController extends BaseController<Order> {
         name: item.product.name,
         quantity: item.quantity,
         price: item.product.price,
-        image: item.product.imgProducts[0]?.imageUrl || ''
+        image: item.product.imgProducts[0]?.imageUrl || "",
       })),
       name: data.name,
       phone: data.phone,
       email: data.email,
       paymentMethod: data.paymentMethod,
-      shipAddress: data.shipAddress
+      shipAddress: data.shipAddress,
     };
   }
 }

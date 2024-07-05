@@ -51,8 +51,8 @@ export default class VnpayController {
         req.socket.remoteAddress ||
         "127.0.0.1";
       const result = await this.vnpayService.vnpayRefund(
-        "03132659", // orderId
-        "user123", // createBy
+        orderId,
+        createBy,
         ipAddr.toString()
       );
       res.status(200).json(result);

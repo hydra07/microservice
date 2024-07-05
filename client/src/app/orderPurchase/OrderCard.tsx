@@ -9,11 +9,42 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
-import { ChevronDownIcon, PackageIcon, ShoppingCart } from "lucide-react";
+import {
+  ChevronDownIcon,
+  PackageIcon,
+  ShoppingBag,
+  ShoppingCart,
+} from "lucide-react";
 import OrderItems from "./OrderItem";
 import { OrderType } from "CustomTypes";
+import {
+  cancelOrder,
+  createCancelRequest,
+  updateOrderStatus,
+} from "@/services/order.service";
 
-const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
+const OrderCard: React.FC<{
+  order: OrderType;
+  onOrderUpdate: (updatedOrder: OrderType) => void;
+}> = ({ order, onOrderUpdate }) => {
+  const handleCancel = async () => {
+    try {
+      let updatedOrder;
+      if (order.paymentMethod === "cod") {
+        updatedOrder = await updateOrderStatus(order.id, "cancelled");
+      } else if (order.paymentMethod === "vnpay") {
+        updatedOrder = await updateOrderStatus(order.id, "cancelling");
+      }
+
+      if (updatedOrder) {
+        onOrderUpdate(updatedOrder);
+      }
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,6 +84,10 @@ const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
                   ? "text-yellow-500"
                   : order.status === "shipping"
                   ? "text-blue-500"
+                  : order.status === "cancelling"
+                  ? "text-gray-500"
+                  : order.status === "cancelled"
+                  ? "text-red-500"
                   : "text-green-500"
               }`}
             >
@@ -63,7 +98,7 @@ const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
         <Collapsible>
           <CollapsibleTrigger className="flex justify-between items-center w-full p-2 bg-muted hover:bg-accent transition-colors rounded">
             <div className="flex items-center space-x-2">
-              <ShoppingCart className="w-6 h-6" />
+              <ShoppingBag className="w-6 h-6" />
               <p className="text-sm font-medium">Order Items</p>
             </div>
             <ChevronDownIcon className="w-4 h-4" />
@@ -74,13 +109,18 @@ const OrderCard: React.FC<{ order: OrderType }> = ({ order }) => {
         </Collapsible>
         <div className="mt-3 flex justify-end space-x-2">
           {order.status === "pending" && (
-            <Button size="sm" variant="destructive">
+            <Button size="sm" variant="destructive" onClick={handleCancel}>
               Cancel order
             </Button>
           )}
-          {order.status === "shipping" && (
+          {/* {order.status === "shipping" && (
             <Button size="sm" variant="outline">
               Complete
+            </Button>
+          )} */}
+          {order.status === "cancelling" && (
+            <Button disabled size="sm" variant="secondary">
+              Cancelling...
             </Button>
           )}
         </div>

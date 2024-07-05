@@ -9,7 +9,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, Check, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  Check,
+  MoreHorizontal,
+  X,
+  Clipboard,
+  Truck,
+  Package,
+  Ban
+} from "lucide-react";
 import OrderDetailDialog from "./OrderDetailDialog";
 import RejectOrderDialog from "./RejectOrderDialog";
 import { updateOrderStatus } from "@/services/order.service";
@@ -21,30 +30,15 @@ export const createColumns = (
     size: 40,
     cell: ({ row }) => {
       const order = row.original;
-      const handleAcceptOrder = async (event: Event) => {
+      const handleUpdateOrderStatus = async (event: Event, status: string) => {
         event.preventDefault();
         try {
-          const updatedOrder = await updateOrderStatus(order.id, "shipping");
+          const updatedOrder = await updateOrderStatus(order.id, status);
           handleUpdateSuccess(updatedOrder);
         } catch (error) {
-          console.error("Failed to accept order:", error);
-          // You might want to show an error message to the user here
+          console.error(`Failed to update order status to ${status}:`, error);
         }
       };
-
-      const handleCompleteOrder = async (event: Event) => {
-        event.preventDefault();
-        try {
-          const updatedOrder = await updateOrderStatus(order.id, "completed");
-          handleUpdateSuccess(updatedOrder);
-        } catch (error) {
-          console.error("Failed to complete order:", error);
-          // You might want to show an error message to the user here
-        }
-      };
-
-      
-
 
       return (
         <div className="text-center">
@@ -61,40 +55,59 @@ export const createColumns = (
                 onClick={() =>
                   navigator.clipboard.writeText(order.id.toString())
                 }
+                className="flex items-center space-x-2"
               >
-                Copy order ID
+                <Clipboard className="h-4 w-4" />
+                <span>Copy order ID</span>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
-              <OrderDetailDialog
-                selectedOrder={order}
-              />
+              <OrderDetailDialog selectedOrder={order} />
               <DropdownMenuSeparator />
 
-              {order.status === "shipping" && (
-                <DropdownMenuItem   
-                  onSelect={handleCompleteOrder} 
-                  className="text-orange-500 hover:text-orange-700 hover:bg-orange-100 focus:bg-orange-100 focus:text-orange-700 font-bold"
-                >
-                  <span>
-                    Complete
-                  </span>
-                </DropdownMenuItem>
-              )}
-              {order.status === "pending" && (
+              {order.status === "cancelling" && (
                 <DropdownMenuItem
-                  onSelect={handleAcceptOrder}
-                  className="text-green-500 hover:text-green-700 hover:bg-green-100 focus:bg-green-100 focus:text-green-700 font-bold"
+                  onSelect={(e) => handleUpdateOrderStatus(e, "cancelled")}
+                  className="flex items-center space-x-2 text-orange-500 hover:text-orange-700 hover:bg-orange-100 focus:bg-orange-100 focus:text-orange-700 font-bold transition-colors duration-200"
                 >
-                  <Check className="mr-2 h-4 w-4" />
-                  <span>Accept</span>
+                  <Ban className="h-4 w-4" />
+                  <span>Accept cancel</span>
                 </DropdownMenuItem>
               )}
+
+              {order.status === "shipping" && (
+                <>
+                  <DropdownMenuItem
+                    onSelect={(e) => handleUpdateOrderStatus(e, "completed")}
+                    className="flex items-center space-x-2 text-green-500 hover:text-green-700 hover:bg-green-100 focus:bg-green-100 focus:text-green-700 font-bold transition-colors duration-200"
+                  >
+                    <Check className="h-4 w-4" />
+                    <span>Complete</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => handleUpdateOrderStatus(e, "unsuccess")}
+                    className="flex items-center space-x-2 text-red-500 hover:text-red-700 hover:bg-red-100 focus:bg-red-100 focus:text-red-700 font-bold transition-colors duration-200"
+                  >
+                    <X className="h-4 w-4" />
+                    <span>Unsuccess</span>
+                  </DropdownMenuItem>
+                </>
+              )}
+
               {order.status === "pending" && (
-                <RejectOrderDialog
-                  selectedOrder={order}
-                  onRejectSuccess={handleUpdateSuccess}
-                />
+                <>
+                  <DropdownMenuItem
+                    onSelect={(e) => handleUpdateOrderStatus(e, "shipping")}
+                    className="flex items-center space-x-2 text-green-500 hover:text-green-700 hover:bg-green-100 focus:bg-green-100 focus:text-green-700 font-bold transition-colors duration-200"
+                  >
+                    <Truck className="h-4 w-4" />
+                    <span>Accept</span>
+                  </DropdownMenuItem>
+                  <RejectOrderDialog
+                    selectedOrder={order}
+                    onRejectSuccess={handleUpdateSuccess}
+                  />
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

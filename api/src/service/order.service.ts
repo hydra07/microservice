@@ -176,12 +176,15 @@ export class OrderService extends BaseService<Order> {
   }
 
   async updateOrderStatus(orderId: number, status: string, reason?: string) {
-    const ALLOWED_STATUSES = ["shipping", "rejected", "completed"];
+    const ALLOWED_STATUSES = ["shipping", "rejected", "completed" , "cancelled", "cancelling", "unsuccess"];
 
     const STATUS_MESSAGE: { [key: string]: string } = {
       shipping: "đang được vận chuyển",
       rejected: "bị từ chối",
       completed: "hoàn thành",
+      cancelled: "đã được hủy",
+      cancelling: "đang chờ xác nhận hủy",
+      unsuccess: "không được giao thành công",
     };
 
     if (!ALLOWED_STATUSES.includes(status)) {
@@ -197,7 +200,18 @@ export class OrderService extends BaseService<Order> {
     order.status = status;
     await order.save();
 
-    const notificationTitle = `Đơn hàng của bạn đã được cập nhật trạng thái`;
+    //update product quantity
+    if (status === "cancelled") {
+      for (const item of order.orderItems!) {
+        const product = await this.productService.getSingle({
+          where: { id: item.product.id },
+        });
+        product!.currentQuantity += item.quantity;
+        await product!.save();
+      }
+    }
+
+    const notificationTitle = `Cập nhật đơn hàng #${order.id}`;
 
     let notificationContent = `Đơn hàng của bạn hiện tại ${STATUS_MESSAGE[status]}`;
     if (status === "rejected" && reason) {

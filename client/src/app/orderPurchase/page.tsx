@@ -15,7 +15,8 @@ const orderPerPage = 5;
 enum OrderStatusEnum {
   Pending = "pending",
   Shipping = "shipping",
-  Complete = "complete",
+  Complete = "completed",
+  Cancel = "cancelled",
 }
 
 interface OrderListProps {
@@ -29,7 +30,7 @@ const PurchaseHistory  = () => {
   );
 
   const { user, status } = useAuth();
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<OrderType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -45,6 +46,19 @@ const PurchaseHistory  = () => {
 
     fetchData();
   }, [activeTab, user]);
+  
+  const handleOrderUpdate = (updatedOrder: OrderType) => {
+    setOrders((prevOrders) => {
+      if (updatedOrder.status === "cancelling") {
+        return prevOrders.map((order) => 
+          order.id === updatedOrder.id ? updatedOrder : order
+        );
+      } else if (updatedOrder.status === "cancelled") {
+        return prevOrders.filter((order) => order.id !== updatedOrder.id);
+      }
+      return prevOrders;
+    });
+  };
 
   return (
     <UserWrapper>
@@ -58,7 +72,7 @@ const PurchaseHistory  = () => {
       />
         <TabButtons activeTab={activeTab} setActiveTab={setActiveTab as any} />
       </div>
-      <OrderList orders={orders} activeTab={activeTab} isLoading={isLoading} />
+      <OrderList orders={orders} activeTab={activeTab} isLoading={isLoading} onOrderUpdate={handleOrderUpdate}/>
     </div>
     </UserWrapper>
   );

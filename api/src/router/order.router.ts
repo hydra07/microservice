@@ -32,6 +32,14 @@ router.post("/orders", (req, res, next: NextFunction) => {
 router.put("/orders/:id/status",resolveIndexId ,(req, res, next: NextFunction) => {
   orderController.updateOrderStatus(req, res, next);
 });
+// router.put("/orders/:id/cancel",resolveIndexId ,(req, res, next: NextFunction) => {
+//   orderController.updateOrderStatus(req, res, next);
+// });
+// router.put("/orders/:id/cancel-request",resolveIndexId ,(req, res, next: NextFunction) => {
+//   orderController.updateOrderStatus(req, res, next);
+// });
+
+
 
 
 
