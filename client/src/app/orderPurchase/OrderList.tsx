@@ -14,9 +14,10 @@ interface OrderListProps {
     orders: OrderType[];
     activeTab: string;
     isLoading: boolean;
+    onOrderUpdate: (updatedOrder: OrderType) => void;
 }
 
-const OrderList: React.FC<OrderListProps> = ({ orders, activeTab, isLoading }) => {
+const OrderList: React.FC<OrderListProps> = ({ orders, activeTab, isLoading, onOrderUpdate }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const filteredOrders = orders;
 
@@ -44,7 +45,7 @@ const OrderList: React.FC<OrderListProps> = ({ orders, activeTab, isLoading }) =
           ) : (
             <div className=" rounded-lg shadow-sm">
               {currentOrders.map((order) => (
-                <OrderCard key={order.id} order={order} />
+                <OrderCard key={order.id} order={order} onOrderUpdate={onOrderUpdate} />
               ))}
             </div>
           )}

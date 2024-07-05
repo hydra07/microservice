@@ -2,20 +2,21 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Package, Truck, CheckCircle } from "lucide-react";
+import { Package, Truck, CheckCircle, CircleX } from "lucide-react";
 
 interface TabButtonsProps {
   activeTab: string;
   setActiveTab: (status: string) => void;
 }
 
-const ORDER_STATUSES = ["pending", "shipping", "completed"] as const;
+const ORDER_STATUSES = ["pending", "shipping", "completed", "cancelled"] as const;
 type OrderStatus = typeof ORDER_STATUSES[number];
 
 const statusIcons = {
   pending: Package,
   shipping: Truck,
   completed: CheckCircle,
+  cancelled: CircleX,
 };
 
 const TabButtons: React.FC<TabButtonsProps> = ({ activeTab, setActiveTab }) => {

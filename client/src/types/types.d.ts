@@ -123,7 +123,7 @@ declare module "CustomTypes" {
     name?: string;
     phone?: string;
     email?: string;
-    paymentMethod?: string;
+    paymentMethod: string;
     shipAddress?: string;
   } 
 

@@ -60,7 +60,7 @@ const ViewOrderDialog: React.FC<ViewOrderDialogProps> = ({ selectedOrder }) => {
                   value={selectedOrder.shipAddress!}
                 />
                 <InfoItem label="Order Status" value={selectedOrder.status} />
-                {/* <InfoItem label="Payment Status" value={selectedOrder.paymentStatus} /> */}
+                <InfoItem label="Payment Status" value={selectedOrder.paymentMethod} />
                 <InfoItem
                   label="Total Amount"
                   value={`$${selectedOrder.total.toFixed(2)}`}
