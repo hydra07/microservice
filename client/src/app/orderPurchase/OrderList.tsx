@@ -42,7 +42,7 @@ const OrderList: React.FC<OrderListProps> = ({ orders, activeTab, isLoading }) =
               <p className="text-lg text-gray-500">No {activeTab} orders found.</p>
             </div>
           ) : (
-            <div className="border rounded-lg shadow-sm">
+            <div className=" rounded-lg shadow-sm">
               {currentOrders.map((order) => (
                 <OrderCard key={order.id} order={order} />
               ))}

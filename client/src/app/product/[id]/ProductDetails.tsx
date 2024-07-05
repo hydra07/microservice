@@ -61,8 +61,8 @@ export default function ProductDetails({ product }: { product: ProductType }) {
               currency: "VND",
             }).format(product.price)            
           }</div>
-          <div className="text-gray-500 dark:text-gray-400">
-            {product.quantity} in stock
+          <div className="text-green-500 dark:text-green-400">
+            {product.currentQuantity} in stock
           </div>
         </div>
         <div className="flex items-center gap-4">

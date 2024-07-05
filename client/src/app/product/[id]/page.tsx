@@ -320,7 +320,7 @@ export default function ProductDetailPage({
             <div className="flex flex-col">
               <ProductDetails product={product} />
             </div>
-            <div className="mt-16">
+            <div className="mt-16 px-6">
               <RelatedProducts products={relatedProducts} />
             </div>
           </div>
