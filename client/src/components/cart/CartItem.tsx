@@ -50,7 +50,7 @@ export default function CartItem({ item }: Props) {
   };
 
   return (
-    <li className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+    <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
       <Image
         alt={item.name}
         src={item.imgProducts?.[0]?.imageUrl ?? imgNotFoundUrl}
@@ -61,7 +61,12 @@ export default function CartItem({ item }: Props) {
       <div className="grid gap-1">
         <h4 className="font-medium">{item.name}</h4>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          ${item.price.toFixed(2)}
+          {
+            new Intl.NumberFormat("vi", {
+              style: "currency",
+              currency: "VND",
+            }).format(item.price)
+          }
         </p>
       </div>
       <div className="flex flex-col items-end gap-2">
@@ -106,6 +111,6 @@ export default function CartItem({ item }: Props) {
           )}
         </div>
       </div>
-    </li>
+    </div>
   );
 }

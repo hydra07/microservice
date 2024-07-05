@@ -55,9 +55,14 @@ export default function ProductDetails({ product }: { product: ProductType }) {
       </div>
       <div className="grid gap-4">
         <div className="flex items-center justify-between">
-          <div className="text-4xl font-bold">${product.price.toFixed(2)}</div>
-          <div className="text-gray-500 dark:text-gray-400">
-            {product.quantity} in stock
+          <div className="text-4xl font-bold">{
+            new Intl.NumberFormat("vi", {
+              style: "currency",
+              currency: "VND",
+            }).format(product.price)            
+          }</div>
+          <div className="text-green-500 dark:text-green-400">
+            {product.currentQuantity} in stock
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -95,7 +100,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
           </div>
         </div>
         {/* <Button size="lg">Add to Cart</Button> */}
-        <div className="sticky bottom-0 bg-white dark:bg-gray-900 p-4 border-t">
+        <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t">
           <Button size="lg" className="w-full">
             Add to Cart
           </Button>

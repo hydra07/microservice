@@ -30,7 +30,7 @@ const SkeletonTable: React.FC<SkeletonTableProps> = ({
     <div className="container mx-auto py-10">
       {showFilter && (
         <div className="flex items-center py-4">
-          <Skeleton className="h-10 w-[250px]" />
+          <Skeleton className="h-6 w-[350px]" />
         </div>
       )}
       <div className="rounded-md border">
@@ -39,7 +39,7 @@ const SkeletonTable: React.FC<SkeletonTableProps> = ({
             <TableRow>
               {columns.map((column, index) => (
                 <TableHead key={index} className={column.header.width}>
-                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-10 w-full" />
                 </TableHead>
               ))}
             </TableRow>

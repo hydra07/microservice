@@ -1,32 +1,42 @@
-"use client";
-
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import { OrderItemType } from "CustomTypes";
+
 const IMAGE_NOT_FOUND = process.env.NEXT_PUBLIC_IMG_NOTFOUND as string;
 
 const OrderItems: React.FC<{ items: OrderItemType[] }> = ({ items }) => {
-    return (
-    <div className="space-y-4">
-      {items.map((item, index) => (
-        <div key={index} className="flex items-center space-x-4">
+  const formatPrice = (price: number) => 
+    new Intl.NumberFormat("vi", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
+
+  const formattedItems = useMemo(() => 
+    items.map(item => ({
+      ...item,
+      formattedPrice: formatPrice(item.price * item.quantity),
+      formattedUnitPrice: formatPrice(item.price)
+    })), [items]
+  );
+
+  return (
+    <div className="space-y-3">
+      {formattedItems.map((item, index) => (
+        <div key={index} className="flex items-center space-x-3 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <Image
-            src={IMAGE_NOT_FOUND}
+            src={item.image || IMAGE_NOT_FOUND}
             alt={item.name}
-            width={64}
-            height={64}
+            width={48}
+            height={48}
             className="rounded-md object-cover"
           />
-          <div className="flex-grow">
-            <p className="font-medium">{item.name}</p>
-            <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+          <div className="flex-grow min-w-0">
+            <p className="font-medium text-sm truncate">{item.name}</p>
+            <p className="text-xs text-gray-500">
+              {item.quantity} x {item.formattedUnitPrice}
+            </p>
           </div>
-          <p className="font-medium">{
-                new Intl.NumberFormat("vi", {
-                    style: "currency",
-                    currency: "VND",
-                }).format(item.price)
-            }</p>
+          <p className="font-medium text-sm whitespace-nowrap">{item.formattedPrice}</p>
         </div>
       ))}
     </div>
