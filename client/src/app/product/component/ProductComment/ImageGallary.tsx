@@ -12,19 +12,19 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, onImageClick
   if (images.length === 0) return null;
 
   return (
-    <div className="mt-2 grid grid-cols-3 gap-1">
+    <div className="mt-2 flex flex-wrap gap-2">
       {images.map((image, index) => (
         <div 
           key={index} 
-          className="cursor-pointer"
-          onClick={() => onImageClick(imgNotFoundUrl)}
+          className="cursor-pointer w-20 h-20 relative"
+          onClick={() => onImageClick(image)}
         >
           <Image
-            src={imgNotFoundUrl}
+            src={image || imgNotFoundUrl}
             alt={`Feedback image ${index + 1}`}
-            width={50}
-            height={50}
-            className="aspect-square w-full rounded-sm object-cover"
+            layout="fill"
+            objectFit="cover"
+            className="rounded-sm"
           />
         </div>
       ))}

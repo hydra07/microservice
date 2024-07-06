@@ -6,10 +6,10 @@ import env from "@/util/validateEnv";
 import ReviewController from "@/controller/review.controller";
 
 const upload = multer({ dest: "uploads/" });
-const ReviewRouter = express.Router();
+const reviewRouter = express.Router();
 const reviewController = new ReviewController();
 
-ReviewRouter.post("/review", upload.array("images"), async (req, res, next) => {
+reviewRouter.post("/review", upload.array("images"), async (req, res, next) => {
   try {
     const files = req.files as Express.Multer.File[];
 
@@ -30,10 +30,15 @@ ReviewRouter.post("/review", upload.array("images"), async (req, res, next) => {
     req.body.imageUrls = imageUrls;
     req.body.rating = parseInt(req.body.rating);
     req.body.productId = parseInt(req.body.productId);
+    req.body.orderItemId = parseInt(req.body.orderItemId);
     return await reviewController.saveReview(req, res, next);
   } catch (error) {
     next(error);
   }
 });
 
-export default ReviewRouter;
+
+reviewRouter.get('/product/:productId/reviews', reviewController.getProductReviews);
+
+
+export default reviewRouter;

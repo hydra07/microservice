@@ -131,6 +131,7 @@ export default class OrderController extends BaseController<Order> {
         quantity: item.quantity,
         price: item.product.price,
         image: item.product.imgProducts[0]?.imageUrl || "",
+        isRated: item.isRated
       })),
       name: data.name,
       phone: data.phone,

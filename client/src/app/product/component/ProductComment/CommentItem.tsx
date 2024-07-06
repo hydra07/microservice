@@ -13,7 +13,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({ comment, onImageClick 
   return (
     <div className="flex gap-3 animate-fade-in">
       <Avatar className="h-8 w-8 shrink-0">
-        <AvatarImage src="/placeholder-user.jpg" alt={comment.user.name} />
+        <AvatarImage src={comment.user.avatar} alt={comment.user.name} />
         <AvatarFallback>{comment.user.name.charAt(0).toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex-1">

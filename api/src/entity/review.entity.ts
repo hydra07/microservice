@@ -11,6 +11,7 @@ import { IsNotEmpty, IsString, IsNumber, Max, Min } from "class-validator";
 import { User } from "./user.entity";
 import { Product } from "./product.entity";
 import { ImgReview } from "./imgReview.entity";
+import { OrderItem } from "./orderItem.entity";
 
 @Entity("reviews")
 export class Review extends BaseEntity {
@@ -30,6 +31,10 @@ export class Review extends BaseEntity {
   @ManyToOne(() => Product, { eager: true })
   @JoinColumn({ name: "product_id" })
   product!: Product;
+
+  @ManyToOne(() => OrderItem, (orderItem) => orderItem.review)
+  @JoinColumn({ name: "order_item_id" })
+  orderItem!: any;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;

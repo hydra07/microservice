@@ -10,7 +10,7 @@ interface PaginationProps {
 
 export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
   return (
-    <div className="mt-4 flex justify-center gap-1">
+    <div className="mt-10 flex justify-center gap-1">
       <Button
         variant="outline"
         size="sm"

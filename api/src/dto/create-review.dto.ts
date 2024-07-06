@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsNotEmpty, IsString, IsNumber, Max, Min, IsArray, ValidateNested } from "class-validator";
 
 class ImageUrlDto {
@@ -28,8 +28,14 @@ export class CreateReviewDto {
   @IsNumber()
   productId!: number;
 
+  @IsNotEmpty()
+  @IsNumber()
+  orderItemId!: number;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ImageUrlDto)
   imageUrls?: ImageUrlDto[];
 }
+
+
