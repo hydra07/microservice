@@ -128,10 +128,25 @@ declare module "CustomTypes" {
   } 
 
   export interface OrderItemType {
-    productId?: number;
+    id: number;
+    productId: number;
     name: string;
     quantity: number;
     price: number;
     image: string;
+    isRated: boolean;
+  }
+
+
+  export interface ReviewType {
+    id: number;
+    user: {
+      name: string;
+      avatar: string;
+    };
+    rating: number;
+    createAt: string;
+    comment: string;
+    images: string[];
   }
 }

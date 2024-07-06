@@ -71,6 +71,27 @@ ImageUploadRouter.post(
 );
 
 
+// ImageUploadRouter.post("/uploadRating", upload.array("files"), async (req, res) => {
+//   try {
+//     const files = req.files as Express.Multer.File[];
+//     const uploads = files.map(async (file) => {
+//       const result = await cloudinary.v2.uploader.upload(file.path, {
+//         resource_type: "auto",
+//         folder: env.CLOUD_IMG_FOLDER_RATING,
+//       });
+//       await fs.unlink(file.path);
+//       return { publicId: result.public_id, imageUrl: result.secure_url };
+//     });
+//     const uploadedFiles = await Promise.all(uploads);
+//     res.json(uploadedFiles);
+//   } catch (error) {
+//     console.error("Error in file upload:", error);
+//     res.status(500).json({ error: "Error uploading files" });
+//   }
+// });
+
+
+
 //delete image of product 
 ImageUploadRouter.delete("/uploadImg/:id", async (req: Request, res: Response) => {
   try {

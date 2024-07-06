@@ -14,6 +14,8 @@ import { ImgProduct } from '@/entity/imgProduct.entity';
 import env from '@/util/validateEnv';
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
+import { Review } from '@/entity/review.entity';
+import { ImgReview } from '@/entity/imgReview.entity';
 // import { Notification } from '@/entity/notification.entity';
 // import { Post } from '@/entity/post.entity';
 // import env from '@/util/validateEnv';
@@ -54,7 +56,9 @@ const PostgresDataSource = new DataSource({
     Recipe,
     ImgProduct,
     Order,
-    OrderItem
+    OrderItem,
+    Review,
+    ImgReview
   ],
   migrations: [],
   subscribers: [],

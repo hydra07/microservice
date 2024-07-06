@@ -1,5 +1,5 @@
-"use client"
-  
+"use client";
+
 import { OrderType } from "CustomTypes";
 import { useEffect, useState } from "react";
 import * as OrderService from "@/services/order.service";
@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { SkeletonTable } from "../component/SkeletonTable";
 import { DataTable } from "../component/data-table";
 import { createColumns } from "./columns";
+import UserWrapper from "@/components/UserWrapper";
 
 const Order = () => {
   const [data, setData] = useState<OrderType[]>([]);
@@ -37,10 +38,9 @@ const Order = () => {
         order.id === updatedOrder.id ? updatedOrder : order
       )
     );
-  }
+  };
 
   const columns = createColumns(handleUpdateSuccess);
-
 
   const skeletonColumns = [
     { header: { width: "w-[50px]" }, cell: { width: "w-8 h-8 rounded-full" } },
@@ -56,26 +56,27 @@ const Order = () => {
   }
 
   return (
-    <>
-      <Breadcrumb
-        items={[
-          { label: "Home", link: "/" },
-          { label: "Admin", link: "/admin" },
-          { label: "Order", link: "/order" },
-        ]}
-      />
+    <UserWrapper>
+      <>
+        <Breadcrumb
+          items={[
+            { label: "Home", link: "/" },
+            { label: "Admin", link: "/admin" },
+            { label: "Order", link: "/order" },
+          ]}
+        />
 
-      {/* <CreateProductDialog onCreateSuccess={handleCreateSuccess} /> */}
-      <div className="container mx-auto py-10">
-        {loading ? (
-          <SkeletonTable columns={skeletonColumns} rows={3} />
-        ) : (
-          <DataTable columns={columns} data={data} />
-        )}
-      </div>
-    </>
+        {/* <CreateProductDialog onCreateSuccess={handleCreateSuccess} /> */}
+        <div className="container mx-auto py-10">
+          {loading ? (
+            <SkeletonTable columns={skeletonColumns} rows={3} />
+          ) : (
+            <DataTable columns={columns} data={data} />
+          )}
+        </div>
+      </>
+    </UserWrapper>
   );
 };
-
 
 export default Order;

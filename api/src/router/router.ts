@@ -10,6 +10,7 @@ import orderRouter from '@/router/order.router';
 import ImageUploadRouter from '@/router/imageUpload';
 import notificationRouter from '@/router/notification.router';
 import vnpayRouter from '@/router/vnpay.router';
+import reviewRouter from '@/router/review.router';
 export default [
   { path: '/api/auth', router: authRouter },
   { path: '/api', router: postRouter },
@@ -22,6 +23,7 @@ export default [
   { path: '/api', router: uploadRouter },
   { path: '/api', router: ImageUploadRouter },
   {path :'/api',  router: notificationRouter},
-  {path :'/api', router: vnpayRouter}
+  {path :'/api', router: vnpayRouter},
+  {path :'/api', router: reviewRouter}
   
 ];

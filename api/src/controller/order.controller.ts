@@ -125,11 +125,13 @@ export default class OrderController extends BaseController<Order> {
       total: data.total,
       status: data.status,
       orderItems: data.orderItems.map((item: any) => ({
+        id: item.id,
         productId: item.product.id,
         name: item.product.name,
         quantity: item.quantity,
         price: item.product.price,
         image: item.product.imgProducts[0]?.imageUrl || "",
+        isRated: item.isRated
       })),
       name: data.name,
       phone: data.phone,
