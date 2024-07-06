@@ -92,7 +92,7 @@ export default function ProductDetailPage({
           </div>
           <div className="md:col-span-1 lg:col-span-1 bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 min-h-[100vh]">
             <ProductDetails product={product} />
-            <ProductComment />
+            <ProductComment productId={params.id} />
           </div>
         </div>
         <Cart />

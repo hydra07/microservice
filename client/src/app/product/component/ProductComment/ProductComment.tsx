@@ -8,7 +8,7 @@ import * as ReviewService from "@/services/review.service";
 
 const imgNotFoundUrl = process.env.NEXT_PUBLIC_IMG_NOTFOUND as string;
 
-export default function ProductComment() {
+export default function ProductComment({ productId }: { productId: number }) {
   const [comments, setComments] = useState<ReviewType[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export default function ProductComment() {
   const fetchComments = async (page: number) => {
     setIsLoading(true);
     try {
-      const data = await ReviewService.getReview(7, page, commentsPerPage);
+      const data = await ReviewService.getReview(productId, page, commentsPerPage);
       if (data) {
         setComments(data.reviews);
         setTotalReviews(data.total);
