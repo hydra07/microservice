@@ -25,7 +25,10 @@ function reducer(state: State, action: Action, maxQuantity: number): State {
     case "DECREMENT":
       return { ...state, quantity: Math.max(1, state.quantity - 1) };
     case "SET_QUANTITY":
-      return { ...state, quantity: Math.max(1, Math.min(action.payload, maxQuantity)) };
+      return {
+        ...state,
+        quantity: Math.max(1, Math.min(action.payload, maxQuantity)),
+      };
     default:
       return state;
   }
@@ -33,7 +36,8 @@ function reducer(state: State, action: Action, maxQuantity: number): State {
 
 export default function ProductDetails({ product }: { product: ProductType }) {
   const [state, dispatch] = useReducer(
-    (state: State, action: Action) => reducer(state, action, product.currentQuantity),
+    (state: State, action: Action) =>
+      reducer(state, action, product.currentQuantity),
     initialState
   );
 
@@ -45,8 +49,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
   };
 
   return (
-    <div className="grid gap-6">
-     
+    <div className="grid gap-">
       <div>
         <h1 className="text-3xl font-bold">{product.name}</h1>
         <p className="text-gray-500 dark:text-gray-400 mt-2">
@@ -55,12 +58,12 @@ export default function ProductDetails({ product }: { product: ProductType }) {
       </div>
       <div className="grid gap-4">
         <div className="flex items-center justify-between">
-          <div className="text-4xl font-bold">{
-            new Intl.NumberFormat("vi", {
+          <div className="text-2xl font-bold">
+            {new Intl.NumberFormat("vi", {
               style: "currency",
               currency: "VND",
-            }).format(product.price)            
-          }</div>
+            }).format(product.price)}
+          </div>
           <div className="text-green-500 dark:text-green-400">
             {product.currentQuantity} in stock
           </div>
@@ -99,12 +102,9 @@ export default function ProductDetails({ product }: { product: ProductType }) {
             </Button>
           </div>
         </div>
-        {/* <Button size="lg">Add to Cart</Button> */}
-        <div className="sticky bottom-0 bg-white dark:bg-gray-900 border-t">
-          <Button size="lg" className="w-full">
+          <Button size="lg" className="w-1/3 bg-green-600 hover:bg-green-400">
             Add to Cart
           </Button>
-        </div>
       </div>
     </div>
   );

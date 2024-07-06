@@ -27,4 +27,7 @@ export class OrderItem extends BaseEntity {
 
   @Column()
   subtotal!: number;
+
+  @Column({ default: false })
+  isRated!: boolean;
 }

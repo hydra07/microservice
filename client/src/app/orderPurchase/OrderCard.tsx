@@ -104,7 +104,7 @@ const OrderCard: React.FC<{
             <ChevronDownIcon className="w-4 h-4" />
           </CollapsibleTrigger>
           <CollapsibleContent className="mt-2">
-            <OrderItems items={order.orderItems} />
+            <OrderItems items={order.orderItems} status={order.status} />
           </CollapsibleContent>
         </Collapsible>
         <div className="mt-3 flex justify-end space-x-2">

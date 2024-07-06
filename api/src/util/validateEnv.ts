@@ -30,6 +30,7 @@ export default cleanEnv(process.env, {
   CLOUD_API_KEY: str(),
   CLOUD_API_SECRET: str(),
   CLOUD_IMG_FOLDER: str(),
+  CLOUD_IMG_FOLDER_RATING: str(),
 
   VNPAY_TMNCODE: str(),
   VNPAY_HASHSECRET: str(),
