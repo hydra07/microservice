@@ -21,7 +21,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({ comment, onImageClick 
           <div className="font-medium text-sm">{comment.user.name}</div>
           <div className="flex items-center gap-0.5">
             {[...Array(5)].map((_, i) => (
-              <StarIcon key={i} className={`h-3 w-3 ${i < comment.rating ? 'text-yellow-400' : 'text-gray-300'}`} />
+              <StarIcon key={i} className={`h-3 w-3 ${i < comment.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
             ))}
           </div>
         </div>
