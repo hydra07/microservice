@@ -1,7 +1,8 @@
-import { Request } from 'express';
-import fs from 'fs';
-import multer, { diskStorage } from 'multer';
-import path from 'path';
+import { Request } from "express";
+import fs from "fs";
+import multer, { diskStorage } from "multer";
+import path from "path";
+
 /**
  *
  * @param folderName
@@ -16,7 +17,7 @@ import path from 'path';
  *  })
  * });
  */
-function uploadService(folderName: string, fileType: string) {
+function uploadService(folderName: string) {
   const storage = diskStorage({
     destination: function (req: Request, file, cb) {
       const dir = path.join(__dirname, `../../../uploads/${folderName}`);
@@ -34,7 +35,7 @@ function uploadService(folderName: string, fileType: string) {
     },
   });
 
-  return multer({ storage: storage }).single(fileType);
+  return multer({ storage: storage });
 }
 
 export default uploadService;
