@@ -1,5 +1,6 @@
 'use client';
 
+import { OrderData } from 'chart';
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -11,7 +12,12 @@ const data = [
   { month: 'May', orders: 200 },
 ];
 
-const OrderChart: React.FC = () => {
+
+interface OrderChartProps {
+  data: OrderData[];
+}
+
+const OrderChart: React.FC<OrderChartProps> = ({data}) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
        <BarChart data={data} className="text-sm">
