@@ -50,6 +50,7 @@ ImageUploadRouter.post('/uploadImg', upload.array('files'), async (req: Request,
     res.status(500).json({ error: "Error uploading files" });
   }
 });
+export default ImageUploadRouter;
 
 // ImageUploadRouter.post(
 //   "/uploadImg",
@@ -73,4 +74,3 @@ ImageUploadRouter.post('/uploadImg', upload.array('files'), async (req: Request,
 
 // });
 
-export default ImageUploadRouter;

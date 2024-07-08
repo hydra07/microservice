@@ -30,19 +30,19 @@ export default class ProductController extends BaseController<Product> {
       next(error);
     }
   }
-  
-  
+
+
   async getAllDTO(req: Request, res: Response, next: NextFunction): Promise<void> {
-   try {
-    
+    try {
+
       const products = await this.service.getAll();
       const productsDTO = products.map((product) => plainToClass(ProductDTO, product));
-      console.log(productsDTO , 'get all')
+      console.log(productsDTO, 'get all')
       res.status(200).json(productsDTO);
 
-   } catch (error) {
-     next(error);
-   }
+    } catch (error) {
+      next(error);
+    }
   }
 
   async createDTO(req: Request, res: Response, next: NextFunction): Promise<void> {

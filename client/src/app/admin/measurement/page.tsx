@@ -19,7 +19,6 @@ const Page = () => {
                 const fetchedData = await MeasurementService.fetchMeasurements();
                 // Delay 2 seconds
 
-                await new Promise((resolve) => setTimeout(resolve, 2000));
                 setMeasurements(fetchedData);
                 setData(fetchedData);
             } catch (error) {

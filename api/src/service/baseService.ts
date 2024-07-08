@@ -48,6 +48,7 @@ import { PaginatedResult } from "../@types/user";
         if (!entity) {
           return null;
         }
+        
     
         Object.assign(entity, data);
         const updatedEntity = await this.repository.save(entity);
@@ -141,5 +142,6 @@ import { PaginatedResult } from "../@types/user";
         return handleError(error as Error, "Error finding and paginating entities");
       }
     }
+    
   }
   

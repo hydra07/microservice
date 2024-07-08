@@ -9,7 +9,7 @@ interface FormData {
     description: string;
     portion: number;
     cookTime: number;
-    imageUrl: string | null;
+    imageUrl: File | null;
     ingredients: {
         name: string;
         quantity: number;
@@ -37,7 +37,7 @@ const Form: React.FC = () => {
         if (name === 'imageUrl' && files) {
             setFormData({
                 ...formData,
-                imageUrl: URL.createObjectURL(files[0]),
+                imageUrl: files[0],
             });
         } else {
             setFormData({
@@ -56,18 +56,31 @@ const Form: React.FC = () => {
             description: formData.description,
             portion: formData.portion,
             cookTime: formData.cookTime,
+            imageUrl: formData.imageUrl,
             ingredients,
             steps,
         };
         if (formData.imageUrl) {
             const formDataImage = new FormData();
-            formDataImage.append('image', formData.imageUrl );
-            const resImage = await axios.post('/api/images', formDataImage);
-            formDataToSend.imageUrl = resImage.data.imageUrl;
+            formDataImage.append('imageUrl', formData.imageUrl);
+            try {
+                const resImage = await fetch('/api/uploadImg', {
+                    method: 'POST',
+                    body: formDataImage
+                });
+                if (!resImage.ok) {
+                    const responseData = await resImage.json();
+                    formDataToSend.imageUrl = responseData.secure_url;                   
+                }
+                
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
         }
 
         try {
             const res = await axios.post('/api/recipes', formDataToSend);
+            console.log(formDataToSend);
             if (res.status === 201) {
                 console.log('Recipe created successfully:', res.data);
             }
@@ -75,18 +88,23 @@ const Form: React.FC = () => {
             console.error('There was a problem with the fetch operation:', error);
         }
     };
-    useEffect (() => {
+    useEffect(() => {
         const fetchMeasurements = async () => {
             try {
                 const response = await fetch('http://localhost:3000/api/measurements');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch measurements');
+                }
                 const data = await response.json();
                 setMeasurements(data);
             } catch (error) {
                 console.error('Error fetching measurements:', error);
+                setTimeout(fetchMeasurements, 5000);
             }
+
         };
         fetchMeasurements();
-    })
+    }, []);
     return (
         <div className="min-h-screen flex items-center justify-center">
             <div className="p-8 rounded-lg shadow-md w-full max-w-5xl">

@@ -11,7 +11,9 @@ export class BaseController<ENTITY extends ObjectLiteral> {
 
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      console.log(req.body);
       const entity = req.body;
+      
       const savedEntity = await this.service.save(entity);
       res.status(201).json(savedEntity);
     } catch (error) {

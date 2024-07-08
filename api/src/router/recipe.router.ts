@@ -19,7 +19,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import validateRequest from '@/util/validateRequest';
 import RecipeController from '../controller/recipe.controller';
-import { Recipe } from '../entity/recipe.entity';
+
 
 const recipeRouter = Router();
 const recipeController = new RecipeController();
@@ -38,7 +38,8 @@ recipeRouter.get('/recipes/:id', (req: Request, res: Response, next: NextFunctio
 });
 
 recipeRouter.post('/recipes', validateRequest, (req: Request, res: Response, next: NextFunction) => {
-    recipeController.create(req, res, next);
+    // recipeController.create(req, res, next);
+    console.log(req.body);
 });
 
 recipeRouter.put('/recipes/:id', validateRequest, (req: Request, res: Response, next: NextFunction) => {

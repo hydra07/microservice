@@ -8,6 +8,7 @@ import { Post } from '@/entity/post.entity';
 import { Product } from '@/entity/product.entity';
 import { Recipe } from '@/entity/recipe.entity';
 import { RefreshToken } from '@/entity/refreshToken.entity';
+import { Search } from '@/entity/search.entity';
 import { User } from '@/entity/user.entity';
 import env from '@/util/validateEnv';
 import 'reflect-metadata';

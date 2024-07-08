@@ -17,6 +17,7 @@ import ImageUploadRouter from '@/router/imageUpload';
 import createHttpError, { isHttpError } from 'http-errors';
 import passport, { session } from 'passport';
 import path from 'path';
+import searchRouter from '@/router/searchRouter';
 
 const app = express();
 
@@ -60,10 +61,11 @@ app.use('/api', recipeRouter);
 app.use('/api', productRouter);
 app.use('/api', measurementRouter);
 app.use('/api', categoryProductRouter);
+app.use('/api', searchRouter);
 // app.use('/api/user', userRouter);
 
 app.use('/api', uploadRouter);
-app.use('/api', ImageUploadRouter);
+// app.use('/api', ImageUploadRouter);
 
 app.use((res, req, next) => {
   next(createHttpError(404, 'Not found'));
