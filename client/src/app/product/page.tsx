@@ -21,7 +21,7 @@ export default function Component() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [limit] = useState(5);
+  const [limit] = useState(8);
   const imgNotFoundUrl = process.env.NEXT_PUBLIC_IMG_NOTFOUND;
   const [categories, setCategories] = useState<ProductCategoryType[]>([]);
   const [isLoading, setIsLoading] = useState(false);

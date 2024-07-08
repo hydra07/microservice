@@ -50,19 +50,19 @@ export default function ProductDetails({ product }: { product: ProductType }) {
 
   return (
     <div className="grid gap-">
-      <div>
-        <h1 className="text-3xl font-bold">{product.name}</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-2">
-          {product.description}
-        </p>
-      </div>
       <div className="grid gap-4">
+        <h1 className="text-3xl font-sans">{product.name}</h1>
         <div className="flex items-center justify-between">
-          <div className="text-2xl font-bold">
-            {new Intl.NumberFormat("vi", {
-              style: "currency",
-              currency: "VND",
-            }).format(product.price)}
+          <div>
+            <span className="text-2xl font-serif text-orange-500">
+              {new Intl.NumberFormat("vi", {
+                style: "currency",
+                currency: "VND",
+              }).format(product.price)}
+            </span>
+            {/* <span className="text-3xl">
+            /{" "}
+            </span> */}
           </div>
           <div className="text-green-500 dark:text-green-400">
             {product.currentQuantity} in stock
@@ -102,9 +102,19 @@ export default function ProductDetails({ product }: { product: ProductType }) {
             </Button>
           </div>
         </div>
-          <Button size="lg" className="w-1/3 bg-green-600 hover:bg-green-400">
-            Add to Cart
-          </Button>
+        <Button size="lg" className="w-1/3 bg-green-600 hover:bg-green-400">
+          Add to Cart
+        </Button>
+        <div>
+          <h2>quantitative</h2>
+          <p className="text-gray-500 dark:text-gray-400">
+            {product.amountToSell} {product.measurement.unit}
+          </p>
+        </div>
+        <div className="bg-slate-200 rounded-md p-2 dark:bg-slate-500">
+          <h2>Description</h2>
+          <p className="text-gray-500 dark:text-gray-400">{product.description}</p>
+        </div>
       </div>
     </div>
   );
