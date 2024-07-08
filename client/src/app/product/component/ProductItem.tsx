@@ -56,7 +56,8 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) =>
         </div>
         <div className="p-4">
           <h3 className="font-semibold text-gray-800 dark:text-gray-200 line-clamp-1 mb-1">{product.name}</h3>
-          <TruncateText maxLength={20} text={product.description} className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mb-2" />
+          <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mb-2">{`${product.amountToSell} ${product.measurement.unit}`} </p>
+          {/* <TruncateText maxLength={20} text={product.description} className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mb-2" /> */}
         </div>
       </Link>
       <div className="px-4 pb-4">
