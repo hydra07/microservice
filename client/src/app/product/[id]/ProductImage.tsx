@@ -7,7 +7,7 @@ const imgNotFound = process.env.NEXT_PUBLIC_IMG_NOTFOUND as string;
 export default function ProductImage({ product }: { product: ProductType }) {
   const [selectedImage, setSelectedImage] = useState(0);
 
-  return (
+   return (
     <div className="grid gap-4">
       <div className="overflow-hidden rounded-lg">
         <Image

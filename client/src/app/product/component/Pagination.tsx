@@ -20,7 +20,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
   onPageChange,
 }) => {
   return (
-    <div className="py-6">
       <div className=" mx-auto">
         <Pagination>
           <PaginationContent>
@@ -60,7 +59,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
           </PaginationContent>
         </Pagination>
       </div>
-    </div>
   );
 };
 

@@ -9,6 +9,7 @@ import { ParsedQs } from "qs";
 import { plainToClass, plainToInstance } from "class-transformer";
 import { ProductDTO } from "@/dto/product-related.dto";
 import { DeepPartial } from "typeorm";
+import { validateOrReject } from "class-validator";
 
 type QueryParams = {
   page?: string;
@@ -30,13 +31,14 @@ export default class ProductController extends BaseController<Product> {
     this.productService = service;
   }
 
-  async create(
-    req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>,
-    res: Response<any, Record<string, any>>,
+ async create(
+    req: Request,
+    res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const productData = req.body;
+      const productData = plainToClass(ProductDTO, req.body);
+      await validateOrReject(productData);
       const newProduct = await this.service.save(productData);
       res.status(201).json(plainToClass(Product, newProduct));
     } catch (error) {

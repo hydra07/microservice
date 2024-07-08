@@ -12,7 +12,7 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav className="flex mb-4 text-sm">
+    <nav className="flex mb-4 text-lg">
       <ol className="flex items-center space-x-1 text-gray-500">
         {items.map((item, index) => (
           <li key={index} className="flex items-center">

@@ -42,7 +42,7 @@ export default function Header() {
           <div className="">
             <MenuList />
           </div>
-          <Search />
+          {/* <Search /> */}
           <div className="flex flex-row space-x-4">
             <AuthButton />
             <ModeButton />

@@ -6,13 +6,14 @@ import {
   ManyToOne,
   JoinColumn,
   BaseEntity,
+  PrimaryColumn,
 } from "typeorm";
 import { User } from "./user.entity";
 import { OrderItem } from "./orderItem.entity";
 
 @Entity("orders")
 export class Order extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id!: number;
 
   @ManyToOne(() => User, { eager: true })

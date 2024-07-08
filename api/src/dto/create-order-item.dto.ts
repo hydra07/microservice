@@ -13,8 +13,12 @@ export class CreateOrderItemDto {
 }
 
 export class CreateOrderDto {
+  @IsOptional()
+  id?: number;
+
   @IsString()
-  id!: string;
+  userId!: string; //user id
+
 
   @IsString()
   name!: string;
@@ -38,68 +42,75 @@ export class CreateOrderDto {
 }
 
 
-export class OrderItemType {
-  @IsNumber()
-  @Expose({ name: 'productId' })
-  @Transform(({ obj }) => obj.product.id)
-  productId!: number;
+  // export class OrderItemType {
+  //   @IsNumber()
+  //   id!: number;
 
-  @IsString()
-  name!: string;
+  //   @IsNumber()
+  //   @Expose({ name: 'productId' })
+  //   @Transform(({ obj }) => obj.product.id)
+  //   productId!: number;
 
-  @IsNumber()
-  quantity!: number;
+  //   @IsString()
+  //   name!: string;
 
-  @IsNumber()
-  price!: number;
+  //   @IsNumber()
+  //   quantity!: number;
 
-  @IsString()
-  image!: string;
-}
+  //   @IsNumber()
+  //   price!: number;
 
-export class OrderType {
-  @IsString()
-  id!: string;
+  //   @IsString()
+  //   image!: string;
+  // }
 
-  @IsString()
-  @Expose({ name: 'createdAt' })
-  createAt!: string;
+  // export class OrderType {
+    
+  //   id!: number;
 
-  @IsOptional()
-  @IsString()
-  shipDate?: string;
+  //   @IsString()
+  //   @Expose({ name: 'userId' })
+  //   @Transform(({ obj }) => obj.user.id)
+  //   userId!: string;
 
-  @IsNumber()
-  total!: number;
+  //   @IsString()
+  //   @Expose({ name: 'createdAt' })
+  //   createAt!: string;
 
-  @IsString()
-  status!: string;
+  //   @IsOptional()
+  //   @IsString()
+  //   shipDate?: string;
 
-  @IsArray()
-  @Type(() => OrderItemType)
-  items!: OrderItemType[];
+  //   @IsNumber()
+  //   total!: number;
 
-  @IsOptional()
-  @IsString()
-  name?: string;
+  //   @IsString()
+  //   status!: string;
 
-  @IsOptional()
-  @IsString()
-  phone?: string;
+  //   @Expose({ name: 'orderItems' })
+  //   @IsArray()
+  //   @Type(() => OrderItemType)
+  //   orderItems!: OrderItemType[];
 
-  @IsOptional()
-  @IsString()
-  email?: string;
+  //   @IsOptional()
+  //   @IsString()
+  //   name?: string;
 
-  @IsOptional()
-  @IsString()
-  paymentMethod?: string;
+  //   @IsOptional()
+  //   @IsString()
+  //   phone?: string;
 
-  @IsOptional()
-  @IsString()
-  shipAddress?: string;
+  //   @IsOptional()
+  //   @IsString()
+  //   email?: string;
 
-  @IsString()
-  @Transform(({ obj }) => obj.user.id)
-  userId!: string;
-}
+  //   @IsOptional()
+  //   @IsString()
+  //   paymentMethod?: string;
+
+  //   @IsOptional()
+  //   @IsString()
+  //   shipAddress?: string;
+
+
+  // }

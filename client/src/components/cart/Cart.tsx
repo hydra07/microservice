@@ -67,7 +67,12 @@ export default function Cart() {
             <div className="flex items-center justify-between mb-4">
               <p className="font-medium text-gray-800">Total</p>
               <p className="font-semibold text-xl text-primary-600">
-                ${total.toFixed(2)}
+                {
+                  new Intl.NumberFormat('vi', {
+                    style: 'currency',
+                    currency: 'VND'
+                  }).format(total)
+                }
               </p>
             </div>
             <InsufficientStockWarning insufficientList={insufficientList} />

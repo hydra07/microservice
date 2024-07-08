@@ -100,7 +100,8 @@ declare module "CustomTypes" {
   }
 
   export interface CheckoutPayload {
-    id?: string; //user
+    id?: number; //order id
+    userId?: string; //user id
     name?: string;
     phone?: string;
     email?: string;
@@ -112,25 +113,40 @@ declare module "CustomTypes" {
 
   
   export interface OrderType {
-    id: string;
+    id: number;
     userId?: string;
     createAt: string;
     shipDate?: string;
     total: number;
     status: string;
-    items: OrderItemType[]; 
+    orderItems: OrderItemType[]; 
     name?: string;
     phone?: string;
     email?: string;
-    paymentMethod?: string;
+    paymentMethod: string;
     shipAddress?: string;
   } 
 
   export interface OrderItemType {
-    productId?: number;
+    id: number;
+    productId: number;
     name: string;
     quantity: number;
     price: number;
     image: string;
+    isRated: boolean;
+  }
+
+
+  export interface ReviewType {
+    id: number;
+    user: {
+      name: string;
+      avatar: string;
+    };
+    rating: number;
+    createAt: string;
+    comment: string;
+    images: string[];
   }
 }

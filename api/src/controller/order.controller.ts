@@ -11,7 +11,8 @@ import { validate } from "class-validator";
 import { Logger } from "@/util/logger"; // Assume you have a logger utility
 import ProductService from "@/service/product.service";
 import UserService from "@/service/user.service";
-import { FindOneOptions } from "typeorm";
+import { FindOneOptions, In } from "typeorm";
+import { OrderType } from "@/@types/order";
 
 export default class OrderController extends BaseController<Order> {
   private orderService: OrderService;
@@ -24,12 +25,6 @@ export default class OrderController extends BaseController<Order> {
     this.orderService = service;
   }
 
-  /**
-   * Creates a new order.
-   * @param req - Express request object
-   * @param res - Express response object
-   * @param next - Express next middleware function
-   */
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const orderData = plainToClass(CreateOrderDto, req.body);
@@ -67,18 +62,82 @@ export default class OrderController extends BaseController<Order> {
     }
   }
 
-  async findOrderByUserAndStatus(req: Request, res: Response, next: NextFunction) {
+  async findOrderByUserAndStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const userId = req.query.userId as string;
       const status = req.query.status as string;
-      Logger.info(`Finding orders for user ${userId} with status ${status}`);
+      const statuses =
+        status === "pending" ? ["pending", "cancelling"] : [status];
       const options: FindOneOptions<Order> = {
-        where: { user: { id: userId }, status: status }
-      };      const orders = await this.orderService.findByOptions(options);
-      res.status(200).json(orders);
+        where: { user: { id: userId }, status: In(statuses) },
+      };
+      const orders = await this.orderService.findByOptions(options);
+      const data = orders.map((order) => this.transformOrderData(order));
+      res.status(200).json(data);
     } catch (error) {
       Logger.error("Failed to find order", error);
       next(error);
     }
+  }
+
+  async updateOrderStatus(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const orderId = req.params.id;
+    const { status, reason } = req.body;
+
+    try {
+      const order = await this.orderService.updateOrderStatus(
+        parseInt(orderId),
+        status,
+        reason
+      );
+      res.status(200).json(this.transformOrderData(order));
+    } catch (error) {
+      Logger.error("Failed to update order status", error);
+      next(error);
+    }
+  }
+
+  async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const entities = await this.orderService.getAll();
+      const data = entities.map((order) => this.transformOrderData(order));
+      res.status(200).json(data);
+    } catch (error) {
+      Logger.error("Failed to get all orders", error);
+      next(error);
+    }
+  }
+
+  transformOrderData(data: any): OrderType {
+    return {
+      id: data.id,
+      userId: data.user.id,
+      createAt: data.createdAt,
+      shipDate: data.shipDate ?? undefined,
+      total: data.total,
+      status: data.status,
+      orderItems: data.orderItems.map((item: any) => ({
+        id: item.id,
+        productId: item.product.id,
+        name: item.product.name,
+        quantity: item.quantity,
+        price: item.product.price,
+        image: item.product.imgProducts[0]?.imageUrl || "",
+        isRated: item.isRated
+      })),
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      paymentMethod: data.paymentMethod,
+      shipAddress: data.shipAddress,
+    };
   }
 }
