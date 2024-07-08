@@ -15,8 +15,7 @@ export default class ReviewService {
       user: { id: reviewData.userId },
       rating: reviewData.rating,
       comment: reviewData.comment,
-      orderItem: {id: reviewData.orderItemId},
-
+      orderItem: { id: reviewData.orderItemId },
     });
     await reviewRepository.save(review);
 
@@ -35,6 +34,16 @@ export default class ReviewService {
     await orderItemRepository.update(reviewData.orderItemId, { isRated: true });
 
     return review;
+  }
+
+  async deleteReview(reviewId: number): Promise<void> {
+    try {
+      const reviewRepository = PostgresDataSource.getRepository(Review);
+      await reviewRepository.delete(reviewId);
+      
+    } catch (error) {
+      throw new Error(`Error deleting review: ${error}`);
+    }
   }
 
   async getProductReviews(

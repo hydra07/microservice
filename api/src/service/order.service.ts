@@ -11,9 +11,10 @@ import {
   CreateOrderItemDto,
 } from "@/dto/create-order-item.dto";
 import { OrderItem } from "@/entity/orderItem.entity";
-import { EntityManager, In } from "typeorm";
+import { EntityManager, In, Between } from "typeorm";
 import { Product } from "@/entity/product.entity";
 import moment from "moment";
+import {formatMonthName, getMonthRange} from '@/util/date';
 
 /**
  * Represents the result of an order creation attempt.
@@ -58,7 +59,7 @@ export class OrderService extends BaseService<Order> {
       createdAt: new Date(),
       status: "pending",
     });
-    
+
     return order;
   }
 
@@ -148,9 +149,9 @@ export class OrderService extends BaseService<Order> {
     createOrderDto: CreateOrderDto
   ): Promise<OrderCreationResult> {
     try {
-      if(!createOrderDto.id){
+      if (!createOrderDto.id) {
         const date = new Date();
-        createOrderDto.id = parseInt( moment(date).format("DDHHmmss"));
+        createOrderDto.id = parseInt(moment(date).format("DDHHmmss"));
       }
       return await PostgresDataSource.transaction(
         async (transactionalEntityManager) => {
@@ -176,7 +177,14 @@ export class OrderService extends BaseService<Order> {
   }
 
   async updateOrderStatus(orderId: number, status: string, reason?: string) {
-    const ALLOWED_STATUSES = ["shipping", "rejected", "completed" , "cancelled", "cancelling", "unsuccess"];
+    const ALLOWED_STATUSES = [
+      "shipping",
+      "rejected",
+      "completed",
+      "cancelled",
+      "cancelling",
+      "unsuccess",
+    ];
 
     const STATUS_MESSAGE: { [key: string]: string } = {
       shipping: "đang được vận chuyển",
@@ -227,4 +235,93 @@ export class OrderService extends BaseService<Order> {
 
     return order;
   }
+  async countOrdersToCheck() {
+    return await this.repository.count({
+      where: { status: In(["pending", "cancelling"]) },
+    });
+  }
+
+  async countOrdersForLastTwoWeeks() {
+    const currentDate = new Date();
+    const startOfCurrentWeek = new Date(currentDate);
+    startOfCurrentWeek.setDate(currentDate.getDate() - currentDate.getDay());
+    startOfCurrentWeek.setHours(0, 0, 0, 0);
+
+    const startOfLastWeek = new Date(startOfCurrentWeek);
+    startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
+
+    const startOfWeekBeforeLast = new Date(startOfLastWeek);
+    startOfWeekBeforeLast.setDate(startOfWeekBeforeLast.getDate() - 7);
+
+    const endOfLastWeek = new Date(startOfCurrentWeek);
+    endOfLastWeek.setDate(endOfLastWeek.getDate() - 1);
+    endOfLastWeek.setHours(23, 59, 59, 999);
+
+    const endOfWeekBeforeLast = new Date(startOfLastWeek);
+    endOfWeekBeforeLast.setDate(endOfWeekBeforeLast.getDate() - 1);
+    endOfWeekBeforeLast.setHours(23, 59, 59, 999);
+
+    const lastWeekCount = await this.repository.count({
+      where: {
+        createdAt: Between(startOfLastWeek, endOfLastWeek),
+      },
+    });
+
+    const weekBeforeLastCount = await this.repository.count({
+      where: {
+        createdAt: Between(startOfWeekBeforeLast, endOfWeekBeforeLast),
+      },
+    });
+
+    return {
+      lastWeekCount,
+      weekBeforeLastCount,
+    };
+  }
+
+  countOrdersByMonth = async () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const monthCounts = [];
+  
+    for (let i = 4; i >= 0; i--) {
+      const { start, end } = getMonthRange(year, currentDate.getMonth() - i);
+      const count = await this.repository.count({
+        where: {
+          createdAt: Between(start, end),
+        },
+      }); 
+      monthCounts.push(count);
+    }
+  
+    return monthCounts.map((count, index) => ({
+      month: formatMonthName(currentDate.getMonth() - 4 + index),
+      orders: count,
+    }));
+  };
+  
+  getRevenueByMonth = async () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const monthRevenues = [];
+  
+    for (let i = 4; i >= 0; i--) {
+      const { start, end } = getMonthRange(year, currentDate.getMonth() - i);
+      const orders = await this.repository.find({
+        where: {
+          createdAt: Between(start, end),
+        },
+      });
+  
+      const revenue = orders.reduce((sum, order) => sum + (order.total ?? 0), 0);
+      monthRevenues.push(revenue);
+    }
+  
+    return monthRevenues.map((revenue, index) => ({
+      month: formatMonthName(currentDate.getMonth() - 4 + index),
+      revenue,
+    }));
+  };
+  
+
 }

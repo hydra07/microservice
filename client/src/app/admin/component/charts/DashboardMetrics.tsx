@@ -10,8 +10,10 @@ import {
   BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MetricData } from "chart";
 
 // Mock data - replace with actual data fetching logic
+
 const metrics = {
   recipesToCheck: 15,
   postsToCheck: 8,
@@ -65,16 +67,21 @@ const MetricCard: React.FC<MetricCardProps> = ({
   </Card>
 );
 
-const DashboardMetrics: React.FC = () => {
+interface DashboardMetricsProps {
+  metrics: MetricData;
+}
+
+
+const DashboardMetrics: React.FC<DashboardMetricsProps> = ({metrics}) => {
   const incomeDifference =
-    ((metrics.income.current - metrics.income.previous) /
-      metrics.income.previous) *
+    ((metrics.income.lastWeekCount - metrics.income.weekBeforeLastCount) /
+      metrics.income.weekBeforeLastCount) *
     100;
 
   return (
     <div className="p-8 bg-gray-50 dark:bg-slate-950">
-      <h2 className="text-3xl font-extrabold tracking-tight text-gray-800 dark:text-gray-100 mb-6">
-        Dashboard Metrics
+      <h2 className="text-2xl font-extrabold tracking-tight text-gray-800 dark:text-gray-100 mb-6">
+        Metrics
       </h2>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
         <MetricCard
@@ -98,8 +105,8 @@ const DashboardMetrics: React.FC = () => {
           icon={UsersIcon}
         />
         <MetricCard
-          title="Monthly Income"
-          value={metrics.income.current}
+          title="Weekly Orders"
+          value={metrics.income.lastWeekCount}
           icon={BanknotesIcon}
           trend={{
             value: incomeDifference,

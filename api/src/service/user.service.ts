@@ -27,6 +27,11 @@ class UserService {
   async findUserByRefreshToken(refreshToken: string): Promise<User | null> {
     return await this.userRepository.findOneBy({ refreshTokenId: refreshToken });
   }
+
+  async countUsers() {
+    return await this.userRepository.count();
+  }
+
 }
 
 export default UserService;

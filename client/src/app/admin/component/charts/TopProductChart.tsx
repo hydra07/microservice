@@ -1,5 +1,6 @@
 "use client";
 
+import { TopProductData } from "chart";
 import React from "react";
 import {
   BarChart,
@@ -20,7 +21,11 @@ const data = [
   { name: "Product E", sales: 100 },
 ];
 
-const TopProductsChart: React.FC = () => {
+interface TopProductsChartProps {
+  data: TopProductData[];
+}
+
+const TopProductChart: React.FC<TopProductsChartProps> = ({data}) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
@@ -56,4 +61,4 @@ const TopProductsChart: React.FC = () => {
   );
 };
 
-export default TopProductsChart;
+export default TopProductChart;
