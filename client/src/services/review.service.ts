@@ -30,3 +30,13 @@ export const getReview = async (productId: number, page: number = 1, limit: numb
     return null;
   }
 }
+
+export const deleteReview = async (reviewId: number): Promise<void> => {
+  try {
+    const response = await http.delete(`/api/review/${reviewId}`);
+    return response.data;
+    
+  } catch (error: any) {
+    console.error('Error deleting review:', error);
+  }
+}
