@@ -1,5 +1,5 @@
-'use client';
-import { Button } from '@/components/ui/button';
+"use client";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -8,12 +8,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import axios from '@/lib/axios';
-import { ReactNode } from 'react';
-import { useForm } from 'react-hook-form';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import axios from "@/lib/axios";
+import { ReactNode } from "react";
+import { useForm } from "react-hook-form";
 
 // export function AddPost() {
 //   return (
@@ -27,26 +27,27 @@ import { useForm } from 'react-hook-form';
 //     </Dialog>
 //   );
 // }
-import Editor from '@/components/Editor';
-import useUploadFile from '@/hooks/useUploadFile';
-import { toast } from 'react-toastify';
+import Editor from "@/components/Editor";
+import useUploadFile from "@/hooks/useUploadFile";
+import { toast } from "react-toastify";
+
 export default function FormPost({ user }: any): ReactNode {
-  const { InputFile, filePath } = useUploadFile();
+  const { InputFile, filePath } = useUploadFile("post");
   const form = useForm({
     defaultValues: {
-      title: '',
-      content: '',
-      userId: '',
+      title: "",
+      content: "",
+      userId: "",
       image: filePath,
     },
   });
   const onsubmit = async (data: any) => {
     data.userId = user.id;
     console.log(data);
-    const res = await axios.post('/api/post', data);
+    const res = await axios.post("/api/post", data);
     // console.log(res.data);
     if (res.status === 201) {
-      toast.success('Post successfully added');
+      toast.success("Post successfully added");
       // form.reset();
     }
   };
