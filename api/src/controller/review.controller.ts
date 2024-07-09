@@ -37,4 +37,14 @@ export default class ReviewController {
       next(error)
     }
   }
+
+  public deleteReview = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const reviewId = parseInt(req.params.reviewId, 10);
+      const result = await this.reviewService.deleteReview(reviewId);
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
 }   

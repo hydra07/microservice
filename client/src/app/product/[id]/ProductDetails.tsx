@@ -106,13 +106,13 @@ export default function ProductDetails({ product }: { product: ProductType }) {
           Add to Cart
         </Button>
         <div>
-          <h2>quantitative</h2>
+          <h2 className="text-sm font-semibold">Quantitative</h2>
           <p className="text-gray-500 dark:text-gray-400">
             {product.amountToSell} {product.measurement.unit}
           </p>
         </div>
         <div className="bg-slate-200 rounded-md p-2 dark:bg-slate-500">
-          <h2>Description</h2>
+          <h2 className="text-sm font-semibold">Description</h2>
           <p className="text-gray-500 dark:text-gray-400">{product.description}</p>
         </div>
       </div>
