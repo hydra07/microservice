@@ -1,46 +1,24 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import { ProductType } from 'CustomTypes';
 import Link from 'next/link';
-import { useCartStore } from '@/store/useCartStore';
 import Image from 'next/image';
-import useFromStore from '@/hooks/useFromStore';
-import { toast, Id } from 'react-toastify';
-import { TruncateText } from '@/components/ui.custom/user/TruncateText';
+import { useAddToCart } from '@/hooks/useAddToCart';
 
 interface ProductItemProps {
   product: ProductType;
   imgNotFoundUrl: string;
 }
 
-const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) => {
-  const addToCart = useCartStore(state => state.addToCart);
-  const cart = useFromStore(useCartStore, (state) => state.cart);
-  const [isAdding, setIsAdding] = useState(false);
-  const toastId = useRef<Id | null>(null);
 
-  const handleAddToCart = useCallback((e: React.MouseEvent) => {
+
+const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) => {
+  const { handleAddToCart, isAdding } = useAddToCart(product);
+
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    if (isAdding) return;
-    
-    setIsAdding(true);
-    
-    const cartItem = cart?.find((item) => item.id === product.id);
-    if (cartItem && cartItem.quantity + 1 > product.currentQuantity) {
-      if (!toast.isActive(toastId.current as any)) {
-        toastId.current = toast.error("Quantity exceeds available stock!");
-      }
-    } else {
-      addToCart(product);
-      if (!toast.isActive(toastId.current as any)) {
-        toastId.current = toast.success("Product added to cart!");
-      }
-    }
-    
-    setTimeout(() => setIsAdding(false), 500);
-  }, [addToCart, cart, isAdding, product]);
-
+    handleAddToCart(1); // Pass 1 as the default quantity
+  };
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg group">
       <Link href={`/product/${product.id}`} className="block">
@@ -63,7 +41,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) =>
       <div className="px-4 pb-4">
         <div className="flex items-center justify-between">
           <button 
-            onClick={handleAddToCart}
+            onClick={handleClick}
             disabled={isAdding}
             className={`flex-grow mr-2 text-sm font-semibold py-2 px-2 rounded-full transition-all duration-300
               ${isAdding

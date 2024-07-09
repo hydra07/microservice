@@ -14,10 +14,24 @@ import ProductSkeleton from "../component/ProductSkeleton";
 import { delay } from "framer-motion";
 import ProductComment from "../component/ProductComment/ProductComment";
 import Cart from "@/components/cart/Cart";
+import { ToastContainer } from "react-toastify";
 // export const metadata: Metadata = {
 //   title: "Product Details",
 //   description: "View details of our amazing product",
 // };
+
+const toastConfig = {
+  position: "top-right" as const,
+  autoClose: 1000,
+  hideProgressBar: false,
+  newestOnTop: false,
+  closeOnClick: true,
+  rtl: false,
+  pauseOnFocusLoss: true,
+  draggable: true,
+  pauseOnHover: true,
+  theme: "light" as const,
+};
 
 export default function ProductDetailPage({
   params,
@@ -84,7 +98,7 @@ export default function ProductDetailPage({
         <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-2 items-start">
           <div className="md:col-span-1 lg:col-span-1  p-6">
             <div className="mb-6">
-              <ProductImage product={product}/>
+              <ProductImage product={product} />
             </div>
             <div className="mt-8 px-4 bg-white dark:bg-gray-700 rounded-md shadow-md p-6">
               <RelatedProducts products={relatedProducts} />
@@ -96,7 +110,7 @@ export default function ProductDetailPage({
           </div>
         </div>
         <Cart />
-
+        <ToastContainer {...toastConfig} />
       </div>
     </ErrorBoundary>
   );
