@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { ProductType } from "CustomTypes";
+import { useAddToCart } from "@/hooks/useAddToCart";
 
 type State = {
   quantity: number;
@@ -41,11 +42,17 @@ export default function ProductDetails({ product }: { product: ProductType }) {
     initialState
   );
 
+  const { handleAddToCart, isAdding } = useAddToCart(product);
+
   const handleQuantityChange = (value: number) => {
     dispatch({
       type: "SET_QUANTITY",
       payload: Math.max(1, Math.min(value, product.currentQuantity)),
     });
+  };
+
+  const handleClick = () => {
+    handleAddToCart(state.quantity);
   };
 
   return (
@@ -102,8 +109,13 @@ export default function ProductDetails({ product }: { product: ProductType }) {
             </Button>
           </div>
         </div>
-        <Button size="lg" className="w-1/3 bg-green-600 hover:bg-green-400">
-          Add to Cart
+        <Button
+          size="lg"
+          className="w-1/3 bg-green-600 hover:bg-green-400"
+          onClick={handleClick}
+          disabled={isAdding}
+        >
+          {isAdding ? "Adding..." : "Add to Cart"}
         </Button>
         <div>
           <h2 className="text-sm font-semibold">Quantitative</h2>
@@ -113,7 +125,9 @@ export default function ProductDetails({ product }: { product: ProductType }) {
         </div>
         <div className="bg-slate-200 rounded-md p-2 dark:bg-slate-500">
           <h2 className="text-sm font-semibold">Description</h2>
-          <p className="text-gray-500 dark:text-gray-400">{product.description}</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            {product.description}
+          </p>
         </div>
       </div>
     </div>
