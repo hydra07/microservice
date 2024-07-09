@@ -1,21 +1,26 @@
-import { Input } from '@/components/ui/input';
-import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
-export default function useUploadFile() {
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+export default function useUploadFile(type: string) {
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [filePath, setFilePath] = useState<string>('');
+  const [filePath, setFilePath] = useState<string>("");
   const handleChange = async () => {
     const formData = new FormData(formRef.current!);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/uploads`, {
-      method: 'POST',
-      body: formData,
-    });
+    console.log(`${process.env.NEXT_PUBLIC_API_URL}/api/uploads/${type}`);
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/uploads/${type}`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
     const data = await res.json();
     console.log(data);
     setFilePath(`${process.env.NEXT_PUBLIC_API_URL}/${data.filePath}`);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -27,11 +32,11 @@ export default function useUploadFile() {
     };
     const input = fileInputRef.current;
     if (input) {
-      input.addEventListener('change', handleFileChange);
+      input.addEventListener("change", handleFileChange);
     }
     return () => {
       if (input) {
-        input.removeEventListener('change', handleFileChange);
+        input.removeEventListener("change", handleFileChange);
       }
     };
   });

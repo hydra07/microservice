@@ -1,13 +1,114 @@
+### GET
+GET http://localhost:3000/api/recipe HTTP/1.1
+
+
+### Create Recipe
+POST http://localhost:3000/api/recipe HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Cơm ngon nek",
+  "userId": "118303620303769287374",
+  "images": ["image1.jpg", "image2.jpg"],
+  "steps": [
+    {
+      "description": "Bước 1 của món cơm ngon",
+      "images": ["image1.jpg", "image2.jpg"]
+    },
+    {
+      "description": "Bước 2 của món cơm ngon",
+      "images": [
+        "image1.jpg",
+        "image2.jpg"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "name": "Nguyên liệu 1 của món cơm ngon",
+      "quantity": 1,
+      "unit": "kg"
+    },
+    {
+      "name": "Nguyên liệu 2 của món cơm ngon",
+      "quantity": 2,
+      "unit": "kg"
+    }
+  ],
+  "cook_time": 30,
+  "serving": 4
+}
+
+
+### GET ALL(Admin role)
+GET http://localhost:3000/api/recipe/all HTTP/1.1
+
+
+### UPDATE Recipe
+PUT http://localhost:3000/api/recipe/6680e8f266ebaca7682bd034 HTTP/1.1
+Content-Type: application/json
+
+{
+    "steps": [
+      {
+        "_id": "6680e8f266ebaca7682bd030",
+        "description": "Bước 1 của món cơm ngon đã sửa",
+        "images": [
+          "image1.jpg",
+          "image2.jpg",
+            "image3.jpg"
+        ]
+      },
+      {
+        "_id": "6680e8f266ebaca7682bd031",
+        "description": "Bước 2 của món cơm ngon",
+        "images": [
+          "image1.jpg",
+          "image2.jpg"
+        ]
+      },
+      {
+        "description": "Bước 3 của món cơm ngon",
+        "images": [
+          "image1.jpg",
+          "image2.jpg"
+        ]
+      }
+    ],
+    "ingredients": [
+      {
+        "_id": "6680e8f266ebaca7682bd032",
+        "name": "Nguyên liệu 1 của món cơm ngon",
+        "unit": "kg",
+        "quantity": 1
+      },
+      {
+        "_id": "6680e8f266ebaca7682bd033",
+        "name": "Nguyên liệu 2 của món cơm ngon update",
+        "unit": "kg",
+        "quantity": 2
+      },
+      {
+        "name": "Nguyên liệu 3 của món cơm ngon",
+        "unit": "kg",
+        "quantity": 2
+      }
+    ],
+    "isActivate": true,
+    "_id": "6680e8f266ebaca7682bd034",
+    "title": "Recipe title updated!!!",
+    "userId": "118303620303769287374",
+    "updatedAt": "2024-06-28T14:45:57.847Z",
+    "images": [
+      "image1!.jpg",
+      "image2!.jpg",
+      "image3!.jpg"
+    ],
+    "cook_time": 300,
+    "serving": 40
+}
 
 
 
-GET http://localhost:3000/api/recipes/search?fieldName=foodName&keyword=Spaghetti HTTP/1.1
-
-# Content-Type: application/json
-
-
-
-
-
-# GET http://localhost:3000/api/recipes HTTP/1.1
-# Content-Type: application/json
+### GET Ingredient
+GET http://localhost:3000/api/recipe/ingredients HTTP/1.1
