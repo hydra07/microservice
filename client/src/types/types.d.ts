@@ -149,4 +149,15 @@ declare module "CustomTypes" {
     comment: string;
     images: string[];
   }
+
+
+  interface IngredientForm {
+    name: string;
+    quantity: string;
+  }
+  
+  interface StepForm {
+    description: string;
+    images: File[];
+  }
 }

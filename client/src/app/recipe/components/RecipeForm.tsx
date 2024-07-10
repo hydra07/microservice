@@ -1,316 +1,243 @@
 "use client";
-
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import React, { useState, ChangeEvent, useEffect } from "react";
+import GeneralInfo from "./GeneralInfo";
+import Review from "./Review";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import AddImage from "@/app/recipe/components/AddImage";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { FilePlus, Trash } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  MultiSelector,
-  MultiSelectorContent,
-  MultiSelectorInput,
-  MultiSelectorItem,
-  MultiSelectorList,
-  MultiSelectorTrigger,
-} from "@/components/ui/multiple-select";
-import { useEffect, useState } from "react";
-import axios from "@/lib/axios";
+import { PlusIcon } from "lucide-react";
+import Ingredient from "./Ingredient";
+import Step from "./Step";
+import { IngredientForm, StepForm } from "CustomTypes";
 
-export default function RecipeForm() {
-  const form = useForm({
-    defaultValues: {
-      title: "",
-      images: [""],
-      steps: [{ description: "", images: [""] }],
-      ingredients: [{ name: "", quantity: 0, unit: "" }],
-      cook_time: 0,
-      serving: 0,
-    },
-  });
-  // const { Dropzone } = useImagesUpload("recipe");
+const EnhancedRecipeForm: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [cookTime, setCookTime] = useState<string>("");
+  const [servings, setServings] = useState<string>(""); 
+  const [difficulty, setDifficulty] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [ingredients, setIngredients] = useState<IngredientForm[]>([
+    { name: "", quantity: "" },
+  ]);
+  const [steps, setSteps] = useState<StepForm[]>([
+    { description: "", images: [] },
+  ]);
 
-  const onsubmit = async (data: any) => {
-    console.log(data);
-  };
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onsubmit)}
-        encType="multipart/form-data"
-      >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>Please enter your post title.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="images"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image</FormLabel>
-              <FormControl>
-                <AddImage type="recipe" onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>Please enter your recipe image.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="steps"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Steps</FormLabel>
-              <FormControl>
-                <AddStep value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>Please enter your recipe steps.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="ingredients"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ingredients</FormLabel>
-              <FormControl>
-                <AddIngredients value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormDescription>
-                Please enter your recipe ingredients.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </Form>
-  );
-}
+  useEffect(() => {
+    if (image) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(image);
+    } else {
+      setImagePreview(null);
+    }
 
-interface Step {
-  description: string;
-  images: string[];
-}
+    return () => {
+      if (image) {
+        URL.revokeObjectURL(imagePreview as string);
+      }
+    }
+  }, [image]);
 
-interface AddStepProps {
-  value: Step[];
-  onChange: (steps: Step[]) => void;
-}
-
-export function AddStep({ value, onChange }: AddStepProps) {
-  const addStep = () => {
-    onChange([...value, { description: "", images: [] }]);
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+    }
   };
 
-  const updateStep = (
+  const addIngredient = () => {
+    setIngredients([...ingredients, { name: "", quantity: "" }]);
+  };
+
+  const removeIngredient = (index: number) => {
+    const newIngredients = [...ingredients];
+    newIngredients.splice(index, 1);
+    setIngredients(newIngredients);
+  };
+
+  const updateIngredient = (
     index: number,
-    field: keyof Step,
-    newValue: string | string[],
+    name: keyof IngredientForm,
+    value: string
   ) => {
-    const newSteps = [...value];
-    newSteps[index] = { ...newSteps[index], [field]: newValue };
-    onChange(newSteps);
+    const newIngredients = [...ingredients];
+    newIngredients[index][name] = value;
+    setIngredients(newIngredients);
+  };
+
+  const addStep = () => {
+    setSteps([...steps, { description: "", images: [] }]);
   };
 
   const removeStep = (index: number) => {
-    const newSteps = value.filter((_, i) => i !== index);
-    onChange(newSteps);
+    const newSteps = [...steps];
+    newSteps.splice(index, 1);
+    setSteps(newSteps);
+    //cleanup
+    newSteps[index].images.forEach(image => URL.revokeObjectURL(URL.createObjectURL(image)));
+    newSteps.splice(index, 1);
+    setSteps(newSteps);
   };
 
-  // const handleImageChange = (
-  //   e: ChangeEvent<HTMLInputElement>,
-  //   index: number,
-  // ) => {
-  //   const files = Array.from(e.target.files || []);
-  //   const imageNames = files.map((file) => file.name);
-  //   updateStep(index, "images", imageNames);
-  // };
+  const updateStep = (index: number, field: keyof StepForm, value: any) => {
+    const newSteps = [...steps];
+    if(field === "images") {
+      //cleanup
+      newSteps[index].images.forEach(image => URL.revokeObjectURL(URL.createObjectURL(image)));
+    }
+    newSteps[index][field] = value;
+    setSteps(newSteps);
+  };
+
+  // //clean up
+  // useEffect(() => {
+  //   return () => {
+  //     steps.forEach(step => {
+  //       step.images.forEach(image => URL.revokeObjectURL(URL.createObjectURL(image)));
+  //     });
+  //   };
+  // }, [steps])
 
   return (
-    <div className="space-y-4">
-      {value.map((step, index) => (
-        <Card key={index}>
-          <CardHeader>
-            <CardTitle className="end-0">
-              <Button
-                variant="destructive"
-                size="icon"
-                onClick={() => removeStep(index)}
-              >
-                <Trash className="w-4 h-4" />
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 flex flex-col">
-            <div className="flex flex-col space-x-4">
-              <div className="space-y-2 pl-4">
-                <Label htmlFor={`step-${index}`}>Bước {index + 1}</Label>
-                <Textarea
-                  id={`step-${index}`}
-                  value={step.description}
-                  onChange={(e) =>
-                    updateStep(index, "description", e.target.value)
-                  }
-                  placeholder="Mô tả bước này..."
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`images-${index}`}>Hình ảnh</Label>
-                {/*<Input*/}
-                {/*  id={`images-${index}`}*/}
-                {/*  type="file"*/}
-                {/*  multiple*/}
-                {/*  onChange={(e) => handleImageChange(e, index)}*/}
-                {/*  className="w-[200px]"*/}
-                {/*/>*/}
-                <AddImage
-                  type="recipe"
-                  onChange={(images) => updateStep(index, "images", images)}
-                  options={{ horizontal: true }}
-                />
-                {step.images.length > 0 && (
-                  <p className="text-sm text-muted-foreground">
-                    Đã chọn: {step.images.join(", ")}
-                  </p>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-      <Button onClick={addStep} className="mt-4" variant="outline" size="icon">
-        <FilePlus className="w-4 h-4" />
-      </Button>
-    </div>
-  );
-}
-
-export function AddIngredients({ value, onChange }: any) {
-  const [ingredientsExist, setIngredientsExist] = useState<
-    { _id: string; name: string; quantity: number; unit: string }[]
-  >([]);
-  const [ingredients, setIngredients] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  useEffect(() => {
-    const fetching = async () => {
-      setIsLoading(true);
-      const res = await axios.get("/api/recipe/ingredients");
-      const data = res.data;
-      setIngredientsExist(data);
-    };
-    fetching().finally(() => setIsLoading(false));
-  }, []);
-  //when ingredients change update value with onChange
-  useEffect(() => {
-    //find the ingredient by name
-    const selectedIngredients = ingredientsExist.filter((ingredient) =>
-      ingredients.includes(ingredient.name),
-    );
-    onChange(selectedIngredients);
-  }, [ingredients]);
-  return (
-    <div>
-      <div>
-        <div>List Ingredient</div>
+    <div className="container mx-auto max-w-4xl px-4 py-12 bg-[#ece3d4] font-mono">
+      <div className="space-y-8">
         <div>
-          {value.map((ingredient: any, index: number) => (
-            <div key={index}>
-              <div>
-                <label>Name</label>
-                <input
-                  type="text"
-                  value={ingredient.name}
-                  onChange={(e) => {
-                    const newIngredients = [...value];
-                    newIngredients[index].name = e.target.value;
-                    onChange(newIngredients);
-                  }}
-                />
-              </div>
-              <div>
-                <label>Quantity</label>
-                <input
-                  type="number"
-                  value={ingredient.quantity}
-                  onChange={(e) => {
-                    const newIngredients = [...value];
-                    newIngredients[index].quantity = +e.target.value;
-                    onChange(newIngredients);
-                  }}
-                />
-              </div>
-              <div>
-                <label>Unit</label>
-                <input
-                  type="text"
-                  value={ingredient.unit}
-                  onChange={(e) => {
-                    const newIngredients = [...value];
-                    newIngredients[index].unit = e.target.value;
-                    onChange(newIngredients);
-                  }}
-                />
-              </div>
-              <Button
-                onClick={() => {
-                  const newIngredients = value.filter((_, i) => i !== index);
-                  onChange(newIngredients);
-                }}
-              >
-                Remove
-              </Button>
-            </div>
-          ))}
+          <h1 className="text-3xl font-bold text-amber-800">Add New Recipe</h1>
+          <p className="text-amber-700">
+            Fill out the form to add a new recipe to your collection.
+          </p>
         </div>
-      </div>
-      <MultiSelector onValuesChange={setIngredients} values={ingredients}>
-        <MultiSelectorTrigger>
-          <MultiSelectorInput placeholder="Select people to invite" />
-        </MultiSelectorTrigger>
-        <MultiSelectorContent>
-          <MultiSelectorList>
-            {ingredientsExist.map((ingredient) => (
-              <MultiSelectorItem key={ingredient._id} value={ingredient.name}>
-                {ingredient.name} - {ingredient.quantity} : {ingredient.unit}
-              </MultiSelectorItem>
+        <div className="relative">
+          <div className="flex justify-between mb-2">
+            {[1, 2, 3, 4].map((s) => (
+              <div
+                key={s}
+                className={`w-8 h-8 rounded-full flex items-center justify-center z-10 ${
+                  s <= currentStep
+                    ? "bg-amber-500 text-white"
+                    : "bg-amber-200 text-amber-700"
+                } transition-all duration-300`}
+              >
+                {s}
+              </div>
             ))}
-          </MultiSelectorList>
-        </MultiSelectorContent>
-      </MultiSelector>
-      <div>
-        <button>them nguyen lieu</button>
-        <div>
-          <input placeholder={"name"} />
-          <input />
+          </div>
+          <div className="absolute top-4 left-0 w-full h-1 bg-amber-200">
+            <div
+              className="h-full bg-amber-500 transition-all duration-300"
+              style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
+            />
+          </div>
+        </div>
+        <div className="space-y-6">
+          {currentStep === 1 && (
+            <GeneralInfo
+              onImageUpload={handleImageUpload}
+              image={imagePreview}
+              title={title}
+              setTitle={setTitle}
+              description={description}
+              setDescription={setDescription}
+              cookTime={cookTime}
+              setCookTime={setCookTime}
+              servings={servings}
+              setServings={setServings}
+              difficulty={difficulty}
+              setDifficulty={setDifficulty}
+            />
+          )}
+          {currentStep === 2 && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-amber-800">Ingredients</h2>
+              {ingredients.map((ingredient, index) => (
+                <Ingredient
+                  key={index}
+                  ingredient={ingredient}
+                  index={index}
+                  onRemove={removeIngredient}
+                  onChange={updateIngredient}
+                />
+              ))}
+              <Button
+                onClick={addIngredient}
+                variant="outline"
+                className="w-full"
+                type="button"
+              >
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Add Ingredient
+              </Button>
+            </div>
+          )}
+          {currentStep === 3 && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-amber-800">
+                Cooking Steps
+              </h2>
+              {steps.map((step, index) => (
+                <Step
+                  key={index}
+                  step={step}
+                  index={index}
+                  onRemove={removeStep}
+                  onChange={updateStep}
+                />
+              ))}
+              <Button
+                onClick={addStep}
+                variant="outline"
+                className="w-full"
+                type="button"
+              >
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Add Step
+              </Button>
+            </div>
+          )}
+          {currentStep === 4 && (
+            <Review
+              title={title}
+              description={description}
+              image={imagePreview}
+              ingredients={ingredients}
+              steps={steps}
+              cookTime={cookTime}
+              servings={servings}
+              difficulty={difficulty}
+            />
+          )}
+          <div className="flex justify-between mt-8">
+            {currentStep > 1 && (
+              <Button
+                onClick={() => setCurrentStep(currentStep - 1)}
+                variant="outline"
+                className="bg-amber-100 text-amber-800"
+              >
+                Previous
+              </Button>
+            )}
+            {currentStep < 4 ? (
+              <Button
+                onClick={() => setCurrentStep(currentStep + 1)}
+                className="bg-amber-500 hover:bg-amber-600 text-white"
+                type="button"
+              >
+                Next
+              </Button>
+            ) : (
+              <Button className="bg-green-500 hover:bg-green-600 text-white">
+                Save Recipe
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default EnhancedRecipeForm;
