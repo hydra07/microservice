@@ -280,7 +280,9 @@ export function AddIngredients({ value, onChange }: any) {
               </div>
               <Button
                 onClick={() => {
-                  const newIngredients = value.filter((_, i) => i !== index);
+                  const newIngredients = value.filter(
+                    (_: any, i: number) => i !== index,
+                  );
                   onChange(newIngredients);
                 }}
               >
