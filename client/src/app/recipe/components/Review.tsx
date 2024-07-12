@@ -18,8 +18,8 @@ interface ReviewProps {
   image: string | null;
   ingredients: Ingredient[];
   steps: Step[];
-  cookTime: string;
-  servings: string;
+  cookTime: number;
+  servings: number;
   difficulty: string;
 }
 

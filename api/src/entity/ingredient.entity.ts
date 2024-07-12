@@ -11,13 +11,13 @@ export class Ingredient extends BaseEntity {
   @IsString()
   name?: string;
 
-  @Column("text")
-  @IsString()
-  unit?: number;
+  // @Column("text")
+  // @IsString()
+  // unit?: number;
 
   @Column("number")
-  @IsNumber()
-  quantity?: number;
+  @IsString()
+  quantity?: string;
 
   //TODO: add product && measurement
 }

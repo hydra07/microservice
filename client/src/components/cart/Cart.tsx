@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { ShoppingCartIcon } from "lucide-react";
+import { ShoppingBag, ShoppingBasket, ShoppingCartIcon } from "lucide-react";
 import useFromStore from "@/hooks/useFromStore";
 import { useCartStore } from "@/store/useCartStore";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,11 +38,11 @@ export default function Cart() {
       <DrawerTrigger asChild>
         <Button
           variant="outline"
-          className="fixed bottom-4 right-4 flex items-center gap-2 px-4 py-3 rounded-full bg-white shadow-lg transition-transform hover:scale-105 active:scale-95 dark:bg-gray-900 dark:text-gray-50"
+          className="fixed bottom-4 right-4 flex items-center gap-2 px-4 py-3 rounded-full bg-green-400 hover:bg-green-400  shadow-lg transition-transform hover:scale-105 active:scale-95 dark:bg-gray-900 dark:text-gray-50"
         >
-          <ShoppingCartIcon className="h-5 w-5 text-primary-600" />
+          <ShoppingBasket className="h-5 w-5 text-primary-600" />
           <span className="font-semibold text-primary-600">
-            Cart ({cart?.length || 0})
+             ({cart?.length || 0})
           </span>
         </Button>
       </DrawerTrigger>

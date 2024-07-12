@@ -17,7 +17,15 @@ export class Recipe extends BaseEntity {
 
   @Column("text")
   @IsString()
-  title?: string;
+  title!: string;
+
+  @Column("text")
+  @IsString()
+  difficulty!: string;
+  
+  @Column("text")
+  @IsString()
+  description!: string;
 
   @Column("text")
   @IsString()
@@ -62,4 +70,22 @@ export class Recipe extends BaseEntity {
   @Column("boolean")
   @IsBoolean()
   isActivate?: boolean = false;
+
+  @Column(() => RecipeTag)
+  @IsArray()
+  @IsOptional()
+  tags?: RecipeTag[];
+
+  @Column("boolean")
+  @IsBoolean()
+  isPublished?: boolean = false;
+}
+
+@Entity("recipeTag")
+export class RecipeTag extends BaseEntity {
+  @ObjectIdColumn()
+  _id!: ObjectId;
+
+  @Column('text')
+  name!: string;
 }

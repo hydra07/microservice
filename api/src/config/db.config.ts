@@ -7,7 +7,7 @@ import { Nutrition } from '@/entity/nutrition.entity';
 import { Order } from '@/entity/order.entity';
 import { OrderItem } from '@/entity/orderItem.entity';
 import { Post } from '@/entity/post.entity';
-import { Recipe } from '@/entity/recipe.entity';
+import { Recipe, RecipeTag } from '@/entity/recipe.entity';
 import { RefreshToken } from '@/entity/refreshToken.entity';
 import { User } from '@/entity/user.entity';
 import { ImgProduct } from '@/entity/imgProduct.entity';
@@ -33,7 +33,7 @@ const MongoDataSource = new DataSource({
   synchronize: true,
   logging: false,
   // entities: [__dirname + '/entity/*.ts'],
-  entities: [Notification, Post, Comment, Recipe, Step, Ingredient],
+  entities: [Notification,RecipeTag ,Post, Comment, Recipe, Step, Ingredient ],
   migrations: [],
   subscribers: [],
   maxQueryExecutionTime: 2000, // thời gian tối đa mà một câu query được thực thi

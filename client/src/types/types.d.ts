@@ -81,7 +81,7 @@ declare module "CustomTypes" {
     limit;
     page;
     data: ProductType[];
-  }
+  };
 
   export interface QueryParams {
     page?: number;
@@ -91,13 +91,13 @@ declare module "CustomTypes" {
     category?: string;
     order?: string;
     orderBy?: string;
-  }
+  };
 
   export interface CartItemType {
     productId: number;
     quantity: number;
     subtotal: number;
-  }
+  };
 
   export interface CheckoutPayload {
     id?: number; //order id
@@ -109,9 +109,9 @@ declare module "CustomTypes" {
     shipAddress?: string;
     orderItems?: CartItem[];
     totalPrice?: number;
-  }
+  };
 
-  
+
   export interface OrderType {
     id: number;
     userId?: string;
@@ -119,13 +119,13 @@ declare module "CustomTypes" {
     shipDate?: string;
     total: number;
     status: string;
-    orderItems: OrderItemType[]; 
+    orderItems: OrderItemType[];
     name?: string;
     phone?: string;
     email?: string;
     paymentMethod: string;
     shipAddress?: string;
-  } 
+  };
 
   export interface OrderItemType {
     id: number;
@@ -135,7 +135,7 @@ declare module "CustomTypes" {
     price: number;
     image: string;
     isRated: boolean;
-  }
+  };
 
 
   export interface ReviewType {
@@ -148,16 +148,53 @@ declare module "CustomTypes" {
     createAt: string;
     comment: string;
     images: string[];
-  }
+  };
 
 
-  interface IngredientForm {
+  export interface IngredientForm {
     name: string;
     quantity: string;
-  }
-  
-  interface StepForm {
+  };
+
+  export interface StepForm {
     description: string;
     images: File[];
-  }
+  };
+
+  export interface Step {
+    _id: string;
+    description: string;
+    images: string[];
+  };
+
+  export interface Ingredient {
+    _id: string;
+    name: string;
+    quantity: string;
+  };
+
+  export interface Tag {
+    name: string;
+  };
+
+  export interface User {
+    id: string;
+    name: string;
+    avatar: string;
+  };
+
+  export interface Recipe {
+    _id: string;
+    title: string;
+    difficulty: string;
+    description: string;
+    isActivate: boolean;
+    steps: Step[];
+    ingredients: Ingredient[];
+    images: string[];
+    cook_time: number;
+    serving: number;
+    tags: Tag[];
+    user: User;
+  };
 }
