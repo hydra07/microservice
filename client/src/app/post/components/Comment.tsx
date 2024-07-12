@@ -177,7 +177,13 @@ const Comment = (
   return (
     <>
       <div className="space-y-4 w-full">
-        <div className={cn('flex items-start gap-4', `pl-[${56 * level}px]`)}>
+        <div
+          className={cn(
+            'flex items-start gap-4',
+            //  `pl-[${56 * level}px]`
+          )}
+          style={{ paddingLeft: level ? `${56 * level}px` : undefined }}
+        >
           <Avatar className="w-10 h-10 border">
             <AvatarImage src={comment.user.avatar} />
             <AvatarFallback>
@@ -210,7 +216,10 @@ const Comment = (
           </div>
         </div>
       </div>
-      <div className={cn(`w-full pl-[${56 * level}px]`)}>
+      <div
+        className={cn(`w-full`)}
+        style={{ paddingLeft: level ? `${56 * level}px` : undefined }}
+      >
         <ReplyComment
           commentId={comment._id}
           postId={postId}
