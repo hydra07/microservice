@@ -1,3 +1,4 @@
+"use client"
 import useAuth from "@/hooks/useAuth";
 import { useAuthFormToggle } from "@/hooks/useAuthFormToggle";
 import { ReactNode, useEffect } from "react";

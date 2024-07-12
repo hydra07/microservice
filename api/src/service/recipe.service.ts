@@ -1,16 +1,20 @@
 import { MongoDataSource } from "@/config/db.config.ts";
-import { Recipe } from "@/entity/recipe.entity.ts";
+import { Recipe, RecipeTag } from "@/entity/recipe.entity.ts";
 import UserService from "@/service/user.service";
 import { Step } from "@/entity/recipeStep.entity.ts";
 import { Ingredient } from "@/entity/ingredient.entity.ts";
 import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
 import { ObjectId } from "mongodb";
+import { notificationService } from "@/config/socket.config";
+
+import env from "@/util/validateEnv";
 
 export default class RecipeService {
   private recipeRepository = MongoDataSource.getRepository(Recipe);
   private stepRepository = MongoDataSource.getRepository(Step);
   private ingredientRepository = MongoDataSource.getRepository(Ingredient);
+  private recipeTagRepository = MongoDataSource.getRepository(RecipeTag);
   private UserService = new UserService();
 
   async mapAndValidateRecipe(json: any): Promise<Recipe> {
@@ -66,15 +70,15 @@ export default class RecipeService {
         const _user = await this.UserService.findUserById(recipe.userId!);
         const user = _user
           ? {
-              id: _user.id,
-              name: _user.username,
-              avatar: _user.avatar,
-            }
+            id: _user.id,
+            name: _user.username,
+            avatar: _user.avatar,
+          }
           : {
-              id: undefined,
-              name: undefined,
-              avatar: undefined,
-            };
+            id: undefined,
+            name: undefined,
+            avatar: undefined,
+          };
         return {
           ...recipe,
           steps,
@@ -104,7 +108,7 @@ export default class RecipeService {
         await this.ingredientRepository.save(existingIngredient);
       } else {
         existingIngredient.name = _ingredient.name;
-        existingIngredient.unit = _ingredient.unit;
+        // existingIngredient.unit = _ingredient.unit;
         existingIngredient.quantity = _ingredient.quantity;
         await this.ingredientRepository.update(
           new ObjectId(existingIngredient._id),
@@ -219,4 +223,143 @@ export default class RecipeService {
   async getIngredients(): Promise<Ingredient[]> {
     return await this.ingredientRepository.find();
   }
+
+  async getAllTags(): Promise<RecipeTag[]> {
+    return await this.recipeTagRepository.find();
+  }
+  
+  async addTagToRecipe(id: string, tags: string[]) {
+    try {
+      const objectId = new ObjectId(id);
+      
+      // First, update the recipe
+      await this.recipeRepository.update(
+        { _id: objectId },
+        { tags: tags.map(tag => ({ name: tag })) }
+      );
+  
+      // Then, fetch the updated recipe
+      const updatedRecipe = await this.recipeRepository.findOne({
+        where: { _id: objectId }
+      });
+  
+      if (!updatedRecipe) {
+        throw new Error('Recipe not found');
+      }
+  
+      return updatedRecipe;
+    } catch (error) {
+      console.error("Error adding tags to recipe:", error);
+      if (error instanceof Error) {
+        throw new Error(`Failed to add tags to recipe: ${error.message}`);
+      } else {
+        throw new Error("Failed to add tags to recipe: An unknown error occurred");
+      }
+    }
+  }
+
+  async saveNewRecipeTag(name: string): Promise<RecipeTag> {
+    try {
+      // Check if the tag already exists
+      let existingTag = await this.recipeTagRepository.findOne({ where: { name } });
+      if (existingTag) {
+        return existingTag;
+      }
+  
+      // Create a new tag if it doesn't exist
+      const newTag = new RecipeTag();
+      newTag._id = new ObjectId();
+      newTag.name = name;
+  
+      await validateOrReject(newTag);
+      const createdTag = await this.recipeTagRepository.save(newTag);
+      return createdTag;
+    } catch (error) {
+      console.error("Error saving new recipe tag:", error);
+      throw new Error("Failed to save new recipe tag");
+    }
+  }
+
+  async updateStatusRecipe(id: string, active: boolean, feedback?: string): Promise<Recipe> {
+    try {
+      const objectId = new ObjectId(id);
+      const recipe = await this.recipeRepository.findOne({ where: { _id: objectId } });
+  
+      if (!recipe) {
+        throw new Error('Recipe not found');
+      }
+  
+      recipe.isActivate = active;
+      await this.recipeRepository.update({ _id: objectId }, recipe);      
+      const updatedRecipe = await this.getRecipeById(id);
+
+      if(!active) {
+        await notificationService.createNotification({
+          userId: recipe.userId!,
+          title: "Recipe Rejected",
+          content: feedback,
+          createdAt: new Date() ,
+        });
+
+      }
+
+      return updatedRecipe;
+    } catch (error) {
+      console.error("Error accepting recipe:", error);
+      if (error instanceof Error) {
+        throw new Error(`Failed to accept recipe: ${error.message}`);
+      } else {
+        throw new Error("Failed to accept recipe: An unknown error occurred");
+      }
+    }
+  }
+  
+  async getRecipeById(id: string): Promise<any> {
+    if (!ObjectId.isValid(id)) {
+      throw new Error("Invalid ID");
+    }
+    const recipe = await this.recipeRepository.findOne({
+      where: { _id: new ObjectId(id) },
+    });
+
+    if (!recipe) {
+      throw new Error("Recipe not found");
+    }
+
+    const steps = await this.stepRepository.find({
+      where: {
+        _id: { $in: recipe.steps },
+      },
+    } as any);
+
+    const ingredients = await this.ingredientRepository.find({
+      where: {
+        _id: { $in: recipe.ingredients },
+      },
+    } as any);
+
+    const _user = await this.UserService.findUserById(recipe.userId!);
+    const user = _user
+      ? {
+          id: _user.id,
+          name: _user.username,
+          avatar: _user.avatar,
+        }
+      : {
+          id: undefined,
+          name: undefined,
+          avatar: undefined,
+        };
+
+    return {
+      ...recipe,
+      steps,
+      ingredients,
+      user,
+    };
+  }
 }
+
+
+
+
