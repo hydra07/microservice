@@ -31,22 +31,28 @@ export default function CartItem({ item }: Props) {
   };
 
   const handleUpdateQuantity = async (change: number) => {
-    if(change === -1){
-      updateCartItem(item, change);
+    if (change === -1 && item.quantity === 1) {
+      handleRemove();
       return;
     }
 
-    const product = await ProductService.getProductById(item.id);
-    const newQuantity = item.quantity + change;
-    
-    if (newQuantity > product?.currentQuantity!) {
-      setErrorMessage("Quantity exceeds available stock!");
-      setTimeout(() => setErrorMessage(null), 3000); // Clear error after 3 seconds
-    } else {
-      setErrorMessage(null);
-      updateCartItem(item, change);
+    if (change === 1) {
+      try {
+        const product = await ProductService.getProductById(item.id);
+        if (item.quantity + change > product?.currentQuantity!) {
+          setErrorMessage("Quantity exceeds available stock!");
+          setTimeout(() => setErrorMessage(null), 3000);
+          return;
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        setErrorMessage("Error updating quantity. Please try again.");
+        setTimeout(() => setErrorMessage(null), 3000);
+        return;
+      }
     }
-    
+
+    updateCartItem(item, change);
   };
 
   return (

@@ -1,33 +1,91 @@
+import { BaseEntity, Column, Entity, ObjectIdColumn } from "typeorm";
+import { ObjectId } from "mongodb";
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    BaseEntity,
-} from "typeorm";
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsMongoId,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 
-@Entity("recipes")
+@Entity("recipe")
 export class Recipe extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id?: number;
+  @ObjectIdColumn()
+  _id!: ObjectId;
 
-    @Column({ type: "text" })
-    foodName?: string;
+  @Column("text")
+  @IsString()
+  title!: string;
 
-    @Column({ type: "text" })
-    description?: string;
+  @Column("text")
+  @IsString()
+  difficulty!: string;
+  
+  @Column("text")
+  @IsString()
+  description!: string;
 
-    @Column({ type: "int" })
-    portion?: number;
+  @Column("text")
+  @IsString()
+  userId?: string;
 
-    @Column({ type: "int" })
-    cookTime?: number;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  @IsOptional()
+  @IsDate()
+  createdAt?: Date;
 
-    @Column({ type: "text" })
-    imageUrl?: string;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  @IsOptional()
+  @IsDate()
+  updatedAt?: Date;
 
-    @Column({ type: "json", nullable: true })
-    ingredients?: { name: string; quantity: number; unit: string }[];
+  @Column("array")
+  @IsArray()
+  // @IsOptional()
+  @IsString({ each: true })
+  images?: string[];
 
-    @Column({ type: "json", nullable: true })
-    steps?: { description: string; image: File | null }[];
+  @Column("array")
+  @IsArray()
+  @IsOptional()
+  @IsMongoId({ each: true })
+  steps: ObjectId[] = [];
+
+  @Column("array")
+  @IsArray()
+  @IsOptional()
+  @IsMongoId({ each: true })
+  ingredients: ObjectId[] = [];
+
+  @Column("number")
+  @IsNumber()
+  cook_time?: number;
+
+  @Column("number")
+  @IsNumber()
+  serving?: number;
+
+  @Column("boolean")
+  @IsBoolean()
+  isActivate?: boolean = false;
+
+  @Column(() => RecipeTag)
+  @IsArray()
+  @IsOptional()
+  tags?: RecipeTag[];
+
+  @Column("boolean")
+  @IsBoolean()
+  isPublished?: boolean = false;
+}
+
+@Entity("recipeTag")
+export class RecipeTag extends BaseEntity {
+  @ObjectIdColumn()
+  _id!: ObjectId;
+
+  @Column('text')
+  name!: string;
 }

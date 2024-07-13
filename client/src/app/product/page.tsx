@@ -21,7 +21,7 @@ export default function Component() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [limit] = useState(5);
+  const [limit] = useState(10);
   const imgNotFoundUrl = process.env.NEXT_PUBLIC_IMG_NOTFOUND;
   const [categories, setCategories] = useState<ProductCategoryType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -129,7 +129,7 @@ export default function Component() {
             onSearchChange={handleSearchChange}
             isLoading={isLoading}
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-6">
             {products.map((product) => (
               <ProductItem
                 key={product.id}

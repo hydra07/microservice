@@ -42,6 +42,7 @@ reviewRouter.post("/review", upload.array("images"), async (req, res, next) => {
   }
 });
 
+reviewRouter.delete("/review/:reviewId", reviewController.deleteReview);
 
 reviewRouter.get('/product/:productId/reviews', reviewController.getProductReviews);
 
