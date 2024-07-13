@@ -1,4 +1,5 @@
 import http from "@/lib/axios";
+import { Ingredient } from "CustomTypes";
 
 const API_URL = "/api/recipe";
 
@@ -21,5 +22,20 @@ export const createRecipe = async (
   } catch (error) {
     console.error("Error creating recipe:", error);
     return { status: 500, data: null };
+  }
+};
+
+export const updateIngredients = async (recipeId: string, ingredientsData: Ingredient[]) => {
+  try {
+    const res = await http.put(`${API_URL}/${recipeId}/ingredients`, {
+      ingredients: ingredientsData
+    });
+    if (res.status !== 200) {
+      throw new Error(`Failed to update ingredients. Status code: ${res.status}`);
+    }
+    return res.data; 
+  } catch (error) {
+    console.error("Error updating ingredients:", error);
+    throw error; 
   }
 };

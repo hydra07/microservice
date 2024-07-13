@@ -19,5 +19,9 @@ export class Ingredient extends BaseEntity {
   @IsString()
   quantity?: string;
 
+  @Column("number")
+  @IsNumber()
+  productId?: number;
+
   //TODO: add product && measurement
 }

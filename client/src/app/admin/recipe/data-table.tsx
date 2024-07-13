@@ -171,7 +171,7 @@ export function SelectColumnFilter({ table }: any) {
         </SelectContent>
       </Select>
       <Input
-        placeholder={`Filter post by ${column}...`}
+        placeholder={`Filter recipes by ${column}...`}
         value={(table.getColumn(column)?.getFilterValue() as string) ?? ""}
         onChange={(event) =>
           table.getColumn(column)?.setFilterValue(event.target.value)

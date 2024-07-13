@@ -16,13 +16,13 @@ export const fetchProducts = async (params: QueryParams) => {
   return data;
 };
 
-export const getAllProducts = async (): Promise<ProductType[] | null> => {
+export const getAllProducts = async (): Promise<ProductType[]> => {
   try {
     const res = await http.get<ProductType[]>(API_URL);
     return res.data;
   } catch (error) {
     handleAxiosError(error, 'Error fetching products');
-    return null;
+    return [];
   }
 }
 

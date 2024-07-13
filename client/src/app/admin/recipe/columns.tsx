@@ -11,7 +11,7 @@ import Link from '@/components/Link';
 import PreviewDialog from './PreviewDialog/PreviewDialog';
 import { Recipe } from 'CustomTypes';
 
-export const createColumns = (renderPreviewDialog: (recipe: Recipe) => React.ReactNode): ColumnDef<Recipe>[] => [
+export const createColumns = (renderPreviewDialog: (recipe: Recipe) => React.ReactNode, renderRecipeIngredientsDialog : (recipe:Recipe) => React.ReactNode ): ColumnDef<Recipe>[] => [
   {
     id: 'actions',
     enableHiding: false,
@@ -96,6 +96,14 @@ export const createColumns = (renderPreviewDialog: (recipe: Recipe) => React.Rea
     cell: ({ row }) => {
       const recipe = row.original;
       return renderPreviewDialog(recipe);
+    },
+  }, 
+  {
+    accessorKey: '_id',
+    header: 'Assign Products',
+    cell: ({ row }) => {
+      const recipe = row.original;
+      return renderRecipeIngredientsDialog(recipe);
     },
   }, 
 ];

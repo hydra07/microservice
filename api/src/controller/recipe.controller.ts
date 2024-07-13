@@ -197,5 +197,20 @@ export default class  RecipeController {
     }
   };
 
+  updateRecipeIngredients = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const recipeId = req.params.id;
+      const ingredients = req.body.ingredients;
 
+      console.log(ingredients, 'ingredient');
+      const updatedRecipe = await this.recipeService.updateRecipeIngredients(recipeId, ingredients);
+
+      res.status(200).json({
+        message: "Recipe ingredients updated successfully",
+        recipe: updatedRecipe,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

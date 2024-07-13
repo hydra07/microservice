@@ -171,6 +171,7 @@ declare module "CustomTypes" {
     _id: string;
     name: string;
     quantity: string;
+    productId?: number
   };
 
   export interface Tag {

@@ -13,11 +13,11 @@ const FeedbackSection: FC<FeedbackSectionProps> = ({ feedback, setFeedback, onAc
   <>
     <Textarea
       placeholder="Provide feedback to the user..."
-      className="w-full"
+      className="w-full "
       value={feedback}
       onChange={(e) => setFeedback(e.target.value)}
     />
-    <div className="flex gap-2">
+    <div className="flex gap-2">  
       <Button variant="destructive" onClick={onReject}>Reject</Button>
       <Button onClick={onAccept}>Approve</Button>
     </div>
