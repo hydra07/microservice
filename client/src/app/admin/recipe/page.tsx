@@ -8,7 +8,9 @@ import { createColumns } from './columns';
 import { DataTable } from './data-table';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import PreviewDialog from './PreviewDialog/PreviewDialog';
-import { Recipe } from 'CustomTypes';
+import { Ingredient, Recipe } from 'CustomTypes';
+import RecipeIngredientsDialog from './PreviewDialog/RecipeIngredientsDialog';
+import { on } from 'events';
 export default function RecipePage() {
   const [data, setData] = useState<any[]>([]);
 
@@ -16,14 +18,22 @@ export default function RecipePage() {
     try {
       const response = await axios.post(`/api/recipe/${id}/${action}`, { feedback });
       const updatedRecipe = response.data; // Assuming the updated recipe is returned in the response data
-  
+
       // Update the recipes state with the updated recipe
-      setData(prevRecipes => prevRecipes.map(recipe => 
+      setData(prevRecipes => prevRecipes.map(recipe =>
         recipe._id === id ? updatedRecipe : recipe
       ));
     } catch (error) {
       console.error(`Error ${action}ing recipe:`, error);
     }
+  };
+
+  const handleAssignSuccess = (recipeId: string, updatedIngredients: Ingredient[]) => {
+    setData(prevData => prevData.map(recipe =>
+      recipe._id === recipeId
+        ? { ...recipe, ingredients: updatedIngredients }
+        : recipe
+    ));
   };
 
   useEffect(() => {
@@ -40,9 +50,14 @@ export default function RecipePage() {
   }, []);
 
   const columns = createColumns((recipe: Recipe) => (
-    <PreviewDialog
-      recipe={recipe}
+
+    <PreviewDialog recipe={recipe}
       onAction={handleAction}
+    />
+  ), (recipe: Recipe) => (
+    <RecipeIngredientsDialog
+     recipe={recipe}
+     onAssignSuccess={(updatedIngredients) => handleAssignSuccess(recipe._id, updatedIngredients)}
     />
   ));
 

@@ -9,7 +9,7 @@ interface InstructionsListProps {
 
 const InstructionsList: FC<InstructionsListProps> = ({ steps }) => (
   <div>
-    <h3 className="text-sm font-medium mb-2">Instructions</h3>
+    <h3 className="text-sm font-semibold mb-2">Instructions</h3>
     <ScrollArea className="h-[200px]">
       <ol className="space-y-4 text-sm">
         {steps.map((step, index) => (
@@ -27,7 +27,7 @@ const InstructionsList: FC<InstructionsListProps> = ({ steps }) => (
                     alt={`Step ${index + 1} Image ${imgIndex + 1}`}
                     width={150}
                     height={100}
-                    className="rounded-md object-cover aspect-[3/2]"
+                    className="rounded-md object-cover aspect-[3/2] shadow"
                   />
                 ))}
               </div>

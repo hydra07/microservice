@@ -110,6 +110,7 @@ export default class RecipeService {
         existingIngredient.name = _ingredient.name;
         // existingIngredient.unit = _ingredient.unit;
         existingIngredient.quantity = _ingredient.quantity;
+        existingIngredient.productId = _ingredient.productId;
         await this.ingredientRepository.update(
           new ObjectId(existingIngredient._id),
           existingIngredient,
@@ -297,7 +298,15 @@ export default class RecipeService {
         await notificationService.createNotification({
           userId: recipe.userId!,
           title: "Recipe Rejected",
-          content: feedback,
+          content:  `Reason: ${feedback}`,
+          createdAt: new Date() ,
+        });
+
+      }else{
+        await notificationService.createNotification({
+          userId: recipe.userId!,
+          title: "Recipe Accepted",
+          content: "Your recipe was public",
           createdAt: new Date() ,
         });
 
@@ -358,6 +367,29 @@ export default class RecipeService {
       user,
     };
   }
+
+  async updateRecipeIngredients(recipeId: string, ingredients: any[]): Promise<Recipe> {
+    if (!ObjectId.isValid(recipeId)) {
+      throw new Error("Invalid recipe ID");
+    }
+
+    const recipe = await this.recipeRepository.findOne({
+      where: { _id: new ObjectId(recipeId) },
+    });
+
+    if (!recipe) {
+      throw new Error("Recipe not found");
+    }
+
+    const ingredientIds = await this.createOrUpdateIngredient(ingredients);
+    recipe.ingredients = ingredientIds;
+    recipe.updatedAt = new Date();
+
+    await this.recipeRepository.update(new ObjectId(recipe._id), recipe);
+
+    return this.getRecipeById(recipeId);
+  }
+
 }
 
 
