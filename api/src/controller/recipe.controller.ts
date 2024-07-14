@@ -58,7 +58,6 @@ export default class  RecipeController {
       console.log('data', body.servings);
       
      const newRecipe = await this.recipeService.createRecipe(recipe);
-     console.log(newRecipe, 'recipe');
       res.status(200).json(newRecipe);
     } catch (error) {
       next(error);

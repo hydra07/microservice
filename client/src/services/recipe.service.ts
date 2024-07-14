@@ -19,6 +19,8 @@ export const createRecipe = async (
         "Content-Type": "multipart/form-data",
       },
     });
+    console.error("res", res.status);
+    console.error("res", res.data);
     return { status: res.status, data: res.data };
   } catch (error) {
     console.error("Error creating recipe:", error);
