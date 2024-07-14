@@ -5,7 +5,7 @@ import { parseIngredients, parseSteps } from "@/util/recipe.util";
 import { uploadToCloudinary } from "@/util/cloudinary.util";
 import env from "@/util/validateEnv";
 
-export default class  RecipeController {
+export default class RecipeController {
   private recipeService = new RecipeService();
   createNewRecipe = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -56,9 +56,9 @@ export default class  RecipeController {
       };
       console.log('data', recipe);
       console.log('data', body.servings);
-      
-     const newRecipe = await this.recipeService.createRecipe(recipe);
-     console.log(newRecipe, 'recipe');
+
+      const newRecipe = await this.recipeService.createRecipe(recipe);
+      console.log(newRecipe, 'recipe');
       res.status(200).json(newRecipe);
     } catch (error) {
       next(error);
@@ -89,7 +89,7 @@ export default class  RecipeController {
       next(error);
     }
   };
-    getRecipe = async (req: Request, res: Response, next: NextFunction) => {
+  getRecipe = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const skip = req.query.skip
         ? parseInt(req.query.skip as string)
@@ -127,7 +127,7 @@ export default class  RecipeController {
     }
   };
 
-  getAllTags = async(req: Request, res: Response , next:NextFunction) => {
+  getAllTags = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const tags = await this.recipeService.getAllTags();
       res.status(200).json(tags);
@@ -136,7 +136,7 @@ export default class  RecipeController {
     }
   }
 
-  getAllTagsName = async(req: Request, res: Response , next:NextFunction) => {
+  getAllTagsName = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const tags = await this.recipeService.getAllTags();
       const tagNames = tags.map(tag => tag.name);
@@ -146,13 +146,13 @@ export default class  RecipeController {
     }
   }
 
-  createRecipeTag = async(req: Request, res: Response , next:NextFunction) => {
+  createRecipeTag = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name } = req.body; // Extract name from req.body
       const tag = await this.recipeService.saveNewRecipeTag(name);
       res.status(201).json({
         message: "Tag created successfully",
-        tag: tag, 
+        tag: tag,
       });
     } catch (error) {
       next(error);
@@ -166,9 +166,9 @@ export default class  RecipeController {
       const tags = req.body.tags;
       console.log('tags', tags);
       console.log('recipeId', recipeId);
-       const savedTags = await Promise.all(tags.map(async (tag: string) => {
-      return await this.recipeService.saveNewRecipeTag(tag);
-    }));
+      const savedTags = await Promise.all(tags.map(async (tag: string) => {
+        return await this.recipeService.saveNewRecipeTag(tag);
+      }));
       const post = await this.recipeService.addTagToRecipe(recipeId, tags);
       res.status(200).json(post);
     } catch (error) {
@@ -179,7 +179,7 @@ export default class  RecipeController {
   acceptRecipe = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const recipeId = req.params.id;
-      const recipe = await this.recipeService.updateStatusRecipe(recipeId , true);
+      const recipe = await this.recipeService.updateStatusRecipe(recipeId, true);
       res.status(200).json(recipe);
     } catch (error) {
       next(error);
@@ -221,7 +221,16 @@ export default class  RecipeController {
       console.log('recipe', recipe);
       res.status(200).json(recipe);
     } catch (error) {
-      next(error);      
+      next(error);
+    }
+  }
+  getRecipesWithUserId= async (req: Request, res: Response)=> {
+    const { userId } = req.params;
+    try {
+      const recipes = await this.recipeService.getRecipesWithUserId(userId);
+      res.json(recipes);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch posts', error });
     }
   }
 }

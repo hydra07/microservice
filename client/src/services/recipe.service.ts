@@ -51,3 +51,12 @@ export const getRecipeById = async (recipeId: string) => {
     throw error;
   }
 };
+export const getRecipesByUserId = async (userId: string): Promise<Recipe[] | null> => {
+  try {
+    const { data } = await http.get(`${API_URL}/user/${userId}`);
+    return data ?? null;
+  } catch (error) {
+    console.error("Error getting recipes by user ID:", error);
+    throw error;
+  }
+};

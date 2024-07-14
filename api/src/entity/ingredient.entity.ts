@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, ObjectIdColumn } from "typeorm";
 import { ObjectId } from "mongodb";
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 @Entity("ingredient")
 export class Ingredient extends BaseEntity {
@@ -20,6 +20,7 @@ export class Ingredient extends BaseEntity {
   quantity?: string;
 
   @Column("number")
+  @IsOptional()
   @IsNumber()
   productId?: number;
 

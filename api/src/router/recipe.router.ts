@@ -26,7 +26,7 @@ router.get("/recipe/tag", recipeController.getAllTagsName);
 router.post("/recipe/tag", recipeController.createRecipeTag);
 router.post("/recipe/tag/:recipeId", recipeController.addTags);
 
-
+router.get("/recipe/user/:userId", recipeController.getRecipesWithUserId);
 
 router.get("/recipe/ingredients", recipeController.getIngredients);
 export default router;

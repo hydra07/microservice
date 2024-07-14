@@ -18,4 +18,5 @@ router
 router.delete("/post/:id", postController.deletePost);
 router.post("/post/comment", postController.addComment);
 router.post("/post/tag/:id", postController.addTags);
+router.get("/post/user/:userId ", postController.getPostsWithUserId);
 export default router;

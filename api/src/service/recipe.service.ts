@@ -322,7 +322,7 @@ export default class RecipeService {
       }
     }
   }
-  
+
   async getRecipeById(id: string): Promise<any> {
     if (!ObjectId.isValid(id)) {
       throw new Error("Invalid ID");
@@ -389,7 +389,61 @@ export default class RecipeService {
 
     return this.getRecipeById(recipeId);
   }
-
+  async getRecipesWithUserId(tag?: string, userid?: string) {
+    const query: any = {};
+    const options: any = {
+      order: {
+        createdAt: "DESC",
+      },
+    };
+  
+    if (tag) {
+      query.tags = { name: tag };
+    }
+  
+    query.isActivate = true;
+  
+    const recipes = await this.recipeRepository.find({
+      where: { userId: userid }, // Điều kiện lấy bài đăng theo userId
+      select: [
+        "_id",
+        "title",
+        "image",
+        "userId",
+        "createdAt",
+        "isActivate",
+        "tags",
+      ],
+      ...options,
+    });
+  
+    const recipeWithUser = await Promise.all(
+      recipes.map(async (recipe) => {
+        const { userId, ...recipeWithoutUserId } = recipe;
+        const user = await this.UserService.findUserById(userId!);
+        if (user) {
+          return {
+            ...recipeWithoutUserId,
+            user: {
+              id: user.id,
+              username: user.username,
+              avatar: user.avatar,
+            },
+          };
+        } else {
+          return {
+            ...recipeWithoutUserId,
+            user: {
+              id: undefined,
+              username: undefined,
+              avatar: undefined,
+            },
+          };
+        }
+      })
+    );
+    return recipeWithUser;
+  }
 }
 
 

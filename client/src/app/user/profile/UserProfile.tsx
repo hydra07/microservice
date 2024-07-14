@@ -5,6 +5,7 @@ import EditProfile from "./EditProfile";
 import MyPosts from "./MyPost";
 import MyRecipes from "./MyRecipe";
 import SavedRecipes from "./SavedRecipe";
+import axios from "@/lib/axios";
 
 interface User {
     id: number;
@@ -48,11 +49,18 @@ const UserProfile = () => {
             .then((data) => setPosts(data))
             .catch((error) => console.error('Error fetching posts:', error));
 
-        fetch("/data/my-recipes.json")
-            .then((response) => response.json())
-            .then((data) => setMyRecipes(data))
-            .catch((error) => console.error('Error fetching my recipes:', error));
-
+    useEffect(() => {
+        const fetching = async () => {
+            try {
+                const res = await axios.get(`/api/recipe/user/userId=${userInfo.id}`);
+                setMyRecipes(res.data.recipes); // Adjusted to match the backend response structure
+                console.log(res.data.recipes);
+            } catch (error) {
+                console.error('Error fetching my recipes:', error);
+            }
+        };
+        fetching();
+    }, [userInfo.id]);
         fetch("/data/saved-recipes.json")
             .then((response) => response.json())
             .then((data) => setSavedRecipes(data))
@@ -92,10 +100,17 @@ const UserProfile = () => {
         <div className="w-full max-w-[1250px] mx-auto mt-8">
             <div className="bg-muted rounded-t-lg p-6 md:p-8">
                 <div className="flex items-center gap-4">
-                    <Avatar className="w-16 h-16 md:w-20 md:h-20">
-                        <AvatarImage src={userInfo.avatar} alt={userInfo.name} />
-                        <AvatarFallback>{userInfo.initials}</AvatarFallback>
-                    </Avatar>
+                    {/* <Avatar>
+                        <AvatarImage
+                            src={userInfo.avatar}
+                            alt={userInfo.name}
+                        />
+                        {userInfo.initials && (
+                            <AvatarFallback>
+                                {userInfo.initials}
+                            </AvatarFallback>
+                        )}
+                    </Avatar> */}
                     <div className="space-y-1">
                         <h2 className="text-xl font-bold">{userInfo.name}</h2>
                         <p className="text-muted-foreground">{userInfo.email}</p>
