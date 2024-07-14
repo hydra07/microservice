@@ -7,6 +7,7 @@ import Instructions from './components/Instructions';
 import Sidebar from './components/Sidebar';
 import { useRouter } from 'next/navigation';
 import * as RecipeService from '@/services/recipe.service';
+import Cart from '@/components/cart/Cart';
 interface RecipePageProps {
   params: {
     id: string;
@@ -57,7 +58,9 @@ const RecipePage: React.FC<RecipePageProps> = ({ params }) => {
         </div>
         
         {/* <RelatedRecipes /> */}
+        
       </div>
+      <Cart />
     </div>
   );
 };

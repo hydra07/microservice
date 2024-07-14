@@ -11,12 +11,12 @@ interface ProductItemProps {
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) => {
-  const { handleAddToCart, isAdding } = useAddToCart(product);
+  const { handleAddToCart, isAdding } = useAddToCart();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    handleAddToCart(1);
+    handleAddToCart(1, product);
   };
 
   return (
