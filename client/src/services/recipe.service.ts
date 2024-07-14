@@ -1,5 +1,6 @@
 import http from "@/lib/axios";
 import { Ingredient } from "CustomTypes";
+import { Recipe } from "CustomTypes";
 
 const API_URL = "/api/recipe";
 
@@ -37,5 +38,16 @@ export const updateIngredients = async (recipeId: string, ingredientsData: Ingre
   } catch (error) {
     console.error("Error updating ingredients:", error);
     throw error; 
+  }
+};
+
+export const getRecipeById = async (recipeId: string) => {
+  try {
+    const { data } = await http.get(`${API_URL}/${recipeId}`);
+    console.log('rele', data);
+    return data ?? null;
+  } catch (error) {
+    console.error("Error getting recipe by ID:", error);
+    throw error;
   }
 };

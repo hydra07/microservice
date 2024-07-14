@@ -165,37 +165,40 @@ declare module "CustomTypes" {
     _id: string;
     description: string;
     images: string[];
-  };
-
+  }
+  
   export interface Ingredient {
     _id: string;
     name: string;
     quantity: string;
-    productId?: number
-  };
-
+    productId?: number;
+  }
+  
   export interface Tag {
+    _id: string | null;
     name: string;
-  };
-
+  }
+  
   export interface User {
     id: string;
     name: string;
     avatar: string;
-  };
-
+  }
+  
   export interface Recipe {
     _id: string;
     title: string;
     difficulty: string;
     description: string;
     isActivate: boolean;
-    steps: Step[];
-    ingredients: Ingredient[];
+    isPublished: boolean;
+    userId: string;
+    updatedAt: string;
     images: string[];
     cook_time: number;
     serving: number;
     tags: Tag[];
     user: User;
-  };
-}
+    steps: Step[];
+    ingredients: Ingredient[];
+  }}
