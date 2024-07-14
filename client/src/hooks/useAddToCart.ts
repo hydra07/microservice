@@ -3,14 +3,14 @@ import { toast, Id } from "react-toastify";
 import { ProductType } from "CustomTypes";
 import { useCartStore } from "@/store/useCartStore";
 
-export const useAddToCart = (product: ProductType) => {
+export const useAddToCart = () => {
   const addToCart = useCartStore((state) => state.addToCart);
   const cart = useCartStore((state) => state.cart);
   const [isAdding, setIsAdding] = useState(false);
   const toastId = useRef<Id | null>(null);
 
   const handleAddToCart = useCallback(
-    (quantity: number = 1) => {
+    (quantity: number = 1, product: ProductType) => {
       if (isAdding) return;
 
       setIsAdding(true);
@@ -29,7 +29,7 @@ export const useAddToCart = (product: ProductType) => {
 
       setTimeout(() => setIsAdding(false), 500);
     },
-    [addToCart, cart, isAdding, product]
+    [addToCart, cart, isAdding]
   );
 
   return { handleAddToCart, isAdding };

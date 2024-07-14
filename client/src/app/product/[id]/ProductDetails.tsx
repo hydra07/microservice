@@ -42,7 +42,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
     initialState
   );
 
-  const { handleAddToCart, isAdding } = useAddToCart(product);
+  const { handleAddToCart, isAdding } = useAddToCart();
 
   const handleQuantityChange = (value: number) => {
     dispatch({
@@ -52,7 +52,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
   };
 
   const handleClick = () => {
-    handleAddToCart(state.quantity);
+    handleAddToCart(state.quantity, product);
   };
 
   return (
