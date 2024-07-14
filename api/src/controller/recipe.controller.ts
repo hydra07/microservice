@@ -213,4 +213,15 @@ export default class  RecipeController {
       next(error);
     }
   };
+
+  getRecipeById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const recipeId = req.params.id;
+      const recipe = await this.recipeService.getRecipeById(recipeId);
+      console.log('recipe', recipe);
+      res.status(200).json(recipe);
+    } catch (error) {
+      next(error);      
+    }
+  }
 }
