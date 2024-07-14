@@ -202,7 +202,7 @@ export default class  RecipeController {
       const ingredients = req.body.ingredients;
 
       console.log(ingredients, 'ingredient');
-      const updatedRecipe = await this.recipeService.updateRecipeIngredients(recipeId, ingredients);
+      const updatedRecipe = await this.recipeService.updateIngredientProductIds(recipeId, ingredients);
 
       res.status(200).json({
         message: "Recipe ingredients updated successfully",

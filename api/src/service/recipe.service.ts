@@ -385,10 +385,43 @@ export default class RecipeService {
     recipe.ingredients = ingredientIds;
     recipe.updatedAt = new Date();
 
-    await this.recipeRepository.update(new ObjectId(recipe._id), recipe);
+    await this.recipeRepository.update(
+      { _id: new ObjectId(recipeId) },
+      recipe
+    );
 
     return this.getRecipeById(recipeId);
   }
+  async updateIngredientProductIds(recipeId: string, ingredients: { _id: string, productId: number }[]): Promise<Recipe> {
+    if (!ObjectId.isValid(recipeId)) {
+      throw new Error("Invalid recipe ID");
+    }
+
+    const recipe = await this.recipeRepository.findOne({
+      where: { _id: new ObjectId(recipeId) },
+    });
+
+    if (!recipe) {
+      throw new Error("Recipe not found");
+    }
+
+    for (const ingredient of ingredients) {
+      await this.ingredientRepository.update(
+        { _id: new ObjectId(ingredient._id) },
+        { productId: ingredient.productId } 
+      );
+    }
+
+    recipe.updatedAt = new Date();
+
+    await this.recipeRepository.update(
+      { _id: new ObjectId(recipeId) },
+      recipe
+    );
+
+    return this.getRecipeById(recipeId);
+  }
+  
 
 }
 
