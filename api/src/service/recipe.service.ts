@@ -1,5 +1,5 @@
   import { MongoDataSource } from "@/config/db.config.ts";
-  import { Recipe, RecipeTag } from "@/entity/recipe.entity.ts";
+  import { Recipe, RecipeComment, RecipeReaction, RecipeTag } from "@/entity/recipe.entity.ts";
   import UserService from "@/service/user.service";
   import { Step } from "@/entity/recipeStep.entity.ts";
   import { Ingredient } from "@/entity/ingredient.entity.ts";
@@ -15,6 +15,8 @@
     private stepRepository = MongoDataSource.getRepository(Step);
     private ingredientRepository = MongoDataSource.getRepository(Ingredient);
     private recipeTagRepository = MongoDataSource.getRepository(RecipeTag);
+    private recipeCommentRepository = MongoDataSource.getRepository(RecipeComment);
+    private reacipeReactionRepository = MongoDataSource.getRepository(RecipeReaction);
     private UserService = new UserService();
 
     async mapAndValidateRecipe(json: any): Promise<Recipe> {

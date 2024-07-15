@@ -10,7 +10,6 @@ import { useAddToCart } from '@/hooks/useAddToCart';
 import { getProductById } from '@/services/product.service';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from 'react-toastify';
-import Reactions from "./Reactions";
 import Link from 'next/link';
 
 

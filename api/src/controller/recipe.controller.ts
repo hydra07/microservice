@@ -287,7 +287,7 @@ export default class RecipeController {
     }
   };
 
-  }
+  
 
   searchRecipes = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -307,5 +307,5 @@ export default class RecipeController {
       next(error);
     }
   }
-
 }
+

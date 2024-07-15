@@ -57,7 +57,7 @@ export const getPublicRecipes = async (skip: number, take: number) => {
   try {
     const { data } = await http.get(`${API_URL}`, {
       params: { skip, take, isPublic: true }
-    });
+    }); 
     return data;
   } catch (error) {
     console.error("Error getting active recipes:", error);
