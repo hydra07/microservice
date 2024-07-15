@@ -15,7 +15,7 @@ export default function RecipeSection() {
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const ITEMS_PER_PAGE = 4;
+  const ITEMS_PER_PAGE = 2;
 
   const fetchRecipes = async () => {
     setIsLoading(true);
@@ -27,7 +27,6 @@ export default function RecipeSection() {
         setHasMore(false);
       } else {
         setRecipes(prevRecipes => [...prevRecipes, ...recipes]);
-        setPage(prevPage => prevPage + 1);
         setHasMore((page + 1) * ITEMS_PER_PAGE < total);
       }
     } catch (error) {
@@ -39,7 +38,7 @@ export default function RecipeSection() {
 
   useEffect(() => {
     fetchRecipes();
-  }, []);
+  }, [page]);
 
   const renderRecipeCard = (recipe: Recipe, index: number) => (
 
@@ -75,20 +74,20 @@ export default function RecipeSection() {
           <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-100">{recipe.title}</h3>
           <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center bg-slate-200 dark:bg-gray-700 rounded-full px-2">
-              <CookingPot className="h-4 w-4 mr-1 text-blue-400 fill-current" />
-              {/* <span>{recipe.cook_time || 'N/A'} min</span> */}
-              <span>{Math.floor(Math.random() * 50)} </span>
+              {/* <CookingPot className="h-4 w-4 mr-1 text-blue-400 fill-current" /> */}
+              <span>{recipe.cook_time || 'N/A'} min</span>
+              {/* <span>{Math.floor(Math.random() * 50)} </span> */}
             </div>
             <div className="flex items-center bg-slate-200 dark:bg-gray-700 rounded-full px-2">
-              <Heart className="h-4 w-4 mr-1 text-red-400 fill-current" />
-              {/* <span>{recipe.serving || 'N/A'} servings</span> */}
-              <span>{Math.floor(Math.random() * 50)} </span>
+              {/* <Heart className="h-4 w-4 mr-1 text-red-400 fill-current" /> */}
+              <span>{recipe.serving || 'N/A'} servings</span>
+              {/* <span>{Math.floor(Math.random() * 50)} </span> */}
 
             </div>
             <div className="flex items-center bg-slate-200 dark:bg-gray-700 rounded-full px-2">
-              <ThumbsUp className="h-4 w-4 mr-1 text-yellow-400 fill-current" />
-              {/* <span>{recipe.difficulty || 'N/A'}</span> */}
-              <span>{Math.floor(Math.random() * 50)} </span>
+              {/* <ThumbsUp className="h-4 w-4 mr-1 text-yellow-400 fill-current" /> */}
+              <span>{recipe.difficulty || 'N/A'}</span>
+              {/* <span>{Math.floor(Math.random() * 50)} </span> */}
 
             </div>
           </div>
@@ -135,7 +134,9 @@ export default function RecipeSection() {
         {hasMore && (
           <div className="mt-8 flex justify-center">
             <Button
-              onClick={fetchRecipes}
+              onClick={() => {
+                setPage(prevPage => prevPage + 1);
+              }}
               disabled={isLoading}
               className="flex items-center gap-2 border-gray-800 dark:border-gray-100"
             >

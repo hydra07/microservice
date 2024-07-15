@@ -2,7 +2,7 @@
 
 import { searchRecipes } from '@/services/recipe.service';
 import { Recipe } from 'CustomTypes';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import RecipeList from './RecipeList';
 import Pagination from './Pagination';
@@ -10,6 +10,7 @@ import SearchSection from './SearchSection';
 import { Loader2 } from 'lucide-react';
 
 export default function SearchResults() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +27,7 @@ export default function SearchResults() {
   const fetchRecipes = async () => {
     setIsLoading(true);
     try {
-      const data  = await searchRecipes(searchQuery, ingredients, currentPage, itemsPerPage);
+      const data  = await searchRecipes(searchQuery, ingredients, (currentPage - 1) * itemsPerPage, itemsPerPage);
       if (data) {
         setRecipes(data.recipes);
         setTotalRecipes(data.total);
