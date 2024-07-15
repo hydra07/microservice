@@ -22,7 +22,7 @@ export class Recipe extends BaseEntity {
   @Column("text")
   @IsString()
   difficulty!: string;
-  
+
   @Column("text")
   @IsString()
   description!: string;
@@ -79,6 +79,18 @@ export class Recipe extends BaseEntity {
   @Column("boolean")
   @IsBoolean()
   isPublished?: boolean = false;
+
+  @Column("array")
+  @IsArray()
+  @IsOptional()
+  @IsMongoId({ each: true })
+  comments?: ObjectId[] = [];
+
+  @Column("array")
+  @IsArray()
+  @IsOptional()
+  @IsMongoId({ each: true })
+  reactions?: ObjectId[] = [];
 }
 
 @Entity("recipeTag")
@@ -86,6 +98,54 @@ export class RecipeTag extends BaseEntity {
   @ObjectIdColumn()
   _id!: ObjectId;
 
-  @Column('text')
+  @Column("text")
   name!: string;
+}
+
+@Entity("recipeComment")
+export class RecipeComment extends BaseEntity {
+  @ObjectIdColumn()
+  _id!: ObjectId;
+
+  @Column("text")
+  @IsString()
+  content!: string;
+
+  @Column("text")
+  @IsString()
+  userId?: string;
+
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  @IsDate()
+  createdAt?: Date = new Date();
+
+  @Column(() => ObjectId)
+  @IsMongoId()
+  recipeId!: ObjectId;
+}
+
+@Entity("recipeReaction")
+export class RecipeReaction extends BaseEntity {
+  @ObjectIdColumn()
+  _id!: ObjectId;
+
+  @Column("text")
+  @IsString()
+  userId!: string;
+
+  @Column(() => ObjectId)
+  @IsMongoId()
+  recipeId!: ObjectId;
+
+  @Column("boolean")
+  @IsBoolean()
+  isLike: boolean = false;
+
+  @Column("boolean")
+  @IsBoolean()
+  isHeart: boolean = false;
+
+  @Column("boolean")
+  @IsBoolean()
+  isCookpot: boolean = false;
 }

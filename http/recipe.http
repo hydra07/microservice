@@ -112,3 +112,31 @@ Content-Type: application/json
 
 ### GET Ingredient
 GET http://localhost:3000/api/recipe/ingredients HTTP/1.1
+
+
+
+
+### POST Comment
+POST http://localhost:3000/api/recipe/6693e4109b989b8af454abbe/comments HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "118303620303769287374",
+  "content": "Comment 5"
+}
+
+
+
+### POST reaction
+POST http://localhost:3000/api/recipe/6693e4109b989b8af454abbe/reactions HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "118303620303769287374",
+  "isLike": false
+}
+
+
+### GET reaction
+GET http://localhost:3000/api/recipe/6693e4109b989b8af454abbe/reactions?userId=118303620303769287374 HTTP/1.1
+
