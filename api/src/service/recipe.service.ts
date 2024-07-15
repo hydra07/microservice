@@ -45,7 +45,7 @@
       const query: any = {};
       const options: any = {
         order: {
-          createdAt: "DESC",
+          createdAt: "ASC",
         },
       };
       isPublic && (query.isPublic = isPublic);
@@ -427,8 +427,8 @@
     async searchRecipes(query: string, tags: string[], ingredients: string[], skip?: number, take?: number): Promise<any> {
       const searchQuery: any = {
         $or: [
-          { title: { $regex: query, $options: 'i' } },
-          { description: { $regex: query, $options: 'i' } },
+          { title: { $regex: `.*${query}.*`, $options: 'i' } },
+          { description: { $regex: `.*${query}.*`, $options: 'i' } },
         ]
       };
     
@@ -438,18 +438,21 @@
 
 
       const optionsIngredients = {
-        where: { name: { $in: ingredients } }
+        where: { name: { $in: ingredients.map(ingredient => new RegExp(ingredient, 'i'))  } },
       } as any;
 
 
     
       if (ingredients && ingredients.length > 0) {
-        const ingredientIds = await this.ingredientRepository.find({
+        const ingredientEntities = await this.ingredientRepository.find({
           ...optionsIngredients,
           select: ['_id']
         });
-        searchQuery.ingredients = { $in: ingredientIds.map(ing => ing._id) };
+    
+        const ingredientIds = ingredientEntities.map(ing => ing._id);
+        searchQuery.ingredients = { $in: ingredientIds };
       }
+
     
       const options: any = {
         order: {
@@ -462,6 +465,8 @@
       take && (options.take = take);
     
       const [recipes, total] = await this.recipeRepository.findAndCount(options);
+
+      console.log('options', options);
     
       const recipeDetails = await Promise.all(
         recipes.map(async (recipe: Recipe) => {
@@ -495,6 +500,8 @@
           };
         }),
       );
+
+      console.log(recipeDetails, 'recipeDetails');
     
       return { recipes: recipeDetails, total };
     }
