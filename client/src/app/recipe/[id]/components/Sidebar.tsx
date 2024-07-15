@@ -10,8 +10,9 @@ import { useAddToCart } from '@/hooks/useAddToCart';
 import { getProductById } from '@/services/product.service';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from 'react-toastify';
-
+import Reactions from "./Reactions";
 import Link from 'next/link';
+
 
 interface SidebarProps {
   recipe: Recipe;
@@ -47,12 +48,17 @@ const Sidebar: React.FC<SidebarProps> = ({ recipe }) => {
   return (
     <div className="lg:w-1/3">
       <div className="sticky top-4 space-y-8">
-        <Reactions />
+
+        <Reactions recipeId={recipe._id} />
+
 
         <div className="bg-muted rounded-lg p-6">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="ghost" className="text-red-500 hover:text-red-600">
+              <Button
+                variant="ghost"
+                className="text-red-500 hover:text-red-600"
+              >
                 <Flag className="w-4 h-4 mr-2" />
                 Report
               </Button>
@@ -69,7 +75,9 @@ const Sidebar: React.FC<SidebarProps> = ({ recipe }) => {
                   </div>
                 ))}
               </RadioGroup>
-              <Button type="submit" className="mt-4">Submit Report</Button>
+              <Button type="submit" className="mt-4">
+                Submit Report
+              </Button>
             </DialogContent>
           </Dialog>
         </div>
@@ -77,6 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ recipe }) => {
         <div className="bg-muted rounded-lg p-6">
           <h3 className="text-2xl font-bold mb-4">Ingredients</h3>
           <ul className="space-y-2">
+
               {recipe.ingredients.map((ingredient) => (
                 <li key={ingredient._id} className="flex items-center justify-between gap-2 group">
                   <div className="flex items-center gap-2">
@@ -101,6 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ recipe }) => {
                       </Link>
                     </div>
                   )}
+
               </li>
             ))}
           </ul>

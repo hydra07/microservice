@@ -348,6 +348,45 @@
         },
       } as any);
 
+      const comments = await this.recipeCommentRepository.find({
+        where: {
+          recipeId: new ObjectId(id),
+        },
+        order: {
+          createdAt: "DESC",
+        },
+      } as any);
+  
+      const commentWithUser = await Promise.all(
+        comments.map(async (comment) => {
+          const { userId, ...commentWithoutUserId } = comment;
+          const user = await this.UserService.findUserById(userId!);
+          console.log(user);
+  
+          if (user) {
+            return {
+              ...commentWithoutUserId,
+              user: {
+                id: user.id,
+                username: user.username,
+                avatar: user.avatar,
+              },
+            };
+          } else {
+            return {
+              ...commentWithoutUserId,
+              user: {
+                id: undefined,
+                username: undefined,
+                avatar: undefined,
+              },
+            };
+          }
+        }),
+      );
+  
+      //fetching user for comment
+  
       const _user = await this.UserService.findUserById(recipe.userId!);
       const user = _user
         ? {
@@ -360,12 +399,13 @@
             name: undefined,
             avatar: undefined,
           };
-
+  
       return {
         ...recipe,
         steps,
         ingredients,
         user,
+        commentWithUser,
       };
     }
 
@@ -505,7 +545,134 @@
     
       return { recipes: recipeDetails, total };
     }
-    
+
+    async addComment(
+      recipeId: string,
+      userId: string,
+      content: string,
+    ): Promise<any> {
+      if (!ObjectId.isValid(recipeId)) {
+        throw new Error("Invalid recipe ID");
+      }
+      // console.log("userId --recipe", userId);
+      // if (!ObjectId.isValid(userId)) {
+      //   throw new Error("Invalid user ID");
+      // }
+      const recipe = await this.recipeRepository.findOne({
+        where: { _id: new ObjectId(recipeId) },
+      });
+  
+      if (!recipe) {
+        throw new Error("Recipe not found");
+      }
+  
+      const comment = new RecipeComment();
+      comment.recipeId = new ObjectId(recipeId);
+      comment.userId = userId;
+      comment.content = content;
+      // comment.createdAt = new Date();
+  
+      const savedComment = await this.recipeCommentRepository.save(comment);
+      recipe.comments?.push(savedComment._id);
+      await this.recipeRepository.update(new ObjectId(recipeId), recipe);
+      return this.getRecipeById(recipeId);
+    }
+
+
+     //reaction
+  async reaction(
+    recipeId: string,
+    userId: string,
+    isLike?: boolean,
+    isHeart?: boolean,
+    isCookpot?: boolean,
+  ): Promise<RecipeReaction> {
+    if (!ObjectId.isValid(recipeId)) {
+      throw new Error("Invalid recipe ID");
+    }
+    const recipe = await this.recipeRepository.findOne({
+      where: { _id: new ObjectId(recipeId) },
+    });
+
+    if (!recipe) {
+      throw new Error("Recipe not found");
+    }
+
+    //find reaction if exist
+    const reaction = await this.reacipeReactionRepository.findOne({
+      where: { recipeId: new ObjectId(recipeId), userId },
+    });
+
+    if (!reaction) {
+      const _reaction = new RecipeReaction();
+      _reaction.recipeId = new ObjectId(recipeId);
+      _reaction.userId = userId;
+      _reaction.isLike = isLike || false;
+      _reaction.isHeart = isHeart || false;
+      _reaction.isCookpot = isCookpot || false;
+      await this.reacipeReactionRepository.save(_reaction);
+      recipe.reactions?.push(_reaction._id);
+      await this.recipeRepository.update(new ObjectId(recipeId), recipe);
+      return _reaction;
+    } else {
+      if (isLike !== undefined) reaction.isLike = isLike;
+      if (isHeart !== undefined) reaction.isHeart = isHeart;
+      if (isCookpot !== undefined) reaction.isCookpot = isCookpot;
+      await this.reacipeReactionRepository.update(reaction._id, reaction);
+      return reaction;
+    }
+
+    // return this.getRecipeById(recipeId);
+    // return reaction;
+  }
+     async getReaction(
+    recipeId: string,
+    userId?: string,
+  ): Promise<{
+    isLike: boolean;
+    isHeart: boolean;
+    isCookpot: boolean;
+    likeCount: number;
+    heartCount: number;
+    cookpotCount: number;
+  }> {
+    if (!ObjectId.isValid(recipeId)) {
+      throw new Error("Invalid recipe ID");
+    }
+
+    const recipe = await this.recipeRepository.findOne({
+      where: { _id: new ObjectId(recipeId) },
+    });
+
+    if (!recipe) {
+      throw new Error("Recipe not found");
+    }
+
+    const [, likeCount] = await this.reacipeReactionRepository.findAndCount({
+      where: { recipeId: new ObjectId(recipeId), isLike: true },
+    });
+    const [, heartCount] = await this.reacipeReactionRepository.findAndCount({
+      where: { recipeId: new ObjectId(recipeId), isHeart: true },
+    });
+
+    const [, cookpotCount] = await this.reacipeReactionRepository.findAndCount({
+      where: { recipeId: new ObjectId(recipeId), isCookpot: true },
+    });
+
+    const reaction = await this.reacipeReactionRepository.findOne({
+      where: { recipeId: new ObjectId(recipeId), userId },
+    });
+
+    return {
+      isLike: reaction?.isLike || false,
+      isHeart: reaction?.isHeart || false,
+      isCookpot: reaction?.isCookpot || false,
+      likeCount,
+      heartCount,
+      cookpotCount,
+    };
+  }
+  
 
   }
 
