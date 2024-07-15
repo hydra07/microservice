@@ -10,6 +10,7 @@ import { useAddToCart } from '@/hooks/useAddToCart';
 import { getProductById } from '@/services/product.service';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from 'react-toastify';
+
 import Link from 'next/link';
 
 interface SidebarProps {

@@ -48,19 +48,19 @@ routers.forEach(({ path, router }) => {
 });
 
 
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  let errorMessage = 'An unknown error occurred';
-  let statusCode = 500;
-  if (isHttpError(error)) {
-    statusCode = error.status;
-    errorMessage = error.message;
-  }
-  console.log(error);
-  res.status(statusCode).json({ error: errorMessage });
-});
+// app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+//   let errorMessage = 'An unknown error occurred';
+//   let statusCode = 500;
+//   if (isHttpError(error)) {
+//     statusCode = error.status;
+//     errorMessage = error.message;
+//   }
+//   console.log(error);
+//   res.status(statusCode).json({ error: errorMessage });
+// });
 
-app.use((req, res, next) => {
-  next(createHttpError(404, 'Not found'));
-});
+// app.use((req, res, next) => {
+//   next(createHttpError(404, 'Not found'));
+// });
 
 export default app;

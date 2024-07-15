@@ -41,7 +41,7 @@ export default function RecipePage() {
       try {
         const res = await axios.get('/api/recipe');
         setData(res.data.recipes); // Adjusted to match the backend response structure
-        console.log(res.data.recipes);
+        console.log(res.data);
       } catch (error) {
         console.error('Error fetching recipes:', error);
       }

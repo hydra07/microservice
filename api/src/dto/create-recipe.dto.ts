@@ -19,7 +19,7 @@ interface CreateRecipeDTO {
   ingredients: CreateIngredientDTO[];
   steps: CreateStepDTO[];
   isPublic: boolean;
-  createAt?: Date;
+  createdAt?: Date;
 }
 
 export { CreateRecipeDTO, CreateIngredientDTO, CreateStepDTO};  

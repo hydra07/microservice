@@ -63,7 +63,7 @@ export const createColumns = (renderPreviewDialog: (recipe: Recipe) => React.Rea
   },
   {
     accessorKey: 'createdAt',
-    header: 'Create',
+    header: 'CreateAt',
     cell: ({ getValue }) => {
       return <span>{new Date(getValue() as any).toLocaleDateString()} </span>;
     },

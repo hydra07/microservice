@@ -120,7 +120,7 @@ export default function ProductDetails({ product }: { product: ProductType }) {
         <div>
           <h2 className="text-sm font-semibold">Quantitative</h2>
           <p className="text-gray-500 dark:text-gray-400">
-            {product.amountToSell} {product.measurement.unit}
+            {product.amountToSell} {product.measurement.name}
           </p>
         </div>
         <div className="bg-slate-200 rounded-md p-2 dark:bg-slate-500">

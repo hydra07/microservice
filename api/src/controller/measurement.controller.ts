@@ -1,4 +1,3 @@
-
 import { MeasurementService } from "@/service/measurement.service";
 import { BaseController } from "./baseController";
 import { Measurement } from "@/entity/measurement.entity";
