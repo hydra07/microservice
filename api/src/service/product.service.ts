@@ -103,6 +103,8 @@ export default class ProductService extends BaseService<Product> {
         where.currentQuantity = MoreThan(0);
       }
 
+      where.is_activated = true;
+
       console.log(where, "where");
       const [result, total] = await this.repository.findAndCount({
         where,

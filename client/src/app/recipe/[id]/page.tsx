@@ -1,13 +1,15 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Recipe } from "CustomTypes";
-import HeroSection from "./components/HeroSection";
-import QuickFacts from "./components/QuickFacts";
-import Instructions from "./components/Instructions";
-import Sidebar from "./components/Sidebar";
-import { useRouter } from "next/navigation";
-import * as RecipeService from "@/services/recipe.service";
+
+"use client"
+import React, { useEffect, useState } from 'react';
+import { Recipe } from 'CustomTypes';
+import HeroSection from './components/HeroSection';
+import QuickFacts from './components/QuickFacts';
+import Instructions from './components/Instructions';
+import Sidebar from './components/Sidebar';
+import { useRouter } from 'next/navigation';
+import * as RecipeService from '@/services/recipe.service';
 import RecipeComment from "@/app/recipe/[id]/components/Comment";
+import Cart from '@/components/cart/Cart';
 
 interface RecipePageProps {
   params: {
@@ -57,11 +59,14 @@ const RecipePage: React.FC<RecipePageProps> = ({ params }) => {
         </div>
 
         {/* <RelatedRecipes /> */}
+
         <RecipeComment
           comments={(recipe as any).commentWithUser}
           recipeId={recipe._id}
         />
+
       </div>
+      <Cart />
     </div>
   );
 };

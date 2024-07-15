@@ -7,6 +7,7 @@ const upload = multer({ dest: "uploads/" });
 const recipeController = new RecipeController();
 
 router.get("/recipe/all", recipeController.getAll);
+router.get("/recipe/search", recipeController.searchRecipes);
 router.post("/recipe/:id/accept", recipeController.acceptRecipe);
 router.post("/recipe/:id/reject", recipeController.rejectRecipe);
 
@@ -28,6 +29,7 @@ router
 router.get("/recipe/tag", recipeController.getAllTagsName);
 router.post("/recipe/tag", recipeController.createRecipeTag);
 router.post("/recipe/tag/:recipeId", recipeController.addTags);
+
 
 router.get("/recipe/ingredients", recipeController.getIngredients);
 export default router;

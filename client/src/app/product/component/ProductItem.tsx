@@ -11,12 +11,12 @@ interface ProductItemProps {
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) => {
-  const { handleAddToCart, isAdding } = useAddToCart(product);
+  const { handleAddToCart, isAdding } = useAddToCart();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    handleAddToCart(1);
+    handleAddToCart(1, product);
   };
 
   return (
@@ -38,7 +38,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) =>
       </Link>
       <div className="px-2  pb-3 flex items-center justify-between">
         <div>
-        <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-1 mb-1">{`${product.amountToSell} ${product.measurement.unit}`}</p>
+        <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-1 mb-1">{`${product.amountToSell} ${product.measurement.name}`}</p>
         <div className="text-sm font-bold text-primary-600 dark:text-primary-400 whitespace-nowrap">
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",
