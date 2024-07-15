@@ -38,7 +38,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, imgNotFoundUrl }) =>
       </Link>
       <div className="px-2  pb-3 flex items-center justify-between">
         <div>
-        <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-1 mb-1">{`${product.amountToSell} ${product.measurement.unit}`}</p>
+        <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-1 mb-1">{`${product.amountToSell} ${product.measurement.name}`}</p>
         <div className="text-sm font-bold text-primary-600 dark:text-primary-400 whitespace-nowrap">
           {new Intl.NumberFormat("vi-VN", {
             style: "currency",

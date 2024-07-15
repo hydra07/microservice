@@ -46,10 +46,37 @@ export const updateIngredients = async (recipeId: string, ingredientsData: Ingre
 export const getRecipeById = async (recipeId: string) => {
   try {
     const { data } = await http.get(`${API_URL}/${recipeId}`);
-    console.log('rele', data);
     return data ?? null;
   } catch (error) {
     console.error("Error getting recipe by ID:", error);
     throw error;
   }
 };
+
+export const getPublicRecipes = async (skip: number, take: number) => {
+  try {
+    const { data } = await http.get(`${API_URL}`, {
+      params: { skip, take, isPublic: true }
+    });
+    return data;
+  } catch (error) {
+    console.error("Error getting active recipes:", error);
+    throw error;
+  }
+}
+
+export const searchRecipes = async (query: string, ingredients: string[], skip: number, limit: number) => {
+  try {
+    const params = new URLSearchParams();
+    params.append('query', query);
+    ingredients.forEach(ingredient => params.append('ingredients', ingredient));
+    params.append('skip', skip.toString());
+    params.append('limit', limit.toString());
+
+    const { data } = await http.get(`${API_URL}/search?${params.toString()}`);
+    return data;
+  } catch (error) {
+    console.error("Error searching recipes:", error);
+    throw error;
+  }
+}

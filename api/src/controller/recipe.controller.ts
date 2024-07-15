@@ -52,7 +52,7 @@ export default class  RecipeController {
         ingredients,
         steps,
         isPublic: false,
-        createAt: new Date(),
+        createdAt: new Date(),
       };
       console.log('data', recipe);
       console.log('data', body.servings);
@@ -88,20 +88,20 @@ export default class  RecipeController {
       next(error);
     }
   };
-    getRecipe = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const skip = req.query.skip
-        ? parseInt(req.query.skip as string)
-        : undefined;
-      const take = req.query.take
-        ? parseInt(req.query.take as string)
-        : undefined;
 
-      const { recipes, total } = await this.recipeService.getRecipe(skip, take);
+  getRecipe = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
+      const take = req.query.take ? parseInt(req.query.take as string) : undefined;
+      const isPublic = req.query.isPublic ? req.query.isPublic === 'true' : undefined;
+      const { recipes, total } = await this.recipeService.getRecipe(skip, take , isPublic);
+      
+
       res.status(200).json({
         message: "Recipes fetched successfully",
         recipes,
         total,
+
       });
     } catch (error) {
       next(error);
@@ -221,6 +221,25 @@ export default class  RecipeController {
       res.status(200).json(recipe);
     } catch (error) {
       next(error);      
+    }
+  }
+
+  searchRecipes = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const query = req.query.query as string;
+      const tags: string[] = []; 
+      const ingredients: string[] = Array.isArray(req.query.ingredients) 
+        ? req.query.ingredients as string[]
+        : req.query.ingredients 
+        ? [req.query.ingredients as string] 
+        : [];
+      const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      
+      const recipes = await this.recipeService.searchRecipes(query, tags, ingredients, skip, limit);
+      res.status(200).json(recipes);
+    } catch (error) {
+      next(error);
     }
   }
 }

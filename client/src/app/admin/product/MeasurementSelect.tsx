@@ -34,7 +34,7 @@ const MeasurementSelect: React.FC<MeasurementSelectProps> = ({ value, onChange }
       <SelectContent>
         {measurements.map((measurement) => (
           <SelectItem key={measurement.id} value={measurement.id.toString()}>
-            {measurement.unit}
+            {measurement.name}
           </SelectItem>
         ))}
       </SelectContent>
