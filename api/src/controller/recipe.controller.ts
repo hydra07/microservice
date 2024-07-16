@@ -307,5 +307,16 @@ export default class RecipeController {
       next(error);
     }
   }
+
+  getRecipesWithUserId = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    console.log('userId', userId);
+    try {
+      const recipes = await this.recipeService.getRecipesWithUserId(userId);
+      res.json(recipes);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch posts', error });
+    }
+  }
 }
 

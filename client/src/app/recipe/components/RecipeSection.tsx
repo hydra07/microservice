@@ -2,9 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
-import { BookmarkIcon, CookingPot, Heart, SearchIcon, ThumbsUp } from "lucide-react";
+import { BookmarkIcon, CookingPot, Heart, ThumbsUp, SearchIcon } from "lucide-react";
 import { Recipe } from "CustomTypes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getPublicRecipes } from "@/services/recipe.service";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -12,21 +12,28 @@ import Link from "next/link";
 export default function RecipeSection() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const ITEMS_PER_PAGE = 2;
+  const ITEMS_PER_PAGE = 4;
 
-  const fetchRecipes = async () => {
+  const fetchRecipes = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await getPublicRecipes(page * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
-      const { recipes, total } = response;
-
-      if (recipes.length === 0) {
+      const response = await getPublicRecipes((page - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE);
+      const { recipes: newRecipes, total } = response;
+  
+      if (newRecipes.length === 0) {
         setHasMore(false);
       } else {
-        setRecipes(prevRecipes => [...prevRecipes, ...recipes]);
+        setRecipes(prevRecipes => {
+          // If it's the first page, replace the entire array
+          if (page === 1) {
+            return newRecipes;
+          }
+          // Otherwise, append new recipes
+          return [...prevRecipes, ...newRecipes];
+        });
         setHasMore((page + 1) * ITEMS_PER_PAGE < total);
       }
     } catch (error) {
@@ -34,14 +41,12 @@ export default function RecipeSection() {
     } finally {
       setIsLoading(false);
     }
-  };
-
+  }, [page]);
   useEffect(() => {
     fetchRecipes();
-  }, [page]);
+  }, [fetchRecipes]);
 
   const renderRecipeCard = (recipe: Recipe, index: number) => (
-
     <Card key={`${recipe._id}-${index}`} className="overflow-hidden bg-white dark:bg-gray-800">
       <CardContent className="p-0">
         <div className="p-3 flex items-center justify-between">
@@ -74,27 +79,19 @@ export default function RecipeSection() {
           <h3 className="font-semibold text-lg mb-2 text-gray-800 dark:text-gray-100">{recipe.title}</h3>
           <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center bg-slate-200 dark:bg-gray-700 rounded-full px-2">
-              {/* <CookingPot className="h-4 w-4 mr-1 text-blue-400 fill-current" /> */}
               <span>{recipe.cook_time || 'N/A'} min</span>
-              {/* <span>{Math.floor(Math.random() * 50)} </span> */}
             </div>
             <div className="flex items-center bg-slate-200 dark:bg-gray-700 rounded-full px-2">
-              {/* <Heart className="h-4 w-4 mr-1 text-red-400 fill-current" /> */}
               <span>{recipe.serving || 'N/A'} servings</span>
-              {/* <span>{Math.floor(Math.random() * 50)} </span> */}
-
             </div>
             <div className="flex items-center bg-slate-200 dark:bg-gray-700 rounded-full px-2">
-              {/* <ThumbsUp className="h-4 w-4 mr-1 text-yellow-400 fill-current" /> */}
-              <span>{recipe.difficulty || 'N/A'}</span>
-              {/* <span>{Math.floor(Math.random() * 50)} </span> */}
-
+              <span>{recipe.difficulty || 'N/A'} </span>
             </div>
+            
           </div>
         </div>
       </CardContent>
     </Card>
-
   );
 
   const renderSkeletonCard = () => (

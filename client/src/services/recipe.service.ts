@@ -36,10 +36,10 @@ export const updateIngredients = async (recipeId: string, ingredientsData: Ingre
     if (res.status !== 200) {
       throw new Error(`Failed to update ingredients. Status code: ${res.status}`);
     }
-    return res.data; 
+    return res.data;
   } catch (error) {
     console.error("Error updating ingredients:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -57,7 +57,7 @@ export const getPublicRecipes = async (skip: number, take: number) => {
   try {
     const { data } = await http.get(`${API_URL}`, {
       params: { skip, take, isPublic: true }
-    }); 
+    });
     return data;
   } catch (error) {
     console.error("Error getting active recipes:", error);
@@ -79,4 +79,15 @@ export const searchRecipes = async (query: string, ingredients: string[], skip: 
     console.error("Error searching recipes:", error);
     throw error;
   }
-}
+};
+
+export const getRecipesByUserId = async (userId: string) => {
+  try {
+    const { data } = await http.get(`${API_URL}/user/${userId}`);
+    return data;
+  } catch (error) {
+    console.error("Error getting recipes by user ID:", error);
+    throw error;
+  }
+};
+

@@ -100,7 +100,7 @@ export const createColumns = (renderPreviewDialog: (recipe: Recipe) => React.Rea
   }, 
   {
     accessorKey: '_id',
-    header: 'Assign Products',
+    header: 'Products',
     cell: ({ row }) => {
       const recipe = row.original;
       return renderRecipeIngredientsDialog(recipe);

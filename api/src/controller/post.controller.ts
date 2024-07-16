@@ -168,4 +168,15 @@ export default class PostController {
       next(error);
     }
   };
+
+  getPostsWithUserId= async (req: Request, res: Response)=> {
+    const { userId } = req.params;
+    console.log("userId", userId);
+    try {
+      const posts = await this.postService.getPostsWithUserId(userId);
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch posts', error });
+    }
+  }
 }

@@ -50,7 +50,7 @@
           createdAt: "ASC",
         },
       };
-      isPublic && (query.isPublic = isPublic);
+      isPublic && (query.isPublished = isPublic);
       skip && (options.skip = skip);
       take && (options.take = take);
       // query.isActivate = true;
@@ -294,6 +294,7 @@
         }
     
         recipe.isActivate = active;
+        recipe.isPublished = active;
         await this.recipeRepository.update({ _id: objectId }, recipe);      
         const updatedRecipe = await this.getRecipeById(id);
 
@@ -471,7 +472,9 @@
         $or: [
           { title: { $regex: `.*${query}.*`, $options: 'i' } },
           { description: { $regex: `.*${query}.*`, $options: 'i' } },
-        ]
+        ],
+        isPublished: true // Ensure only published recipes are returned
+
       };
     
       if (tags && tags.length > 0) {
@@ -505,6 +508,7 @@
     
       skip && (options.skip = skip);
       take && (options.take = take);
+      
     
       const [recipes, total] = await this.recipeRepository.findAndCount(options);
 
@@ -673,6 +677,49 @@
       heartCount,
       cookpotCount,
     };
+  }
+
+  async getRecipesWithUserId( userid?: string) {
+    
+    const options: any = {
+      order: {
+        createdAt: "DESC",
+      },
+    };
+  
+  
+    const recipes = await this.recipeRepository.find({
+      where: { userId: userid }, // Điều kiện lấy bài đăng theo userId
+    
+      ...options,
+    });
+    console.log(recipes, 'recipe');
+    const recipeWithUser = await Promise.all(
+      recipes.map(async (recipe) => {
+        const { userId, ...recipeWithoutUserId } = recipe;
+        const user = await this.UserService.findUserById(userId!);
+        if (user) {
+          return {
+            ...recipeWithoutUserId,
+            user: {
+              id: user.id,
+              username: user.username,
+              avatar: user.avatar,
+            },
+          };
+        } else {
+          return {
+            ...recipeWithoutUserId,
+            user: {
+              id: undefined,
+              username: undefined,
+              avatar: undefined,
+            },
+          };
+        }
+      })
+    );
+    return recipeWithUser;
   }
   
 

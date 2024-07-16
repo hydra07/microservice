@@ -384,6 +384,48 @@ class PostService {
       throw new Error("Failed to get post data");
     }
   }
+
+  async getPostsWithUserId( userid?: string) {
+    const options: any = {
+      order: {
+        createdAt: "DESC",
+      },
+    };
+  
+
+  
+    const posts = await this.postRepository.find({
+      where: { userId: userid }, // Điều kiện lấy bài đăng theo userId
+      ...options,
+    });
+    console.log( posts, 'post');
+    const postWithUser = await Promise.all(
+      posts.map(async (post) => {
+        const { userId, ...postWithoutUserId } = post;
+        const user = await this.UserService.findUserById(userId!);
+        if (user) {
+          return {
+            ...postWithoutUserId,
+            user: {
+              id: user.id,
+              username: user.username,
+              avatar: user.avatar,
+            },
+          };
+        } else {
+          return {
+            ...postWithoutUserId,
+            user: {
+              id: undefined,
+              username: undefined,
+              avatar: undefined,
+            },
+          };
+        }
+      })
+    );
+    return postWithUser;
+  }
 }
 
 export default PostService;

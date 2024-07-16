@@ -59,7 +59,7 @@ const RecipePage: React.FC<RecipePageProps> = ({ params }) => {
         </div>
 
         {/* <RelatedRecipes /> */}
-
+    
         <RecipeComment
           comments={(recipe as any).commentWithUser}
           recipeId={recipe._id}

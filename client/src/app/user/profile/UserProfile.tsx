@@ -1,116 +1,95 @@
+
 'use client'
 import { useState, useEffect } from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import EditProfile from "./EditProfile";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import MyPosts from "./MyPost";
 import MyRecipes from "./MyRecipe";
 import SavedRecipes from "./SavedRecipe";
+import * as PostService from "@/services/post.service";
+import * as RecipeService from "@/services/recipe.service";
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    avatar: string;
-    phone?: string;
-    initials?: string;
-}
+// import axios from "@/lib/axios";
+import { Recipe, User } from "CustomTypes";
+import { PostType } from "Post";
+import useAuth from "@/hooks/useAuth";
 
-interface Post {
-    id: number;
-    title: string;
-    content: string;
-    category?: string;
-}
-
-interface Recipe {
-    id: number;
-    name: string;
-    description: string;
-    initials?: string;
-}
-
-const UserProfile = () => {
-    const [userInfo, setUserInfo] = useState<User>({} as User);
-    const [isEditProfile, setIsEditProfile] = useState(false);
-    const [posts, setPosts] = useState<Post[]>([]);
+const UserProfile = () => {   
+    const { user } = useAuth();
+    const [posts, setPosts] = useState<PostType[]>([]);
     const [myRecipes, setMyRecipes] = useState<Recipe[]>([]);
     const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
     const [activeSection, setActiveSection] = useState<'posts' | 'my-recipes' | 'saved-recipes'>('posts');
 
+    
+    // Fetch posts
     useEffect(() => {
-        fetch("/data/user.json")
-            .then((response) => response.json())
-            .then((data) => setUserInfo(data))
-            .catch((error) => console.error('Error fetching user info:', error));
+        const fetchPosts = async () => {
+            try {
+                const res = await PostService.getPostWithUserId(user!.id as string);
+                if (res) {
+                    setPosts(res);
+                }
+                console.log(res);
+            } catch (error) {
+                console.error('Error fetching posts by user! ID:', error);
+            }
+        };
+        if (user!.id) {
+            fetchPosts();
+        }
+    }, [user!.id]);
 
-        fetch("/data/my-posts.json")
-            .then((response) => response.json())
-            .then((data) => setPosts(data))
-            .catch((error) => console.error('Error fetching posts:', error));
+    // Fetch my recipes
+    useEffect(() => {
+        const fetchMyRecipes = async () => {
+            try {
+                const res = await RecipeService.getRecipesByUserId(user!.id as string);
+                if (res) { setMyRecipes(res); }// Adjusted to match the backend response structure
+                console.log(res);
+            } catch (error) {
+                console.error('Error fetching my recipes:', error);
+            }
+        };
+        if (user!.id) {
+            fetchMyRecipes();
+        }
+    }, [user!.id]);
 
-        fetch("/data/my-recipes.json")
-            .then((response) => response.json())
-            .then((data) => setMyRecipes(data))
-            .catch((error) => console.error('Error fetching my recipes:', error));
-
-        fetch("/data/saved-recipes.json")
-            .then((response) => response.json())
-            .then((data) => setSavedRecipes(data))
-            .catch((error) => console.error('Error fetching saved recipes:', error));
-    }, []);
-
-    const handleEditProfileSave = (updatedUser: { name: string; email: string; phone: string }) => {
-        setUserInfo((prevUser) => ({
-            ...prevUser,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            phone: updatedUser.phone,
-        }));
-    };
-
-    const handleEditPost = (postId: number, updatedPost: Post) => {
-        setPosts(posts.map(post => post.id === postId ? updatedPost : post));
+    // Placeholder functions for edit and delete actions
+    const handleEditPost = (postId: number) => {
+        // Implement your edit post logic here
     };
 
     const handleDeletePost = (postId: number) => {
-        setPosts(posts.filter((post) => post.id !== postId));
+        // Implement your delete post logic here
     };
 
-    const handleEditRecipe = (recipeId: number, updatedRecipe: Recipe) => {
-        setMyRecipes(myRecipes.map(recipe => recipe.id === recipeId ? updatedRecipe : recipe));
+    const handleEditRecipe = (recipeId: string) => {
+        // Implement your edit recipe logic here
     };
 
-    const handleDeleteRecipe = (recipeId: number) => {
-        setMyRecipes(myRecipes.filter((recipe) => recipe.id !== recipeId));
+    const handleDeleteRecipe = (recipeId: string) => {
+        // Implement your delete recipe logic here
     };
 
-    const handleRemoveFromSavedRecipes = (recipeId: number) => {
-        setSavedRecipes(savedRecipes.filter((recipe) => recipe.id !== recipeId));
+    const handleRemoveFromSavedRecipes = (recipeId: string) => {
+        // Implement your remove from saved recipes logic here
     };
 
     return (
         <div className="w-full max-w-[1250px] mx-auto mt-8">
             <div className="bg-muted rounded-t-lg p-6 md:p-8">
                 <div className="flex items-center gap-4">
-                    <Avatar className="w-16 h-16 md:w-20 md:h-20">
-                        <AvatarImage src={userInfo.avatar} alt={userInfo.name} />
-                        <AvatarFallback>{userInfo.initials}</AvatarFallback>
+                    <Avatar>
+                        <AvatarImage
+                            src={user!.avatar}
+                            alt={user!.email}
+                            className="h-full w-full"
+                        />
                     </Avatar>
                     <div className="space-y-1">
-                        <h2 className="text-xl font-bold">{userInfo.name}</h2>
-                        <p className="text-muted-foreground">{userInfo.email}</p>
-                        <p className="text-muted-foreground">{userInfo.phone}</p>
-                    </div>
-                    <div className="ml-auto">
-                        <EditProfile
-                            user={{
-                                name: userInfo.name,
-                                email: userInfo.email,
-                                phone: userInfo.phone || "",
-                            }}
-                            onClose={() => setIsEditProfile(false)}
-                            onSave={handleEditProfileSave}
-                        />
+                        <h2 className="text-xl font-bold">{user!.email}</h2>
+                        
                     </div>
                 </div>
             </div>
@@ -137,12 +116,14 @@ const UserProfile = () => {
                         </button>
                     </div>
                 </div>
-                {activeSection === 'posts' && <MyPosts posts={posts} onEdit={handleEditPost} onDelete={handleDeletePost} />}
+                {activeSection === 'posts' && <MyPosts posts={posts}/>}
                 {activeSection === 'my-recipes' && <MyRecipes recipes={myRecipes} onEdit={handleEditRecipe} onDelete={handleDeleteRecipe} />}
                 {activeSection === 'saved-recipes' && <SavedRecipes recipes={savedRecipes} onRemove={handleRemoveFromSavedRecipes} />}
             </div>
         </div>
     );
-};
+}
 
 export default UserProfile;
+
+
